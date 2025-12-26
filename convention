@@ -1,0 +1,8 @@
+Class:        GameState
+Member:       scoreContribution
+Local var:    previewState
+Method:       isActive()
+Enum type:    VariableId
+Enum value:   Energy
+Constant:     MaxVariables
+File:         game_state.h
