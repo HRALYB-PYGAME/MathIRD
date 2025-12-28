@@ -17,10 +17,16 @@ class VariableValue{
         VariableValue(double v) : value(v), type(Type::DOUBLE) {};
         VariableValue(bool v) : value(v), type(Type::BOOL) {};
 
+        VariableValue add(VariableValue& other);
+        VariableValue subtract(VariableValue& other);
+        VariableValue multiply(VariableValue& other);
+        VariableValue divide(VariableValue& other);
+
         int getInt();
         double getDouble();
         bool getBool();
         double getAsDouble();
+        double getAsInt();
         Type getType();
 
         void set(int v);

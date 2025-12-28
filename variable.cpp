@@ -3,6 +3,9 @@
 #include <algorithm>
 
 double Variable::getScore(){
+    if (this->scoreParams.polarity == Polarity::Neutral)
+        return 0.0;
+        
     double value = this->value.getAsDouble();
     value -= this->scoreParams.offset;
 
@@ -33,4 +36,8 @@ void Variable::add(double v){
 void Variable::toggle(){
     if (this->value.getType() != Type::BOOL) return;
     this->set(!this->value.getBool());
+}
+
+ScoreParams getScoreParams(double knee, double offset, Polarity polarity) {
+    return {knee, offset, polarity};
 }

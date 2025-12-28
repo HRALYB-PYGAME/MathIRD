@@ -8,7 +8,8 @@
 enum class Polarity{
     Normal,
     Inverted,
-    Absolute
+    Absolute,
+    Neutral
 };
 
 struct ScoreParams{
@@ -16,6 +17,8 @@ struct ScoreParams{
     double offset;
     Polarity polarity;
 };
+
+ScoreParams getScoreParams(double knee, double offset, Polarity polarity);
 
 class Variable {
     private:
