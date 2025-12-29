@@ -81,13 +81,3 @@ VariableValue Expression::evaluate(GameState* gameState){
 
     return 0.0;
 }
-
-bool isBinaryOperand(Operand oper){
-
-}
-bool isUnaryOperand(Operand oper){
-
-}
-bool isAssignment(Operand oper){
-
-}

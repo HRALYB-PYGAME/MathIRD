@@ -3,31 +3,7 @@
 
 #include "variable.hpp"
 #include "game_state.hpp"
-
-enum class Operand{
-    Add, // +
-    Subtract, // -
-    Multiply, // *
-    Divide, // /
-    Modulo, // %
-
-    Equal, // ==
-    NotEqual, // !=
-    Less, // <
-    Greater, // >
-    LessOrEqual, // <=
-    GreaterOrEqual, // >=
-
-    And, // &&
-    Or, // ||
-    Not, // !
-
-    Assign, // =
-    AddAssign, // +=
-    SubAssign, // -=
-    MulAssign, // *=
-    DivAssign, // /=
-};
+#include "tokenizer.hpp"
 
 enum class ExprType{
     BinaryExpr,
@@ -56,10 +32,6 @@ struct Assignment{
     Operand oper;
     Expression* expr;
 };
-
-bool isBinaryOperand(Operand oper);
-bool isUnaryOperand(Operand oper);
-bool isAssignment(Operand oper);
 
 class Expression{
     private:
