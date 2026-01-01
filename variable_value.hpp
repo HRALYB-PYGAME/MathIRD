@@ -2,6 +2,7 @@
 #define variable_value_hpp
 #include <variant>
 #include <string>
+#include <cmath>
 
 enum class Type{
     INT, DOUBLE, BOOL
@@ -21,17 +22,39 @@ class VariableValue{
         VariableValue subtract(const VariableValue& other) const;
         VariableValue multiply(const VariableValue& other) const;
         VariableValue divide(const VariableValue& other) const;
+        bool isGreaterThan(const VariableValue& other) const;
+        bool isLessThan(const VariableValue& other) const;
+        bool isEqualTo(const VariableValue& other) const;
+
+        VariableValue modulo(const VariableValue& other) const;
+        VariableValue power(const VariableValue& other) const;
+        bool logAnd(const VariableValue& other) const;
+        bool logOr(const VariableValue& other) const;
+        bool logNot() const;
+
+        /*Modulo, // %
+
+        And, // &&
+        Or, // ||
+        Not, // !
+        Abs, // abs()
+        Max,
+        Min,
+
+        Power // ^*/
 
         const int getInt() const;
         const double getDouble() const;
         const bool getBool() const;
         const double getAsDouble() const;
-        const double getAsInt() const;
+        const int getAsInt() const;
+        const bool getAsBool() const;
         const Type getType() const;
 
         void set(int v);
         void set(double v);
         void set(bool v);
+        void set(VariableValue v);
 };
 
 #endif
