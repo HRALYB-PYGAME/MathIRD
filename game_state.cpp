@@ -9,6 +9,14 @@ GameState::GameState(){
         "y",
         Variable("y", 5.0, getScoreParams(100, 0, Polarity::Normal))
     );
+    variables.emplace(
+        "s",
+        Variable("s", 5.0, getScoreParams(100, 100, Polarity::Absolute))
+    );
+    variables.emplace(
+        "mq",
+        Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal))
+    );
 }
 
 double GameState::getScore(){
