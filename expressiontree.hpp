@@ -19,6 +19,7 @@ enum class NodeType{
 struct Node{
     virtual ~Node() = default;
     virtual VariableValue evaluate(GameState& gameState) = 0;
+    virtual VariableChanges simulate(GameState& gameState) = 0;
     virtual std::string insight(GameState& gameState, int level) = 0;
     virtual NodeType getType() = 0;
 };
@@ -27,6 +28,7 @@ struct ConstantNode : public Node{
     VariableValue val;
     ConstantNode(VariableValue val): val(val) {};
     VariableValue evaluate(GameState& gameState) override;
+    VariableChanges simulate(GameState& gameState) override { return VariableChanges(); };
     std::string insight(GameState& gameState, int level) override;
     NodeType getType() override { return NodeType::Constant;};
 };
@@ -35,6 +37,7 @@ struct VariableNode : public Node{
     std::string var;
     VariableNode(std::string var): var(var) {};
     VariableValue evaluate(GameState& gameState) override;
+    VariableChanges simulate(GameState& gameState) override { return VariableChanges(); };
     std::string insight(GameState& gameState, int level) override;
     NodeType getType() override { return NodeType::Variable;};
 };
@@ -45,6 +48,7 @@ struct OperandNode : public Node{
     std::unique_ptr<Node> right;
     OperandNode(Operand oper, std::unique_ptr<Node> left, std::unique_ptr<Node> right): oper(oper), left(std::move(left)), right(std::move(right)) {};
     VariableValue evaluate(GameState& gameState) override;
+    VariableChanges simulate(GameState& gameState) override;
     std::string insight(GameState& gameState, int level) override;
     NodeType getType() override { return NodeType::Operand;};
 };

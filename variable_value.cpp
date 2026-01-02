@@ -1,4 +1,5 @@
 #include "variable_value.hpp"
+#include <iostream>
 
 const int VariableValue::getInt() const{
     return std::get<int>(this->value);
@@ -120,4 +121,30 @@ VariableValue VariableValue::multiply(const VariableValue& other) const{
 VariableValue VariableValue::divide(const VariableValue& other) const{
     if (other.getAsDouble() == 0) return VariableValue(0.0);
     return VariableValue(this->getAsDouble() / other.getAsDouble());
+}
+
+VariableChanges VariableChanges::add(const VariableChanges& varc) const{
+    VariableChanges result = *this;
+    for (auto& [var, delta] : varc.changes){
+        if (result.changes.find(var) != result.changes.end())
+            result.changes[var] += delta;
+        else
+            result.changes[var] = delta;
+    }
+    return result;
+}
+
+VariableChanges VariableChanges::add(std::string var, double val) const{
+    VariableChanges result = *this;
+    if (result.changes.find(var) != result.changes.end())
+        result.changes[var] += val;
+    else
+        result.changes[var] = val;
+    return result;
+}
+
+void VariableChanges::print(){
+    for (auto& [var, delta] : this->changes){
+        std::cout << var << ":" << delta << std::endl;
+    }
 }

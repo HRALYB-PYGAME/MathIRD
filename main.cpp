@@ -1,6 +1,7 @@
 #include <iostream>
 #include "game_state.hpp"
 #include "expressiontree.hpp"
+#include "term.hpp"
 
 int main(){
     std::cout << "Henlo" << std::endl;
@@ -17,13 +18,26 @@ int main(){
     // Expression expr(&x, Operand::Divide, &y);
     // std::cout << expr.evaluate(&gameState).getAsDouble() << std::endl;
 
-    std::vector<Token> v = tokenize("s -= 1/(mq+0.1) ");
+    std::vector<Token> v = tokenize("s -= 1/(mq+0.1*x) ");
 
     auto p = construct(v);
     std::cout << "evaluated: " << p->evaluate(gameState).getAsDouble() << std::endl;
     std::cout << "insight: " << p->insight(gameState, 0) << std::endl;
 
     printf("\x1B[31mTexting\033[0m\t\t");
+
+    p->simulate(gameState).add(p->simulate(gameState)).print();
+
+    Term term;
+    term.setCondition(construct(tokenize("x == 2 ")));
+    term.addExpression(construct(tokenize("x += 200 ")));
+    term.addExpression(construct(tokenize("s -= 1/(mq+0.1*x) ")));
+
+    std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
+    VariableChanges changes = term.simulate(gameState);
+    changes.print();
+    gameState.applyChanges(changes);
+    std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
 
     return 0;
 }

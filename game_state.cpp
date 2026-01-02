@@ -1,4 +1,5 @@
 #include "game_state.hpp"
+#include <iostream>
 
 GameState::GameState(){
     variables.emplace(
@@ -35,5 +36,10 @@ Variable* GameState::getVar(std::string name){
     else{
         return nullptr;
     }
-    
+}
+
+void GameState::applyChanges(VariableChanges changes){
+    for (auto& [var, val] : changes.changes){
+        this->variables.at(var).add(val);
+    }
 }
