@@ -12,9 +12,36 @@ VariableValue VariableNode::evaluate(GameState& gameState){
     return gameState.getVar(this->var)->getValue();
 }
 
+VariableChanges OperandNode::simulate(GameState& gameState){
+    if (this->left == nullptr) return VariableChanges();
+    if (this->left->getType() != NodeType::Variable) return VariableChanges();
+    
+    VariableNode* vNode = static_cast<VariableNode*>(this->left.get());
+    std::string var = vNode->var;
+    double varValue = gameState.getVar(var)->getValue().getAsDouble();
+
+    double rightValue = this->right->evaluate(gameState).getAsDouble();
+    VariableChanges changes;
+
+    switch(this->oper){
+        case Operand::Assign:
+            return changes.add(var, rightValue-varValue);
+        case Operand::AddAssign:
+            return changes.add(var, rightValue);
+        case Operand::SubAssign:
+            return changes.add(var, -rightValue);
+        case Operand::MulAssign:
+            return changes.add(var, rightValue/varValue - varValue);
+        case Operand::DivAssign:
+            return changes.add(var, rightValue*varValue - varValue);
+        default:
+            return VariableChanges();
+    }
+}
+
 VariableValue OperandNode::evaluate(GameState& gameState){
     VariableValue left(0);
-    if (this->left == nullptr) left = 0;
+    if (this->left == nullptr) left = VariableValue(0);
     else left = this->left->evaluate(gameState);
     VariableValue right = this->right->evaluate(gameState);
     VariableValue val(0);
@@ -35,23 +62,18 @@ VariableValue OperandNode::evaluate(GameState& gameState){
     case Operand::Neg:
         return right.multiply(VariableValue(-1));
     case Operand::Assign:
-        left.set(right);
         return right;
     case Operand::AddAssign:
         val = left.add(right);
-        left.set(val);
         return val;
     case Operand::SubAssign:
         val = left.subtract(right);
-        left.set(val);
         return val;
     case Operand::MulAssign:
         val = left.multiply(right);
-        left.set(val);
         return val;
     case Operand::DivAssign:
         val = left.divide(right);
-        left.set(val);
         return val;
     case Operand::Equal:
         if (left.isEqualTo(right)) return VariableValue(true);
@@ -125,15 +147,9 @@ std::string OperandNode::insight(GameState& gameState, int level){
     case Operand::Add:
         return addInsight(*this->left, *this->right, gameState, level);
     case Operand::Subtract:
-        return leftInsight + " decreased by " + rightInsight;
+        return subtractInsight(*this->left, *this->right, gameState, level);
     case Operand::Multiply:
-        if (this->right->getType() == NodeType::Constant){
-            if (rightValue == 2.0)
-                return "double of " + leftInsight;
-            if (rightValue == 3.0)
-                return "double of " + leftInsight;
-        }
-        return "product of "s + REVERSE + leftInsight + RESET + " and " + REVERSE + rightInsight + RESET;
+        return multiplyInsight(*this->left, *this->right, gameState, level);    
     case Operand::Divide:
         return divideInsight(*this->left, *this->right, gameState, level);
     case Operand::Neg:

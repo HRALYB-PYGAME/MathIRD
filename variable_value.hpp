@@ -3,6 +3,7 @@
 #include <variant>
 #include <string>
 #include <cmath>
+#include <unordered_map>
 
 enum class Type{
     INT, DOUBLE, BOOL
@@ -32,17 +33,6 @@ class VariableValue{
         bool logOr(const VariableValue& other) const;
         bool logNot() const;
 
-        /*Modulo, // %
-
-        And, // &&
-        Or, // ||
-        Not, // !
-        Abs, // abs()
-        Max,
-        Min,
-
-        Power // ^*/
-
         const int getInt() const;
         const double getDouble() const;
         const bool getBool() const;
@@ -55,6 +45,16 @@ class VariableValue{
         void set(double v);
         void set(bool v);
         void set(VariableValue v);
+};
+
+class VariableChanges{
+public:
+    std::unordered_map<std::string, double> changes;
+
+    VariableChanges(): changes({}) {};
+    VariableChanges add(const VariableChanges& varc) const;
+    VariableChanges add(std::string var, double val) const;
+    void print();
 };
 
 #endif

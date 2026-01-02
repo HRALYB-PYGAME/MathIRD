@@ -11,6 +11,7 @@ class GameState{
         GameState();
         double getScore();
         Variable* getVar(std::string name);
+        void applyChanges(VariableChanges changes);
 };
 
 #endif
