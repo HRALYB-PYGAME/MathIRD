@@ -12,6 +12,7 @@ public:
     void addExpression(std::unique_ptr<Node> expression);
     bool isConditionMet(GameState& gameState);
     VariableChanges simulate(GameState& gameState);
+    bool isUnlocked(GameState& gameState);
 };
 
 #endif

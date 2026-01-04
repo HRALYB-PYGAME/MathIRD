@@ -40,6 +40,7 @@ enum class Operand{
 
 enum class TokenType{
     Variable,
+    SoftVariable,
     Constant,
     Operand
 };
@@ -50,7 +51,7 @@ class Token{
         std::variant<double, std::string, Operand> value;
     public:
         Token(double val): type(TokenType::Constant), value(val) {};
-        Token(std::string name): type(TokenType::Variable), value(name) {};
+        Token(std::string name, bool soft): type(soft ? TokenType::SoftVariable : TokenType::Variable), value(name) {};
         Token(Operand oper): type(TokenType::Operand), value(oper) {};
         void print();
         bool isValue() {if (type == TokenType::Constant || type == TokenType::Variable) return true; return false;};

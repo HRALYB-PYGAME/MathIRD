@@ -1,23 +1,8 @@
 #include "game_state.hpp"
+#include "expressiontree.hpp"
 #include <iostream>
 
 GameState::GameState(){
-    variables.emplace(
-        "x",
-        Variable("x", 0.0, getScoreParams(100, 0, Polarity::Normal))
-    );
-    variables.emplace(
-        "y",
-        Variable("y", 5.0, getScoreParams(100, 0, Polarity::Normal))
-    );
-    variables.emplace(
-        "s",
-        Variable("s", 5.0, getScoreParams(100, 100, Polarity::Absolute))
-    );
-    variables.emplace(
-        "mq",
-        Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal))
-    );
 }
 
 double GameState::getScore(){
@@ -41,5 +26,32 @@ Variable* GameState::getVar(std::string name){
 void GameState::applyChanges(VariableChanges changes){
     for (auto& [var, val] : changes.changes){
         this->variables.at(var).add(val);
+    }
+    this->updateVariables();
+}
+
+void GameState::updateVariables(){
+    for (auto& [name, cond] : this->unlockConditions){
+        if (!isVariableUnlocked(name) && cond->evaluate(*this).getAsBool()){
+            this->variables.at(name).unlock();
+        }
+    }
+}
+
+bool GameState::isVariableUnlocked(std::string name){
+    if (this->variables.find(name) == this->variables.end())
+        return false;
+    return this->variables.at(name).isUnlocked();
+}
+
+void GameState::addVariable(std::string name, Variable var, std::shared_ptr<Node> condition){
+    this->variables.emplace(name, var);
+    this->unlockConditions[name] = condition;
+}
+
+void GameState::printUnlocked(){
+    for (auto& [name, var] : this->variables){
+        if (var.isUnlocked())
+            std::cout << "unlocked: " << name << std::endl;
     }
 }

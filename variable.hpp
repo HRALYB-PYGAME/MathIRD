@@ -3,6 +3,7 @@
 
 #include <string>
 #include <variant>
+#include <memory>
 #include "variable_value.hpp"
 
 enum class Polarity{
@@ -25,9 +26,10 @@ class Variable {
         std::string name;
         ScoreParams scoreParams;
         VariableValue value;
+        bool unlocked;
     public:
         Variable(std::string name, VariableValue value, ScoreParams scoreParams): 
-            name(std::move(name)), value(std::move(value)), scoreParams(scoreParams){};
+            name(std::move(name)), value(std::move(value)), scoreParams(scoreParams), unlocked(false) {};
         double getScore();
         VariableValue getValue(){ return value; };
         void set(int v){ value.set(v); };
@@ -38,6 +40,8 @@ class Variable {
         void add(int v);
         void add(double v);
         void toggle();
+        void unlock() {unlocked = true;};
+        bool isUnlocked() {return unlocked;};
 };
 
 #endif
