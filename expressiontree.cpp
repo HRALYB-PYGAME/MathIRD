@@ -4,6 +4,16 @@
 
 using namespace std::string_literals;
 
+bool VariableNode::isConstant(GameState& gameState){
+    return !gameState.isVariableUnlocked(this->var);
+}
+
+bool OperandNode::isConstant(GameState& gameState){
+    if (this->left->isConstant(gameState) && this->right->isConstant(gameState))
+        return true;
+    return false;
+}
+
 VariableValue ConstantNode::evaluate(GameState& gameState){
     return this->val;
 }
@@ -131,6 +141,8 @@ std::string ConstantNode::insight(GameState& gameState, int level){
 
 std::string VariableNode::insight(GameState& gameState, int level){
     std::string name = this->var;
+    if (!gameState.isVariableUnlocked(name))
+        return formatDouble(gameState.getVar(name)->getValue().getAsDouble());
     double val = this->evaluate(gameState).getAsDouble();
     return name.append(" (").append(formatDouble(val)).append(")");
 }
@@ -210,18 +222,19 @@ void printNodeStack(std::stack<std::unique_ptr<Node>>& nodeStack) {
 }
 
 std::unique_ptr<Node> construct(std::vector<Token> tokens){
-    std::cout << "construct\n";
     std::stack<std::unique_ptr<Node>> nodeStack;
     std::stack<Operand> operandStack;
     for(int i=0; i<tokens.size(); i++){
         Token token = tokens[i];
-        token.print();
         switch(token.getType()){
         case TokenType::Constant:
             nodeStack.push(std::make_unique<ConstantNode>(VariableValue(token.getValueAsDouble())));
             break;
+        case TokenType::SoftVariable:
+            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), true));
+            break;
         case TokenType::Variable:
-            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString()));
+            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), false));
             break;
         case TokenType::Operand:
             Operand oper = token.getValueAsOperand();
@@ -252,14 +265,11 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
                 operandStack.push(oper);
             }
         }
-        printNodeStack(nodeStack);
     }
 
     while(!operandStack.empty()){
         Operand topOper = operandStack.top(); operandStack.pop();
-        Token(topOper).print();
         createSubtree(nodeStack, topOper);
-        printNodeStack(nodeStack);
     }
 
     return std::move(nodeStack.top());

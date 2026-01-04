@@ -90,6 +90,9 @@ void Token::print(){
         case TokenType::Variable:
             std::cout << "Token Type: Variable (" << std::get<std::string>(this->value) << ")\n";
             break;
+        case TokenType::SoftVariable:
+            std::cout << "Token Type: ~Variable (" << std::get<std::string>(this->value) << ")\n";
+            break;
     }
 }
 
@@ -99,7 +102,7 @@ bool isNumber(char c){
 }
 
 bool isLetter(char c){
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '~')
         return true;
     return false;
 }
@@ -205,6 +208,7 @@ enum class TokenizeState{
 };
 
 std::vector<Token> tokenize(std::string text){
+    text = text.append(" ");
     TokenizeState state = TokenizeState::Empty;
     std::string acc = "";
     std::vector<Token> tokens;
@@ -296,8 +300,10 @@ std::vector<Token> tokenize(std::string text){
                     tokens.insert(tokens.end(), Token(Operand::Max));
                 else if (acc.compare("abs") == 0)
                     tokens.insert(tokens.end(), Token(Operand::Abs));
+                else if (acc[0] == '~')
+                    tokens.insert(tokens.end(), Token(acc.substr(1), true));
                 else
-                    tokens.insert(tokens.end(), Token(acc));
+                    tokens.insert(tokens.end(), Token(acc, false));
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;

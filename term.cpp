@@ -21,3 +21,10 @@ void Term::setCondition(std::unique_ptr<Node> condition) {
 void Term::addExpression(std::unique_ptr<Node> expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
 }
+
+bool Term::isUnlocked(GameState& gameState){
+    // get all variables thats dependant
+    // check if all are unlocked
+
+    // maybe the variables should be stored somewhere
+}
