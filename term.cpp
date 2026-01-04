@@ -16,13 +16,30 @@ VariableChanges Term::simulate(GameState& gameState){
 
 void Term::setCondition(std::unique_ptr<Node> condition) {
     this->condition = std::move(condition);
+    updateDependencies();
 }
 
 void Term::addExpression(std::unique_ptr<Node> expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
+    updateDependencies();
+}
+
+void Term::updateDependencies(){
+    dependencies.clear();
+    auto condDeps = condition->getDependencies();
+    dependencies.insert(condDeps.begin(), condDeps.end());
+    for (int i=0; i<expressions.size(); i++){
+        auto exprDeps = expressions[i]->getDependencies();
+        dependencies.insert(exprDeps.begin(), exprDeps.end());
+    }
 }
 
 bool Term::isUnlocked(GameState& gameState){
+    for (const std::string& var : dependencies) {
+        if (!gameState.isVariableUnlocked(var))
+            return false;
+    }
+    return true;
     // get all variables thats dependant
     // check if all are unlocked
 

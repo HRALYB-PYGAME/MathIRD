@@ -4,6 +4,20 @@
 
 using namespace std::string_literals;
 
+std::set<std::string> VariableNode::getDependencies(){
+    std::set<std::string> deps;
+    if (this->soft) return deps;
+    deps.insert(this->var);
+    return deps;
+}
+
+std::set<std::string> OperandNode::getDependencies(){
+    auto leftDeps = this->left->getDependencies();
+    auto rightDeps = this->right->getDependencies();
+    leftDeps.insert(rightDeps.begin(), rightDeps.end());
+    return leftDeps;
+}
+
 bool VariableNode::isConstant(GameState& gameState){
     return !gameState.isVariableUnlocked(this->var);
 }
@@ -44,6 +58,10 @@ VariableChanges OperandNode::simulate(GameState& gameState){
             return changes.add(var, rightValue/varValue - varValue);
         case Operand::DivAssign:
             return changes.add(var, rightValue*varValue - varValue);
+        case Operand::If:
+            if (left->evaluate(gameState).getAsBool())
+                return this->right->simulate(gameState);
+            return changes;
         default:
             return VariableChanges();
     }
@@ -122,6 +140,10 @@ VariableValue OperandNode::evaluate(GameState& gameState){
     case Operand::Max:
         if (right.isGreaterThan(left)) return right;
         return left;
+    case Operand::If:
+        if (left.getAsBool())
+            return right;
+        return VariableValue(0);
     }    
 
     return VariableValue(0);
@@ -204,17 +226,22 @@ std::string OperandNode::insight(GameState& gameState, int level){
         return "minimum of " + leftInsight + " and " + rightInsight;
     case Operand::Max:
         return "maximum of " + leftInsight + " and " + rightInsight;
+    case Operand::If:
+        return "if " + leftInsight + " then " + rightInsight;
     }
 }
 
 void createSubtree(std::stack<std::unique_ptr<Node>>& nodeStack, Operand oper){
+    //std::cout << "creating subtree with nodestack of size: " << nodeStack.size() << std::endl;
     std::unique_ptr<Node> rightChild = std::move(nodeStack.top()); nodeStack.pop();
+    //std::cout << "successfully popped right child\n";
     std::unique_ptr<Node> leftChild = nullptr;
     if (!isUnary(oper)){
         leftChild = std::move(nodeStack.top()); nodeStack.pop();
     }
     auto parent = std::make_unique<OperandNode>(oper, std::move(leftChild), std::move(rightChild));
     nodeStack.push(std::move(parent));
+    //std::cout << std::endl;
 }
 
 void printNodeStack(std::stack<std::unique_ptr<Node>>& nodeStack) {
@@ -226,6 +253,8 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
     std::stack<Operand> operandStack;
     for(int i=0; i<tokens.size(); i++){
         Token token = tokens[i];
+        //std::cout << "nodestack size " << nodeStack.size() << " operandStack size " << operandStack.size() << std::endl;
+        //token.print();
         switch(token.getType()){
         case TokenType::Constant:
             nodeStack.push(std::make_unique<ConstantNode>(VariableValue(token.getValueAsDouble())));

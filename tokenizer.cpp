@@ -85,6 +85,10 @@ void Token::print(){
                     break;
                 case Operand::Power:
                     std::cout << "(^)" << std::endl;
+                    break;
+                case Operand::If:
+                    std::cout << "(if)" << std::endl;
+                    break;
             }
             break;
         case TokenType::Variable:
@@ -166,6 +170,9 @@ int getPrecedence(Operand oper){
     case Operand::Max:
         return 5;
         break;
+    case Operand::If:
+        return 5;
+        break;
     case Operand::Assign:
         return 0;
         break;
@@ -182,10 +189,10 @@ int getPrecedence(Operand oper){
         return 0;
         break;
     case Operand::LeftPar:
-        return 0;
+        return -1;
         break;
     case Operand::RightPar:
-        return 0;
+        return -1;
         break;
     }
 }
@@ -220,6 +227,18 @@ std::vector<Token> tokenize(std::string text){
             if (isNumber(c)){
                 acc += c;
                 state = TokenizeState::Constant;
+            }
+            else if (c == '['){
+                tokens.insert(tokens.end(), Operand::LeftPar);
+                tokens.insert(tokens.end(), Operand::LeftPar);
+            }
+            else if (c == ']'){
+                tokens.insert(tokens.end(), Operand::RightPar);
+                tokens.insert(tokens.end(), Operand::RightPar);
+            }
+            else if (c == ','){
+                tokens.insert(tokens.end(), Operand::RightPar);
+                tokens.insert(tokens.end(), Operand::LeftPar);
             }
             else if (isLetter(c) || c == '_'){
                 acc += c;
@@ -300,6 +319,12 @@ std::vector<Token> tokenize(std::string text){
                     tokens.insert(tokens.end(), Token(Operand::Max));
                 else if (acc.compare("abs") == 0)
                     tokens.insert(tokens.end(), Token(Operand::Abs));
+                else if (acc.compare("true") == 0)
+                    tokens.insert(tokens.end(), Token(1));
+                else if (acc.compare("false") == 0)
+                    tokens.insert(tokens.end(), Token(0));
+                else if (acc.compare("if") == 0)
+                    tokens.insert(tokens.end(), Token(Operand::If));
                 else if (acc[0] == '~')
                     tokens.insert(tokens.end(), Token(acc.substr(1), true));
                 else
@@ -447,7 +472,7 @@ std::vector<Token> tokenize(std::string text){
 }
 
 bool isFunction(Operand oper){
-    if (oper == Operand::Abs || oper == Operand::Min || oper == Operand::Max)
+    if (oper == Operand::Abs || oper == Operand::Min || oper == Operand::Max || oper == Operand::If)
         return true;
     return false;
 }
