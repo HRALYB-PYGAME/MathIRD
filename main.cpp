@@ -11,24 +11,36 @@ int main(){
     gameState.addVariable("mq", Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal)), std::move(construct(tokenize("x*y >= 1000"))));
     gameState.updateVariables();
     gameState.printUnlocked();
-    std::vector<Token> v = tokenize("s -= 1/((mq+1)+0.1*~x) ");
+    std::vector<Token> v = tokenize("s = 10 * if[mq == 4, 5]"/*s -= 1/((mq+1)+0.1*~x)*/);
+    for (int i=0; i<v.size(); i++){
+        v[i].print();
+    }
 
     auto p = construct(v);
     std::cout << "evaluated: " << p->evaluate(gameState).getAsDouble() << std::endl;
     std::cout << "insight: " << p->insight(gameState, 0) << std::endl;
 
-    p->simulate(gameState).add(p->simulate(gameState)).print();
+    
+
+    // p->simulate(gameState).add(p->simulate(gameState)).print();
 
     Term term;
     term.setCondition(construct(tokenize("x == 2 ")));
-    term.addExpression(construct(tokenize("x += 200 ")));
-    term.addExpression(construct(tokenize("s -= 1/(~mq+0.1*~x) ")));
+    term.addExpression(construct(tokenize("x += 2000 ")));
+    term.addExpression(construct(tokenize("s -= 1/(mq+0.1*~x) ")));
+
+    auto s = term.getDependencies();
+    for (const std::string& varName : s) {
+        std::cout << varName << std::endl;
+    }
 
     std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
     VariableChanges changes = term.simulate(gameState);
     changes.print();
     gameState.applyChanges(changes);
     std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
+
+    std::cout << term.isUnlocked(gameState) << std::endl;
 
     return 0;
 }

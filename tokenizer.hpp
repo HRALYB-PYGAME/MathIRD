@@ -35,6 +35,7 @@ enum class Operand{
 
     LeftPar,
     RightPar,
+    If, // if left = condition right = what will happen
     Power // ^
 };
 
