@@ -33,13 +33,13 @@ class VariableValue{
         bool logOr(const VariableValue& other) const;
         bool logNot() const;
 
-        const int getInt() const;
-        const double getDouble() const;
-        const bool getBool() const;
-        const double getAsDouble() const;
-        const int getAsInt() const;
-        const bool getAsBool() const;
-        const Type getType() const;
+        int getInt() const;
+        double getDouble() const;
+        bool getBool() const;
+        double getAsDouble() const;
+        int getAsInt() const;
+        bool getAsBool() const;
+        Type getType() const;
 
         void set(int v);
         void set(double v);
@@ -54,7 +54,7 @@ public:
     VariableChanges(): changes({}) {};
     VariableChanges add(const VariableChanges& varc) const;
     VariableChanges add(std::string var, double val) const;
-    void print();
+    std::string insight();
 };
 
 #endif

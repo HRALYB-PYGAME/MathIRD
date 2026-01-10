@@ -1,35 +1,36 @@
 #include "variable_value.hpp"
+#include "utils.hpp"
 #include <iostream>
 
-const int VariableValue::getInt() const{
+int VariableValue::getInt() const{
     return std::get<int>(this->value);
 }
-const double VariableValue::getDouble() const{
+double VariableValue::getDouble() const{
     return std::get<double>(this->value);
 }
-const bool VariableValue::getBool() const{
+bool VariableValue::getBool() const{
     return std::get<bool>(this->value);
 
 }
-const double VariableValue::getAsDouble() const{
+double VariableValue::getAsDouble() const{
     if (this->type == Type::INT)
         return (double)std::get<int>(this->value);
     if (this->type == Type::BOOL)
         return std::get<bool>(value) ? 1.0 : 0.0;
     return std::get<double>(value);
 }
-const int VariableValue::getAsInt() const{
+int VariableValue::getAsInt() const{
     if (this->type == Type::INT)
         return std::get<int>(this->value);
     if (this->type == Type::BOOL)
         return std::get<bool>(value) ? 1 : 0;
     return (int)std::get<double>(value);
 }
-const bool VariableValue::getAsBool() const{
+bool VariableValue::getAsBool() const{
     if (this->getAsDouble() == 0) return false;
     return true;
 }
-const Type VariableValue::getType() const{
+Type VariableValue::getType() const{
     return this->type;
 }
 
@@ -143,8 +144,10 @@ VariableChanges VariableChanges::add(std::string var, double val) const{
     return result;
 }
 
-void VariableChanges::print(){
+std::string VariableChanges::insight(){
+    std::string insight;
     for (auto& [var, delta] : this->changes){
-        std::cout << var << ":" << delta << std::endl;
+        insight += var + ": " + formatDouble(delta) + "\n";
     }
+    return insight;
 }

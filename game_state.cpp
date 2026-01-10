@@ -39,6 +39,7 @@ void GameState::updateVariables(){
 }
 
 bool GameState::isVariableUnlocked(std::string name){
+    if (name[0] == '_') return true;
     if (this->variables.find(name) == this->variables.end())
         return false;
     return this->variables.at(name).isUnlocked();
@@ -54,4 +55,38 @@ void GameState::printUnlocked(){
         if (var.isUnlocked())
             std::cout << "unlocked: " << name << std::endl;
     }
+}
+
+double GameState::getCurrentrandom(){
+    return currentSeed;
+}
+
+void GameState::step(){
+    uint64_t multiplier = 6364136223846793005ULL;
+    uint64_t increment = 1442695040888963407ULL;
+    currentSeed = currentSeed*multiplier + increment;
+}
+
+VariableValue GameState::getVarValue(std::string name){
+    if (name == "_R")
+        return VariableValue(currentSeed/RANDOM_MAX);
+    if (name == "_NR"){
+        step();
+        return VariableValue(currentSeed/RANDOM_MAX);
+    }
+    if (this->variables.find(name) != this->variables.end())
+        return variables.at(name).getValue();
+    return VariableValue(0.f);
+}
+
+double GameState::getVarValueAsDouble(std::string name){
+    if (name == "_R")
+        return currentSeed/RANDOM_MAX;
+    if (name == "_NR"){
+        step();
+        return currentSeed/RANDOM_MAX;
+    }
+    if (this->variables.find(name) != this->variables.end())
+        return variables.at(name).getValue().getAsDouble();
+    return 0.0;
 }

@@ -8,11 +8,11 @@ int main(){
     gameState.addVariable("x", Variable("x", 0.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
     gameState.addVariable("y", Variable("y", 5.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
     gameState.addVariable("s", Variable("s", 5.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("x >= 0"))));
-    gameState.addVariable("mq", Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal)), std::move(construct(tokenize("x*y >= 1000"))));
+    gameState.addVariable("mq", Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal)), std::move(construct(tokenize("x*y >= 0"))));
     gameState.updateVariables();
     gameState.printUnlocked();
     std::vector<Token> v = tokenize("s = 10 * if[mq == 4, 5]"/*s -= 1/((mq+1)+0.1*~x)*/);
-    for (int i=0; i<v.size(); i++){
+    for (size_t i=0; i<v.size(); i++){
         v[i].print();
     }
 
@@ -24,23 +24,41 @@ int main(){
 
     // p->simulate(gameState).add(p->simulate(gameState)).print();
 
-    Term term;
+    Term term("testing term");
     term.setCondition(construct(tokenize("x == 2 ")));
-    term.addExpression(construct(tokenize("x += 2000 ")));
-    term.addExpression(construct(tokenize("s -= 1/(mq+0.1*~x) ")));
+    term.addExpression(construct(tokenize("mq += _NR*2000 ")));
+    term.addExpression(construct(tokenize("mq += _R*2000 ")));
+    term.addExpression(construct(tokenize("s -= 1/(~mq+0.1*~x) ")));
 
-    auto s = term.getDependencies();
+    std::unique_ptr<Node> expr = construct(tokenize("(_R) + x"));
+    auto min = expr->getRangeObject();
+    std::cout << "tokenized" << std::endl;
+    std::cout << "min is " << expr->getRangeObject().min->evaluate(gameState).getAsDouble() << std::endl;
+    std::cout << "max is " << expr->getRangeObject().max->evaluate(gameState).getAsDouble() << std::endl;
+
+    std::cout << "random number between " << expr->getRangeObject().min->insight(gameState, 0) << " and " << expr->getRangeObject().max->insight(gameState, 0) << std::endl;
+
+    auto s = term.getInputs();
     for (const std::string& varName : s) {
-        std::cout << varName << std::endl;
+        std::cout << "input: " << varName << std::endl;
+    }
+
+    s = term.getDependencies();
+    for (const std::string& varName : s) {
+        std::cout << "dependencies: " << varName << std::endl;
     }
 
     std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
     VariableChanges changes = term.simulate(gameState);
-    changes.print();
+    printf("changes: ");
+    std::cout << changes.insight() << std::endl;
+    printf("\n");
     gameState.applyChanges(changes);
-    std::cout << "is condition met? " << term.isConditionMet(gameState) << std::endl;
+    std::cout << "is term unlocked? " << term.isUnlocked(gameState) << std::endl;
 
     std::cout << term.isUnlocked(gameState) << std::endl;
+
+    std::cout << term.insight(gameState) << std::endl;
 
     return 0;
 }

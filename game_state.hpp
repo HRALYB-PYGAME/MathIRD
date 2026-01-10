@@ -4,21 +4,28 @@
 #include "variable.hpp"
 #include <string>
 
+#define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
+
 class Node;
 
 class GameState{
     private:
         std::unordered_map<std::string, Variable> variables;
         std::unordered_map<std::string, std::shared_ptr<Node>> unlockConditions;
+        uint64_t currentSeed;
     public:
         GameState();
         double getScore();
         Variable* getVar(std::string name);
+        VariableValue getVarValue(std::string name);
+        double getVarValueAsDouble(std::string name);
         void applyChanges(VariableChanges changes);
         void updateVariables();
         bool isVariableUnlocked(std::string name);
         void addVariable(std::string name, Variable var, std::shared_ptr<Node> condition);
         void printUnlocked();
+        double getCurrentrandom();
+        void step();
 };
 
 #endif

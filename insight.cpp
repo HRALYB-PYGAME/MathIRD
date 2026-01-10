@@ -5,6 +5,10 @@ using namespace std::string_literals;
 std::string addInsight      (Node& left, Node& right, GameState& gameState, int level){
     std::string leftInsight = left.insight(gameState, level+1);
     std::string rightInsight = right.insight(gameState, level+1);
+    if (left.isConstant(gameState) && left.evaluate(gameState).getAsDouble() == 0)
+        return rightInsight;
+    if (right.isConstant(gameState) && right.evaluate(gameState).getAsDouble() == 0)
+        return leftInsight;
     if (left.isConstant(gameState) && right.isConstant(gameState))
         return formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble());
     if (level <= 1)
@@ -23,7 +27,6 @@ std::string subtractInsight (Node& left, Node& right, GameState& gameState, int 
 }
 
 std::string multiplyInsight (Node& left, Node& right, GameState& gameState, int level){
-    double leftValue = left.evaluate(gameState).getAsDouble();
     double rightValue = right.evaluate(gameState).getAsDouble();
     std::string leftInsight = left.insight(gameState, level+1);
     std::string rightInsight = right.insight(gameState, level+1);

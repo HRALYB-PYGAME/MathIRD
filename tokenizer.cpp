@@ -195,6 +195,7 @@ int getPrecedence(Operand oper){
         return -1;
         break;
     }
+    return 0;
 }
 
 enum class TokenizeState{
@@ -220,7 +221,7 @@ std::vector<Token> tokenize(std::string text){
     std::string acc = "";
     std::vector<Token> tokens;
 
-    for(int i=0; i<text.length(); i++){
+    for(size_t i=0; i<text.length(); i++){
         char c = text[i];
         switch(state){
         case TokenizeState::Empty:
