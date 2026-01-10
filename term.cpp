@@ -7,11 +7,23 @@ bool Term::isConditionMet(GameState& gameState){
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     GameState tmpState = gameState;
-    for(int i=0; i<this->expressions.size(); i++){
+    for(size_t i=0; i<this->expressions.size(); i++){
         changes = changes.add(this->expressions[i]->simulate(tmpState));
         tmpState.applyChanges(changes);
     }
     return changes;
+}
+
+std::string Term::insight(GameState& gameState){
+    std::string insight;
+    VariableChanges simulationResult = this->simulate(gameState);
+    insight.append("Immediate changes:\n");
+    insight.append(simulationResult.insight() + "\n");
+    insight.append("if " + condition->insight(gameState, 0) + "\n");
+    for(size_t i=0; i<expressions.size(); i++){
+        insight.append(expressions[i]->insight(gameState, 0) + "\n");
+    }
+    return insight;
 }
 
 void Term::setCondition(std::unique_ptr<Node> condition) {
@@ -22,15 +34,24 @@ void Term::setCondition(std::unique_ptr<Node> condition) {
 void Term::addExpression(std::unique_ptr<Node> expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
     updateDependencies();
+    updateInputs();
 }
 
 void Term::updateDependencies(){
     dependencies.clear();
     auto condDeps = condition->getDependencies();
     dependencies.insert(condDeps.begin(), condDeps.end());
-    for (int i=0; i<expressions.size(); i++){
+    for (size_t i=0; i<expressions.size(); i++){
         auto exprDeps = expressions[i]->getDependencies();
         dependencies.insert(exprDeps.begin(), exprDeps.end());
+    }
+}
+
+void Term::updateInputs(){
+    inputs.clear();
+    for (size_t i=0; i<expressions.size(); i++){
+        auto exprIns = expressions[i]->getInputs(true);
+        inputs.insert(exprIns.begin(), exprIns.end());
     }
 }
 
@@ -40,8 +61,4 @@ bool Term::isUnlocked(GameState& gameState){
             return false;
     }
     return true;
-    // get all variables thats dependant
-    // check if all are unlocked
-
-    // maybe the variables should be stored somewhere
 }

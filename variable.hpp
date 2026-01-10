@@ -24,8 +24,8 @@ ScoreParams getScoreParams(double knee, double offset, Polarity polarity);
 class Variable {
     private:
         std::string name;
-        ScoreParams scoreParams;
         VariableValue value;
+        ScoreParams scoreParams;
         bool unlocked;
     public:
         Variable(std::string name, VariableValue value, ScoreParams scoreParams): 
