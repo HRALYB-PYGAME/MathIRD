@@ -1,5 +1,7 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17
+CXXFLAGS = -Wall -Wextra -std=c++17 -I./raylib/include
+# -L tells the linker where to look for the file, -Wl,-rpath tells the program where to look when it RUNS
+LDFLAGS = -L./raylib/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -Wl,-rpath,./raylib/lib
 BUILD_DIR = build
 TARGET = $(BUILD_DIR)/MathIRD
 
@@ -12,23 +14,19 @@ SRCS = main.cpp \
        insight.cpp \
        term.cpp \
        utils.cpp \
-	   rangeobject.cpp \
-	   button.cpp
+       rangeobject.cpp \
+       button.cpp
 
-# This transforms 'main.cpp' into 'build/main.o'
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
 
 all: $(TARGET)
 
-# Link the objects into the final executable
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
-# Rule for compiling .cpp to .o inside the build directory
 $(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Create the build directory if it doesn't exist
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 

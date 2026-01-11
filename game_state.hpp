@@ -26,6 +26,7 @@ class GameState{
         std::unordered_map<std::string, Variable> variables;
         std::unordered_map<std::string, std::shared_ptr<Node>> unlockConditions;
         uint64_t currentSeed;
+        double forcedRandom = -1;
 
         std::unordered_map<std::string, std::vector<ConditionProbability>> probabilities;
         std::string currentTerm;
@@ -53,6 +54,9 @@ class GameState{
         void setCurrentTerm(std::string name) {currentTerm = name; currentIndex = 0;};
         void setCurrentIndex(size_t index) {currentIndex = index;};
         void incrementCurrentIndex() {currentIndex++;};
+
+        void forceRandom(double val) { forcedRandom = val; };
+        void freeRandom() { forcedRandom = -1; };
 };
 
 #endif

@@ -76,10 +76,13 @@ double GameState::insertNewConditionResult(bool result){
 }
 
 VariableValue GameState::getVarValue(std::string name){
-    if (name == "_R")
+    if (name == "_R"){
+        if (forcedRandom != -1) return VariableValue(forcedRandom);
         return VariableValue(currentSeed/RANDOM_MAX);
+    }
     if (name == "_NR"){
         step();
+        if (forcedRandom != -1) return VariableValue(forcedRandom);
         return VariableValue(currentSeed/RANDOM_MAX);
     }
     if (this->variables.find(name) != this->variables.end())
@@ -88,10 +91,13 @@ VariableValue GameState::getVarValue(std::string name){
 }
 
 double GameState::getVarValueAsDouble(std::string name){
-    if (name == "_R")
+    if (name == "_R"){
+        if (forcedRandom != -1) return forcedRandom; 
         return currentSeed/RANDOM_MAX;
+    }
     if (name == "_NR"){
         step();
+        if (forcedRandom != -1) return forcedRandom;
         return currentSeed/RANDOM_MAX;
     }
     if (this->variables.find(name) != this->variables.end())
