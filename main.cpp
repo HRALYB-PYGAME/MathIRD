@@ -2,8 +2,19 @@
 #include "game_state.hpp"
 #include "expressiontree.hpp"
 #include "term.hpp"
+#include "button.hpp"
+#include "raylib.h"
 
 int main(){
+    InitWindow(800, 450, "test");
+    SetTargetFPS(60);
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+            ClearBackground(RAYWHITE);
+            DrawText("If you see this, Raylib is working!", 190, 200, 20, LIGHTGRAY);
+        EndDrawing();
+    }
+
     GameState gameState;
     gameState.addVariable("x", Variable("x", 0.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
     gameState.addVariable("y", Variable("y", 5.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
@@ -71,6 +82,20 @@ int main(){
     auto expr2 = construct(tokenize("x += _R*_R*4"));
 
     std::cout << expr2->insight(gameState, 0) << "\n";
+
+    gameState.forceRandom(0.5);
+    std::cout << gameState.getVarValueAsDouble("_R") << std::endl;
+    std::cout << gameState.getVarValueAsDouble("_NR") << std::endl;
+    std::cout << gameState.getVarValue("_R").getAsDouble() << std::endl;
+    std::cout << gameState.getVarValue("_NR").getAsDouble() << std::endl;
+    std::cout << expr2->simulate(gameState).insight() << "\n";
+    gameState.freeRandom();
+
+    Button b;
+    b.setDisplay("{x} / {y}");
+    std::cout << "bdisplay: " << b.getDisplay(gameState) << std::endl;
+
+    CloseWindow();
 
     return 0;
 }
