@@ -15,6 +15,7 @@ VariableChanges Term::simulate(GameState& gameState){
 }
 
 std::string Term::insight(GameState& gameState){
+    gameState.setCurrentTerm(this->name);
     std::string insight;
     VariableChanges simulationResult = this->simulate(gameState);
     insight.append("Immediate changes:\n");
@@ -22,6 +23,8 @@ std::string Term::insight(GameState& gameState){
     insight.append("if " + condition->insight(gameState, 0) + "\n");
     for(size_t i=0; i<expressions.size(); i++){
         insight.append(expressions[i]->insight(gameState, 0) + "\n");
+        if (expressions[i]->oper == Operand::If && expressions[i]->isRangeObject())
+            gameState.incrementCurrentIndex();
     }
     return insight;
 }

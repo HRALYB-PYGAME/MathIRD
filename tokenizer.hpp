@@ -6,6 +6,7 @@
 #include <iostream>
 
 enum class Operand{
+    NoOperand,
     Add, // +
     Subtract, // -
     Multiply, // *

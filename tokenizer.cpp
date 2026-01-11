@@ -89,6 +89,9 @@ void Token::print(){
                 case Operand::If:
                     std::cout << "(if)" << std::endl;
                     break;
+                case Operand::NoOperand:
+                    std::cout << "(?)" << std::endl;
+                    break;
             }
             break;
         case TokenType::Variable:
@@ -194,8 +197,9 @@ int getPrecedence(Operand oper){
     case Operand::RightPar:
         return -1;
         break;
+    default:
+        return 0;
     }
-    return 0;
 }
 
 enum class TokenizeState{
