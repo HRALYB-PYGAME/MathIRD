@@ -24,9 +24,16 @@ RangeObject::RangeObject(VariableValue val){
 }
 
 RangeObject::RangeObject(std::string str, bool soft){
-    this->min = std::make_unique<VariableNode>(VariableNode(str, soft));
-    this->max = std::make_unique<VariableNode>(VariableNode(str, soft));
-    this->distribution = nullptr;
+    if (str == "_R" || str == "_NR"){
+        this->min = std::make_unique<ConstantNode>(ConstantNode(0));
+        this->max = std::make_unique<ConstantNode>(ConstantNode(1));
+        this->distribution = std::make_unique<VariableNode>(VariableNode(str, soft));
+    }
+    else{
+        this->min = std::make_unique<VariableNode>(VariableNode(str, soft));
+        this->max = std::make_unique<VariableNode>(VariableNode(str, soft));
+        this->distribution = nullptr;
+    }
 }
 
 RangeObject::RangeObject(int min, int max){

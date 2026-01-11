@@ -53,6 +53,23 @@ bool OperandNode::isConstant(GameState& gameState){
     return false;
 }
 
+bool ConstantNode::isConstantValue([[maybe_unused]] GameState& gameState, double val){
+    if (this->val.getAsDouble() == val) return true;
+    return false;
+}
+
+bool VariableNode::isConstantValue(GameState& gameState, double val){
+    if (this->isConstant(gameState) && this->evaluate(gameState).getAsDouble() == val)
+        return true;
+    return false;
+}
+
+bool OperandNode::isConstantValue(GameState& gameState, double val){
+    if (this->isConstant(gameState) && this->evaluate(gameState).getAsDouble() == val)
+        return true;
+    return false;
+}
+
 VariableValue ConstantNode::evaluate([[maybe_unused]] GameState& gameState){
     return this->val;
 }
@@ -192,6 +209,15 @@ std::string VariableNode::insight(GameState& gameState, [[maybe_unused]] int lev
 }
 
 std::string OperandNode::insight(GameState& gameState, int level){
+    if (this->isRangeObject() && level != 0){
+        RangeObject ro = this->getRangeObject();
+        std::string distributionInsight = "";
+        if (ro.distribution->getType() != NodeType::Variable)
+            distributionInsight = ro.distribution->arithmeticalInsight();
+        return "random number between " + ro.min->insight(gameState, level+1) + " and " + ro.max->insight(gameState, level+1)
+            + " " + distributionInsight;
+    }
+
     if (isAssignment(oper) && this->left->isConstant(gameState)){
         return "";
     }
@@ -251,10 +277,93 @@ std::string OperandNode::insight(GameState& gameState, int level){
     case Operand::Max:
         return "maximum of " + leftInsight + " and " + rightInsight;
     case Operand::If:
+        if (left->isRangeObject()){
+            gameState.insertNewConditionResult(left->evaluate(gameState).getAsBool());
+            double prob = gameState.insertNewConditionResult(left->evaluate(gameState).getAsBool());
+            return std::to_string((int)(prob*100)) + "% of the time " + rightInsight;
+        }
         return "if " + leftInsight + " then " + rightInsight;
     default:
         return "";
     }
+}
+
+std::string OperandNode::arithmeticalInsight(){
+    std::string operSymbol = "";
+    switch(oper){
+    case Operand::Add:
+        operSymbol = "+";
+        break;
+    case Operand::Subtract:
+        operSymbol = "-";
+        break;
+    case Operand::Multiply:
+        operSymbol = "*"; 
+        break;
+    case Operand::Divide:
+        operSymbol = "/";
+        break;
+    case Operand::Neg:
+        return "(-" + right->arithmeticalInsight() + ")";
+    case Operand::Assign:
+        operSymbol = "=";
+        break;
+    case Operand::AddAssign:
+        operSymbol = "+=";
+        break;
+    case Operand::SubAssign:
+        operSymbol = "-=";
+        break;
+    case Operand::MulAssign:
+        operSymbol = "*=";
+        break;
+    case Operand::DivAssign:
+        operSymbol = "/=";
+        break;
+    case Operand::Equal:
+        operSymbol = "==";
+        break;
+    case Operand::NotEqual:
+        operSymbol = "!=";
+        break;
+    case Operand::Less:
+        operSymbol = "<";
+        break;
+    case Operand::Greater:
+        operSymbol = ">";
+        break;
+    case Operand::LessOrEqual:
+        operSymbol = "<=";
+        break;
+    case Operand::GreaterOrEqual:
+        operSymbol = ">=";
+        break;
+    case Operand::Modulo:
+        operSymbol = "%";
+        break;
+    case Operand::Power:
+        operSymbol = "^";
+        break;
+    case Operand::And:
+        operSymbol = "&&";
+        break;
+    case Operand::Or:
+        operSymbol = "||";
+        break;
+    case Operand::Not:
+        return "(!" + right->arithmeticalInsight() + ")";
+    case Operand::Abs:
+        return "|" + right->arithmeticalInsight() + "|";
+    case Operand::Min:
+        return "min(" + left->arithmeticalInsight() + ", " + right->arithmeticalInsight() + ")";
+    case Operand::Max:
+        return "max(" + left->arithmeticalInsight() + ", " + right->arithmeticalInsight() + ")";
+    case Operand::If:
+        return "if " + left->arithmeticalInsight() + " do " + right->arithmeticalInsight();
+    default:
+        return "";
+    }
+    return "(" + left->arithmeticalInsight() + operSymbol + right->arithmeticalInsight() + ")";
 }
 
 void createSubtree(std::stack<std::unique_ptr<Node>>& nodeStack, Operand oper){
@@ -339,3 +448,30 @@ RangeObject OperandNode::getRangeObject(){
     l.combine(r, oper); return l;
     //printf("4");
 };
+
+std::unique_ptr<Node> ConstantNode::getRandomDistribution() { 
+    return std::make_unique<GeneralConstantNode>(); 
+}
+
+std::unique_ptr<Node> VariableNode::getRandomDistribution() { 
+    if (this->var == "_R" or this->var == "_NR")
+        return std::make_unique<VariableNode>("_R", false);
+    return std::make_unique<GeneralConstantNode>(); 
+}
+
+std::unique_ptr<Node> OperandNode::getRandomDistribution() { 
+    std::unique_ptr<Node> leftRD  = this->left ->getRandomDistribution();
+    std::unique_ptr<Node> rightRD = this->right->getRandomDistribution();
+
+    if (leftRD->getType() == NodeType::GeneralConstant && rightRD->getType() == NodeType::GeneralConstant)
+        return std::make_unique<GeneralConstantNode>();
+    if (oper == Operand::Power)
+        return std::make_unique<OperandNode>(oper, std::move(leftRD), std::move(rightRD));
+    if (leftRD->getType() == NodeType::GeneralConstant)
+        return rightRD;
+    if (rightRD->getType() == NodeType::GeneralConstant)
+        return leftRD;
+    if (leftRD->getType() == NodeType::Variable && rightRD->getType() == NodeType::Variable && (oper == Operand::Add || oper == Operand::Subtract))
+        return std::make_unique<VariableNode>("_R", false);
+    return std::make_unique<OperandNode>(oper, std::move(leftRD), std::move(rightRD));
+}

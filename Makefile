@@ -12,7 +12,8 @@ SRCS = main.cpp \
        insight.cpp \
        term.cpp \
        utils.cpp \
-	   rangeobject.cpp
+	   rangeobject.cpp \
+	   button.cpp
 
 # This transforms 'main.cpp' into 'build/main.o'
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
@@ -41,5 +42,13 @@ run: $(TARGET)
 crun: $(TARGET)
 	clear
 	./$(TARGET)
+
+remake:
+	make clean
+	make
+
+rerun:
+	make clean
+	make run
 
 .PHONY: all clean run crun

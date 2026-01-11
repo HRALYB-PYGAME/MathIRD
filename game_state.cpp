@@ -67,6 +67,14 @@ void GameState::step(){
     currentSeed = currentSeed*multiplier + increment;
 }
 
+double GameState::insertNewConditionResult(bool result){
+    auto& vec = probabilities[currentTerm];
+    if (vec.size() >= currentIndex){
+        vec.resize(currentIndex+1);
+    }
+    return vec[currentIndex].update(result);
+}
+
 VariableValue GameState::getVarValue(std::string name){
     if (name == "_R")
         return VariableValue(currentSeed/RANDOM_MAX);

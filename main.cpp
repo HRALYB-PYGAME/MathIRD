@@ -29,8 +29,10 @@ int main(){
     term.addExpression(construct(tokenize("mq += _NR*2000 ")));
     term.addExpression(construct(tokenize("mq += _R*2000 ")));
     term.addExpression(construct(tokenize("s -= 1/(~mq+0.1*~x) ")));
+    term.addExpression(construct(tokenize("if[_NR>0.4, x+=1]")));
 
-    std::unique_ptr<Node> expr = construct(tokenize("(_R) + x"));
+    std::unique_ptr<Node> expr = construct(tokenize("((_R)*(_R) + 4)^2"));
+    std::cout << "distribution insight: " << expr->getRandomDistribution()->arithmeticalInsight() << std::endl;
     auto min = expr->getRangeObject();
     std::cout << "tokenized" << std::endl;
     std::cout << "min is " << expr->getRangeObject().min->evaluate(gameState).getAsDouble() << std::endl;
@@ -58,7 +60,17 @@ int main(){
 
     std::cout << term.isUnlocked(gameState) << std::endl;
 
+    for(size_t i = 0; i < 200; i++){
+        term.insight(gameState);
+    }
+
     std::cout << term.insight(gameState) << std::endl;
+
+    //term.insight()
+
+    auto expr2 = construct(tokenize("x += _R*_R*4"));
+
+    std::cout << expr2->insight(gameState, 0) << "\n";
 
     return 0;
 }
