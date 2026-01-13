@@ -4,6 +4,7 @@
 #include "term.hpp"
 #include "button.hpp"
 #include "raylib.h"
+#include <set>
 
 int main(){
     InitWindow(800, 450, "test");
@@ -15,11 +16,16 @@ int main(){
         EndDrawing();
     }
 
+    Variable x ("x",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("1"))),        VariableValue(0.0));
+    Variable y ("y",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("1"))),        VariableValue(5.0));
+    Variable s ("s",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("x >= 0"))),   VariableValue(5.0));
+    Variable mq("mq", getScoreParams(25, 0, Polarity::Normal),  std::move(construct(tokenize("x*y >= 0"))), VariableValue(5.0));
+
     GameState gameState;
-    gameState.addVariable("x", Variable("x", 0.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
-    gameState.addVariable("y", Variable("y", 5.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("1"))));
-    gameState.addVariable("s", Variable("s", 5.0, getScoreParams(100, 0, Polarity::Normal)), std::move(construct(tokenize("x >= 0"))));
-    gameState.addVariable("mq", Variable("mq", 5.0, getScoreParams(25, 0, Polarity::Normal)), std::move(construct(tokenize("x*y >= 0"))));
+    gameState.addVariable(&x);
+    gameState.addVariable(&y);
+    gameState.addVariable(&s);
+    gameState.addVariable(&mq);
     gameState.updateVariables();
     gameState.printUnlocked();
     std::vector<Token> v = tokenize("s = 10 * if[mq == 4, 5]"/*s -= 1/((mq+1)+0.1*~x)*/);
@@ -51,13 +57,13 @@ int main(){
 
     std::cout << "random number between " << expr->getRangeObject().min->insight(gameState, 0) << " and " << expr->getRangeObject().max->insight(gameState, 0) << std::endl;
 
-    auto s = term.getInputs();
-    for (const std::string& varName : s) {
+    auto& ss = term.getInputs();
+    for (const auto& varName : ss) {
         std::cout << "input: " << varName << std::endl;
     }
 
-    s = term.getDependencies();
-    for (const std::string& varName : s) {
+    ss = term.getDependencies();
+    for (const std::string& varName : ss) {
         std::cout << "dependencies: " << varName << std::endl;
     }
 

@@ -26,6 +26,14 @@ std::set<std::string> VariableNode::getInputs(bool root){
     return set;
 }
 
+std::set<std::string> VariableNode::getOutputs(bool root){
+    std::set<std::string> set;
+    if (!root){
+        set.insert(this->var);
+    }
+    return set;
+}
+
 std::set<std::string> OperandNode::getInputs(bool root){
     std::set<std::string> set;
     if (root){
@@ -35,10 +43,19 @@ std::set<std::string> OperandNode::getInputs(bool root){
         }
     }
     else {
-        auto leftIns = this->right->getInputs(false);
-        auto rightIns = this->left->getInputs(false);
+        auto leftIns = this->left->getInputs(false);
+        auto rightIns = this->right->getInputs(false);
         set.insert(leftIns.begin(), leftIns.end());
         set.insert(rightIns.begin(), rightIns.end());
+    }
+    return set;
+}
+
+std::set<std::string> OperandNode::getOutputs(bool root){
+    std::set<std::string> set;
+    if (isAssignment(this->oper)){
+        auto leftOuts = this->left->getOutputs(root);
+        set.insert(leftOuts.begin(), leftOuts.end());
     }
     return set;
 }
