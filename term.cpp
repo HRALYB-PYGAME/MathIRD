@@ -31,13 +31,19 @@ std::string Term::insight(GameState& gameState){
 
 void Term::setCondition(std::unique_ptr<Node> condition) {
     this->condition = std::move(condition);
-    updateDependencies();
+    // updateDependencies();
 }
 
 void Term::addExpression(std::unique_ptr<Node> expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
+    // updateDependencies();
+    // updateInputs();
+}
+
+void Term::updateSets(){
     updateDependencies();
     updateInputs();
+    updateOutputs();
 }
 
 void Term::updateDependencies(){
@@ -55,6 +61,14 @@ void Term::updateInputs(){
     for (size_t i=0; i<expressions.size(); i++){
         auto exprIns = expressions[i]->getInputs(true);
         inputs.insert(exprIns.begin(), exprIns.end());
+    }
+}
+
+void Term::updateOutputs(){
+    outputs.clear();
+    for (size_t i=0; i<expressions.size(); i++){
+        auto exprOuts = expressions[i]->getOutputs(true);
+        outputs.insert(exprOuts.begin(), exprOuts.end());
     }
 }
 

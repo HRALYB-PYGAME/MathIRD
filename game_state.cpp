@@ -5,54 +5,58 @@
 GameState::GameState(){
 }
 
-double GameState::getScore(){
+double GameState::getTotalScore(){
     double score = 0;
-    for (auto& [name, var] : this->variables){
-        score += var.getScore();
+    for (auto& [name, varEntry] : variables){
+        score += varEntry.getScore();
     }
     return score;
 }
 
 Variable* GameState::getVar(std::string name){
-    auto pair = this->variables.find(name); 
-    if (pair != this->variables.end()){
-        return &(pair->second);
-    }
-    else{
-        return nullptr;
-    }
+    if (variables.find(name) == variables.end()) return nullptr;
+    return variables.at(name).definition;
 }
 
 void GameState::applyChanges(VariableChanges changes){
     for (auto& [var, val] : changes.changes){
-        this->variables.at(var).add(val);
+        addVarValue(var, VariableValue(val));
     }
     this->updateVariables();
 }
 
+void GameState::setVarValue(std::string name, VariableValue value){
+    if (variables.find(name) != variables.end())
+        variables.at(name).value.set(value);
+}
+
+void GameState::addVarValue(std::string name, VariableValue value){
+    if (variables.find(name) != variables.end())
+        variables.at(name).value.add(value);
+}
+
 void GameState::updateVariables(){
-    for (auto& [name, cond] : this->unlockConditions){
-        if (!isVariableUnlocked(name) && cond->evaluate(*this).getAsBool()){
-            this->variables.at(name).unlock();
+    for (auto& [name, entry] : variables){
+        if (!isVariableUnlocked(name) && entry.definition->unlockCondition->evaluate(*this).getAsBool()){
+            entry.unlock();
         }
     }
 }
 
 bool GameState::isVariableUnlocked(std::string name){
-    if (name[0] == '_') return true;
-    if (this->variables.find(name) == this->variables.end())
-        return false;
-    return this->variables.at(name).isUnlocked();
+    if (variables.find(name) == variables.end()) return false;
+    return variables.at(name).isUnlocked;
 }
 
-void GameState::addVariable(std::string name, Variable var, std::shared_ptr<Node> condition){
-    this->variables.emplace(name, var);
-    this->unlockConditions[name] = condition;
+void GameState::addVariable(Variable* variable){
+    VariableEntry entry = {variable, variable->defaultValue, false};
+    std::string name = variable->name;
+    variables.insert({name, entry});
 }
 
 void GameState::printUnlocked(){
-    for (auto& [name, var] : this->variables){
-        if (var.isUnlocked())
+    for (auto& [name, entry] : variables){
+        if (entry.isUnlocked)
             std::cout << "unlocked: " << name << std::endl;
     }
 }
@@ -86,7 +90,7 @@ VariableValue GameState::getVarValue(std::string name){
         return VariableValue(currentSeed/RANDOM_MAX);
     }
     if (this->variables.find(name) != this->variables.end())
-        return variables.at(name).getValue();
+        return variables.at(name).value;
     return VariableValue(0.f);
 }
 
@@ -101,6 +105,6 @@ double GameState::getVarValueAsDouble(std::string name){
         return currentSeed/RANDOM_MAX;
     }
     if (this->variables.find(name) != this->variables.end())
-        return variables.at(name).getValue().getAsDouble();
+        return variables.at(name).value.getAsDouble();
     return 0.0;
 }

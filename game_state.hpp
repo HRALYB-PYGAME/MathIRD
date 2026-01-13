@@ -1,6 +1,7 @@
 #ifndef game_state_hpp
 #define game_state_hpp
 #include <unordered_map>
+#include "variable_value.hpp"
 #include "variable.hpp"
 #include <vector>
 #include <string>
@@ -21,10 +22,29 @@ struct ConditionProbability{
     };
 };
 
+struct VariableEntry {
+    Variable* definition;
+    VariableValue value;
+    bool isUnlocked;
+
+    double getScore(){
+        return definition->scoreParams.getScore(value.getAsDouble());
+    };
+
+    void unlock(){
+        isUnlocked = true;
+    };
+
+    void lock(){
+        isUnlocked = false;
+    };
+};
+
 class GameState{
     private:
-        std::unordered_map<std::string, Variable> variables;
-        std::unordered_map<std::string, std::shared_ptr<Node>> unlockConditions;
+        // std::unordered_map<std::string, Variable> variables;
+        std::unordered_map<std::string, VariableEntry> variables;
+
         uint64_t currentSeed;
         double forcedRandom = -1;
 
@@ -33,14 +53,16 @@ class GameState{
         size_t currentIndex;
     public:
         GameState();
-        double getScore();
+        double getTotalScore();
 
         // Variables
         Variable* getVar(std::string name);
         VariableValue getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);
-        void addVariable(std::string name, Variable var, std::shared_ptr<Node> condition);
+        void setVarValue(std::string name, VariableValue value);
+        void addVarValue(std::string name, VariableValue value);
+        void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
 

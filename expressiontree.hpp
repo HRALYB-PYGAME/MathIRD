@@ -7,8 +7,8 @@
 #include <memory>
 #include <set>
 
-#define RED "\x1B[31m"
-#define RESET "\033[0m"
+#define REDTXT  "\x1B[31m"
+#define RESET   "\033[0m"
 #define WHITEBG "\033[47m"
 #define REVERSE "\033[30;47m"
 
@@ -33,6 +33,7 @@ struct Node{
 
     virtual std::set<std::string> getDependencies() = 0;
     virtual std::set<std::string> getInputs(bool root) = 0;
+    virtual std::set<std::string> getOutputs(bool root) = 0;
 
     virtual bool isConstant(GameState& gameState) = 0;
     virtual bool isConstantValue(GameState& gameState, double val) = 0;
@@ -56,6 +57,7 @@ struct ConstantNode : public Node{
 
     std::set<std::string> getDependencies() override { std::set<std::string> deps; return deps; };
     std::set<std::string> getInputs([[maybe_unused]] bool root) override { std::set<std::string> deps; return deps; };
+    std::set<std::string> getOutputs([[maybe_unused]] bool root) override { std::set<std::string> deps; return deps; };
 
     bool isConstant([[maybe_unused]] GameState& gameState) override {return true;};
     bool isConstantValue([[maybe_unused]] GameState& gameState, double val) override;
@@ -89,6 +91,7 @@ struct VariableNode : public Node{
 
     std::set<std::string> getDependencies() override;
     std::set<std::string> getInputs(bool root) override;
+    std::set<std::string> getOutputs(bool root) override;
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
@@ -113,6 +116,7 @@ struct OperandNode : public Node{
 
     std::set<std::string> getDependencies() override;
     std::set<std::string> getInputs(bool root) override;
+    std::set<std::string> getOutputs([[maybe_unused]] bool root) override;
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;

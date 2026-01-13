@@ -10,6 +10,7 @@ private:
     std::vector<std::unique_ptr<Node>> expressions;
     std::set<std::string> dependencies;
     std::set<std::string> inputs;
+    std::set<std::string> outputs;
     std::string name;
 public:
     Term(std::string name): name(name) {};
@@ -20,11 +21,14 @@ public:
     VariableChanges simulate(GameState& gameState);
     void updateDependencies();
     void updateInputs();
+    void updateOutputs();
+    void updateSets();
     bool isUnlocked(GameState& gameState);
     std::string insight(GameState& gameState);
 
-    std::set<std::string> getDependencies() {return dependencies;};
-    std::set<std::string> getInputs()       {return inputs;};
+    std::set<std::string>& getDependencies() {return dependencies;};
+    std::set<std::string>& getInputs()       {return inputs;};
+    std::set<std::string>& getOutputs()      {return outputs;};
 };
 
 #endif
