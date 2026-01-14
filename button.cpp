@@ -39,3 +39,7 @@ void Button::setDisplay(std::string t){
             display.insert(display.end(), DisplayChunk(tmp, DisplayType::Var));
     }
 }
+
+std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
+    return {}; 
+}

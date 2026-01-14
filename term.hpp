@@ -1,10 +1,11 @@
 #ifndef term_hpp
 #define term_hpp
 #include "expressiontree.hpp"
+#include "insightable.hpp"
 #include <vector>
 #include <set>
 
-class Term{
+class Term : public Insightable{
 private:
     std::unique_ptr<Node> condition;
     std::vector<std::unique_ptr<Node>> expressions;
@@ -24,7 +25,7 @@ public:
     void updateOutputs();
     void updateSets();
     bool isUnlocked(GameState& gameState);
-    std::string insight(GameState& gameState);
+    std::vector<DisplayLine> insight(GameState& gameState, int level) override;
 
     std::set<std::string>& getDependencies() {return dependencies;};
     std::set<std::string>& getInputs()       {return inputs;};

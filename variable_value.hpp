@@ -3,7 +3,11 @@
 #include <variant>
 #include <string>
 #include <cmath>
+#include <vector>
 #include <unordered_map>
+#include "insightable.hpp"
+
+class GameState;
 
 enum class Type{
     INT, DOUBLE, BOOL
@@ -47,14 +51,14 @@ class VariableValue{
         void set(VariableValue v);
 };
 
-class VariableChanges{
+class VariableChanges : Insightable{
 public:
     std::unordered_map<std::string, double> changes;
 
     VariableChanges(): changes({}) {};
     VariableChanges add(const VariableChanges& varc) const;
     VariableChanges add(std::string var, double val) const;
-    std::string insight();
+    std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
 };
 
 #endif
