@@ -5,6 +5,7 @@
 #include "variable.hpp"
 #include <vector>
 #include <string>
+#include "insightable.hpp"
 
 #define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
 
@@ -52,6 +53,7 @@ class GameState{
         std::string currentTerm;
         size_t currentIndex;
     public:
+        std::vector<DisplayLine> currentInsight;
         GameState();
         double getTotalScore();
 
@@ -79,6 +81,11 @@ class GameState{
 
         void forceRandom(double val) { forcedRandom = val; };
         void freeRandom() { forcedRandom = -1; };
+
+        void setCurrentInsight(std::vector<DisplayLine> insight) {
+            //if (insight.size() > 0)
+                this->currentInsight = std::move(insight);
+        };
 };
 
 #endif

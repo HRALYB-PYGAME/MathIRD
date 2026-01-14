@@ -25,3 +25,16 @@ double ScoreParams::getScore(double val){
 ScoreParams getScoreParams(double knee, double offset, Polarity polarity) {
     return {knee, offset, polarity};
 }
+
+Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, VariableValue defaultValue)
+    : name(std::move(name)), 
+      scoreParams(scoreParams), 
+      unlockCondition(std::move(unlockCondition)), 
+      defaultValue(defaultValue) 
+{
+    
+}
+
+std::vector<DisplayLine> Variable::insight(GameState& gameState, int level){
+    return {};
+}

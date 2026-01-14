@@ -1,6 +1,7 @@
 #include "variable_value.hpp"
 #include "utils.hpp"
 #include <iostream>
+#include "game_state.hpp"
 
 int VariableValue::getInt() const{
     return std::get<int>(this->value);
@@ -144,10 +145,18 @@ VariableChanges VariableChanges::add(std::string var, double val) const{
     return result;
 }
 
-std::string VariableChanges::insight(){
-    std::string insight;
-    for (auto& [var, delta] : this->changes){
-        insight += var + ": " + formatDouble(delta) + "\n";
+std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level){
+    std::vector<DisplayChunk> chunks;
+    for (auto& [name, delta] : this->changes){
+        DisplayChunk valChunk(name, DisplayType::Var);
+        DisplayChunk varChunk(name, DisplayType::Text);
+        varChunk.setHover({ valChunk });
+        varChunk.setLink(gameState.getVar(name));
+        chunks.push_back(varChunk);
+
+        DisplayChunk deltaChunk(": " + formatDouble(delta) + "\n", DisplayType::Text);
+        chunks.push_back(deltaChunk);
     }
-    return insight;
+
+    return { DisplayLine(chunks) };
 }

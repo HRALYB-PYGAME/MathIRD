@@ -14,19 +14,31 @@ VariableChanges Term::simulate(GameState& gameState){
     return changes;
 }
 
-std::string Term::insight(GameState& gameState){
+std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     gameState.setCurrentTerm(this->name);
-    std::string insight;
+    std::vector<DisplayLine> lines;
+    std::vector<DisplayChunk> chunks;
     VariableChanges simulationResult = this->simulate(gameState);
-    insight.append("Immediate changes:\n");
-    insight.append(simulationResult.insight() + "\n");
-    insight.append("if " + condition->insight(gameState, 0) + "\n");
+
+    /*chunks.push_back(DisplayChunk("Immediate changes:", DisplayType::Text));
+    lines.insert(lines.back(), chunks.begin(), chunks.back());
+    std::vector<DisplayChunk> simulationChunks = simulationResult.insight(gameState, level);
+    chunks.insert(chunks.end(), simulationChunks.begin(), simulationChunks.end());
+    chunks.push_back(DisplayChunk("\n", DisplayType::Text));
+
+    chunks.push_back(DisplayChunk("If ", DisplayType::Text));
+    std::vector<DisplayChunk> conditionChunks = condition->insight(gameState, level);
+    chunks.insert(chunks.end(), conditionChunks.begin(), conditionChunks.end());
+    chunks.push_back(DisplayChunk("\n", DisplayType::Text));
+
     for(size_t i=0; i<expressions.size(); i++){
-        insight.append(expressions[i]->insight(gameState, 0) + "\n");
+        std::vector<DisplayChunk> expressionChunks = expressions[i]->insight(gameState, level);
+        chunks.insert(chunks.end(), expressionChunks.begin(), expressionChunks.end());
+        chunks.push_back(DisplayChunk("\n", DisplayType::Text));
         if (expressions[i]->oper == Operand::If && expressions[i]->isRangeObject())
             gameState.incrementCurrentIndex();
-    }
-    return insight;
+    }*/
+    return lines;
 }
 
 void Term::setCondition(std::unique_ptr<Node> condition) {

@@ -2,23 +2,36 @@
 using namespace std::string_literals;
 
 
-std::string addInsight      (Node& left, Node& right, GameState& gameState, int level){
-    std::string leftInsight = left.insight(gameState, level+1);
-    std::string rightInsight = right.insight(gameState, level+1);
-    if (left.isConstantValue(gameState, 0))
-        return rightInsight;
-    if (right.isConstantValue(gameState, 0))
-        return leftInsight;
-    if (left.isConstant(gameState) && right.isConstant(gameState))
-        return formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble());
-    if (level <= 1)
-        return "the sum of "s + REVERSE + leftInsight + RESET + " and " + REVERSE + rightInsight + RESET;
-    return "("s + leftInsight + " plus " + rightInsight + ")";
+std::vector<DisplayChunk> addInsight (Node& left, Node& right, GameState& gameState, int level){
+    return {};
+    // std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
+    // std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
+    // std::vector<DisplayChunk> s;
+    // if (left.isConstantValue(gameState, 0))
+    //     return rightInsight;
+    // if (right.isConstantValue(gameState, 0))
+    //     return leftInsight;
+    // if (left.isConstant(gameState) && right.isConstant(gameState))
+    //     return { DisplayChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()), DisplayType::Text) };
+    // if (level <= 1){
+    //     // s.appendTextChunk("the sum of ");
+    //     // appendChunks(s, leftInsight);
+    //     // appendTextChunk(s, " and ");
+    //     // appendChunks(s, rightInsight);
+    //     return s;
+    // }
+    // // appendTextChunk(s, "(");
+    // // appendChunks(s, leftInsight);
+    // // appendTextChunk(s, " plus ");
+    // // appendChunks(s, rightInsight);
+    // // appendTextChunk(s, ")");
+    // return s;
 }
 
-std::string subtractInsight (Node& left, Node& right, GameState& gameState, int level){
-    std::string leftInsight = left.insight(gameState, level+1);
-    std::string rightInsight = right.insight(gameState, level+1);
+std::vector<DisplayChunk> subtractInsight (Node& left, Node& right, GameState& gameState, int level){
+    return {};
+    /*std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
+    std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
     if (left.isConstantValue(gameState, 0))
         return rightInsight;
     if (right.isConstantValue(gameState, 0))
@@ -27,13 +40,14 @@ std::string subtractInsight (Node& left, Node& right, GameState& gameState, int 
         return formatDouble(left.evaluate(gameState).getAsDouble() - right.evaluate(gameState).getAsDouble());
     if (level <= 1)
         return REVERSE + leftInsight + RESET + " decreased by " + REVERSE + rightInsight + RESET;
-    return "(" + leftInsight + " minus " + rightInsight + ")";
+    return "(" + leftInsight + " minus " + rightInsight + ")";*/
 }
 
-std::string multiplyInsight (Node& left, Node& right, GameState& gameState, int level){
-    double rightValue = right.evaluate(gameState).getAsDouble();
-    std::string leftInsight = left.insight(gameState, level+1);
-    std::string rightInsight = right.insight(gameState, level+1);
+std::vector<DisplayChunk> multiplyInsight (Node& left, Node& right, GameState& gameState, int level){
+    return {};
+    /*double rightValue = right.evaluate(gameState).getAsDouble();
+    std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
+    std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
     if (left.isConstantValue(gameState, 1))
         return rightInsight;
     if (right.isConstantValue(gameState, 1))
@@ -49,14 +63,15 @@ std::string multiplyInsight (Node& left, Node& right, GameState& gameState, int 
         }
         return "the product of "s + REVERSE + leftInsight + RESET + " and " + REVERSE + rightInsight + RESET;
     }
-    return "(" + leftInsight + " times " + rightInsight + ")";
+    return "(" + leftInsight + " times " + rightInsight + ")";*/
 }
 
-std::string divideInsight   (Node& left, Node& right, GameState& gameState, int level){
-    double leftValue = left.evaluate(gameState).getAsDouble();
+std::vector<DisplayChunk> divideInsight (Node& left, Node& right, GameState& gameState, int level){
+    return {};
+    /*double leftValue = left.evaluate(gameState).getAsDouble();
     double rightValue = right.evaluate(gameState).getAsDouble();
-    std::string leftInsight = left.insight(gameState, level+1);
-    std::string rightInsight = right.insight(gameState, level+1);
+    std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
+    std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
     if (left.isConstant(gameState))
         return rightInsight;
     if (right.isConstant(gameState))
@@ -76,5 +91,5 @@ std::string divideInsight   (Node& left, Node& right, GameState& gameState, int 
         }
         return leftInsight + " divided by " + rightInsight;
     }
-    return "(" + leftInsight + "/" + rightInsight + ")";
+    return "(" + leftInsight + "/" + rightInsight + ")";*/
 }

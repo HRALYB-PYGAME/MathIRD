@@ -212,96 +212,41 @@ VariableValue OperandNode::evaluate(GameState& gameState){
     }
 }
 
-std::string ConstantNode::insight(GameState& gameState, [[maybe_unused]] int level){
-    double val = this->evaluate(gameState).getAsDouble();
-    return formatDouble(val)+RESET;
+std::vector<DisplayLine> Node::insight(GameState& gameState, int level){
+    return { };
 };
 
-std::string VariableNode::insight(GameState& gameState, [[maybe_unused]] int level){
-    std::string name = this->var;
-    if (!gameState.isVariableUnlocked(name))
-        return formatDouble(gameState.getVarValueAsDouble(name));
+std::vector<DisplayLine> ConstantNode::insight(GameState& gameState, [[maybe_unused]] int level){
     double val = this->evaluate(gameState).getAsDouble();
-    return name.append(" (").append(formatDouble(val)).append(")");
+    DisplayChunk c(formatDouble(val), DisplayType::Text);
+    return { DisplayLine({ c }) };
+};  
+
+std::vector<DisplayLine> GeneralConstantNode::insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level){
+    DisplayChunk c("C", DisplayType::Text);
+    return { DisplayLine({ c }) };
 }
 
-std::string OperandNode::insight(GameState& gameState, int level){
-    if (this->isRangeObject() && level != 0){
-        RangeObject ro = this->getRangeObject();
-        std::string distributionInsight = "";
-        if (ro.distribution->getType() != NodeType::Variable)
-            distributionInsight = ro.distribution->arithmeticalInsight();
-        return "random number between " + ro.min->insight(gameState, level+1) + " and " + ro.max->insight(gameState, level+1)
-            + " " + distributionInsight;
-    }
+std::vector<DisplayLine> VariableNode::insight(GameState& gameState, [[maybe_unused]] int level){
+    std::string name = this->var;
+    DisplayChunk c(name, DisplayType::Text);
+    DisplayChunk h(name, DisplayType::Var);
+    c.setLink(gameState.getVar(name));
+    c.setHover({ h });
+    return { DisplayLine({ c }) };
+}
 
-    if (isAssignment(oper) && this->left->isConstant(gameState)){
-        return "";
-    }
-
-    Operand oper = this->oper;
-    std::string leftInsight = "";
-    if (this->left != nullptr) leftInsight = this->left->insight(gameState, level+1);
-    std::string rightInsight = this->right->insight(gameState, level+1);
-
+std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
+    DisplayLine l;
+    auto leftInsight = left->insight(gameState, level+1);
+    auto rightInsight = right->insight(gameState, level+1);
     switch(oper){
-    case Operand::Add:
-        return addInsight(*this->left, *this->right, gameState, level);
-    case Operand::Subtract:
-        return subtractInsight(*this->left, *this->right, gameState, level);
-    case Operand::Multiply:
-        return multiplyInsight(*this->left, *this->right, gameState, level);    
-    case Operand::Divide:
-        return divideInsight(*this->left, *this->right, gameState, level);
-    case Operand::Neg:
-        return "negative " + rightInsight;
-    case Operand::Assign:
-        return "Set " + leftInsight + " to " + rightInsight;
-    case Operand::AddAssign:
-        return "Increase " + leftInsight + " by " + rightInsight;
-    case Operand::SubAssign:
-        return "Decrease " + leftInsight + " by " + rightInsight;
-    case Operand::MulAssign:
-        return "Multiply " + leftInsight + " by " + rightInsight;
-    case Operand::DivAssign:
-        return "Divide " + leftInsight + " by " + rightInsight;
-    case Operand::Equal:
-        return leftInsight + " is equal to " + rightInsight;
-    case Operand::NotEqual:
-        return leftInsight + " is not equal to " + rightInsight;
-    case Operand::Less:
-        return leftInsight + " is less than " + rightInsight;
-    case Operand::Greater:
-        return leftInsight + " is greater than " + rightInsight;
-    case Operand::LessOrEqual:
-        return leftInsight + " is at most " + rightInsight;
-    case Operand::GreaterOrEqual:
-        return leftInsight + " is at least " + rightInsight;
-    case Operand::Modulo:
-        return "remainder after dividing " + leftInsight + " by " + rightInsight;
-    case Operand::Power:
-        return leftInsight + " raised to the power of " + rightInsight;
-    case Operand::And:
-        return leftInsight + " and " + rightInsight;
-    case Operand::Or:
-        return leftInsight + " or " + rightInsight;
-    case Operand::Not:
-        return "not " + rightInsight;
-    case Operand::Abs:
-        return "the absolute value of " + rightInsight;
-    case Operand::Min:
-        return "minimum of " + leftInsight + " and " + rightInsight;
-    case Operand::Max:
-        return "maximum of " + leftInsight + " and " + rightInsight;
-    case Operand::If:
-        if (left->isRangeObject()){
-            gameState.insertNewConditionResult(left->evaluate(gameState).getAsBool());
-            double prob = gameState.insertNewConditionResult(left->evaluate(gameState).getAsBool());
-            return std::to_string((int)(prob*100)) + "% of the time " + rightInsight;
-        }
-        return "if " + leftInsight + " then " + rightInsight;
-    default:
-        return "";
+        case Operand::Add:
+            l.appendTextChunk("Sum of");
+            l.appendLines(leftInsight);
+            l.appendTextChunk("and");
+            l.appendLines(rightInsight);
+            return { l };
     }
 }
 

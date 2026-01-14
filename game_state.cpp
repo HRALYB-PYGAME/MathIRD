@@ -2,7 +2,7 @@
 #include "expressiontree.hpp"
 #include <iostream>
 
-GameState::GameState(){
+GameState::GameState() : currentInsight() {
 }
 
 double GameState::getTotalScore(){
