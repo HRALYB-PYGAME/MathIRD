@@ -86,6 +86,8 @@ class GameState{
             //if (insight.size() > 0)
                 this->currentInsight = std::move(insight);
         };
+
+        void updateVariableSets(Term* term);
 };
 
 #endif

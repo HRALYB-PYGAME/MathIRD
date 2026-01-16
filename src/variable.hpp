@@ -7,10 +7,11 @@
 #include <memory>
 #include "variable_value.hpp"
 #include "insightable.hpp"
+#include <set>
 
 class GameState;
-
 class Node;
+class Term;
 
 enum class Polarity{
     Normal,
@@ -37,9 +38,17 @@ class Variable : public Insightable{
         ScoreParams scoreParams;
         std::unique_ptr<Node> unlockCondition;
         VariableValue defaultValue;
+        std::set<Term*> asDependencyInTerms;
+        std::set<Term*> asInputInTerms;
+        std::set<Term*> asOutputInTerms;
         Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, VariableValue defaultValue);
 
         std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
+        void addTermAsDependency(Term* term);
+        void addTermAsInput(Term* term);
+        void addTermAsOutput(Term* term);
+
+        void printDependencies();
 };
 
 #endif

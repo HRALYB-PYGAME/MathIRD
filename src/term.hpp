@@ -30,6 +30,7 @@ public:
     std::set<std::string>& getDependencies() {return dependencies;};
     std::set<std::string>& getInputs()       {return inputs;};
     std::set<std::string>& getOutputs()      {return outputs;};
+    std::string getName() {return name;};
 };
 
 #endif

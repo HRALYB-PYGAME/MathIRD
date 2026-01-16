@@ -54,7 +54,7 @@ std::set<std::string> OperandNode::getInputs(bool root){
 std::set<std::string> OperandNode::getOutputs(bool root){
     std::set<std::string> set;
     if (isAssignment(this->oper)){
-        auto leftOuts = this->left->getOutputs(root);
+        auto leftOuts = this->left->getOutputs(false);
         set.insert(leftOuts.begin(), leftOuts.end());
     }
     return set;
@@ -238,8 +238,16 @@ std::vector<DisplayLine> VariableNode::insight(GameState& gameState, [[maybe_unu
 
 std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
     DisplayLine l;
-    auto leftInsight = left->insight(gameState, level+1);
-    auto rightInsight = right->insight(gameState, level+1);
+    std::vector<DisplayLine> leftInsight;
+    std::vector<DisplayLine> rightInsight;
+    if (level == 0){
+        leftInsight = left->insight(gameState, level+1);
+        rightInsight = right->insight(gameState, level+1);
+    }
+    else{
+        leftInsight = left->arithmeticalInsight(gameState, 0);
+        rightInsight = right->arithmeticalInsight(gameState, 0);
+    }
     switch(oper){
         case Operand::Add:
             l.appendTextChunk("Sum of");
@@ -247,10 +255,46 @@ std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
             l.appendTextChunk("and");
             l.appendLines(rightInsight);
             return { l };
+        case Operand::Assign:
+            l.appendTextChunk("Set");
+            l.appendLines(leftInsight);
+            l.appendTextChunk("to");
+            l.appendLines(rightInsight);
+            return { l };
     }
 }
 
-std::string OperandNode::arithmeticalInsight(){
+std::vector<DisplayLine> ConstantNode::arithmeticalInsight(GameState& gameState, int level){
+    DisplayLine line;
+    line.appendTextChunk(formatDouble(this->val.getAsDouble()));
+    return { line };
+}
+
+std::vector<DisplayLine> GeneralConstantNode::arithmeticalInsight(GameState& gameState, int level){
+    DisplayLine line;
+    line.appendTextChunk("C");
+    return { line };
+}
+
+std::vector<DisplayLine> VariableNode::arithmeticalInsight(GameState& gameState, int level){
+    DisplayLine line;
+    if (this->var == "_R" || this->var == "_NR"){
+        line.appendTextChunk("R");
+        return { line };
+    }
+    std::string name = this->var;
+    DisplayChunk c(name, DisplayType::Text);
+    DisplayChunk h(name, DisplayType::Var);
+    c.setLink(gameState.getVar(name));
+    c.setHover({ h });
+    line.appendChunk(c);
+    return { line };
+}
+
+
+std::vector<DisplayLine> OperandNode::arithmeticalInsight(GameState& gameState, int level){
+    DisplayLine line;
+    if (level == 0) line.appendWordGapChunk(0.25);
     std::string operSymbol = "";
     switch(oper){
     case Operand::Add:
@@ -266,7 +310,10 @@ std::string OperandNode::arithmeticalInsight(){
         operSymbol = "/";
         break;
     case Operand::Neg:
-        return "(-" + right->arithmeticalInsight() + ")";
+        line.appendTextChunk("(-");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(")");
+        break;
     case Operand::Assign:
         operSymbol = "=";
         break;
@@ -313,19 +360,47 @@ std::string OperandNode::arithmeticalInsight(){
         operSymbol = "||";
         break;
     case Operand::Not:
-        return "(!" + right->arithmeticalInsight() + ")";
+        line.appendTextChunk("(!");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(")");
+        break;
     case Operand::Abs:
-        return "|" + right->arithmeticalInsight() + "|";
+        line.appendTextChunk("|");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk("|");
+        break;
     case Operand::Min:
-        return "min(" + left->arithmeticalInsight() + ", " + right->arithmeticalInsight() + ")";
+        line.appendTextChunk("min(");
+        line.appendLines(left->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(",");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(")");
+        break;
     case Operand::Max:
-        return "max(" + left->arithmeticalInsight() + ", " + right->arithmeticalInsight() + ")";
+        line.appendTextChunk("max(");
+        line.appendLines(left->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(",");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(")");
+        break;
     case Operand::If:
-        return "if " + left->arithmeticalInsight() + " do " + right->arithmeticalInsight();
+        line.appendTextChunk("if");
+        line.appendLines(left->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk("do");
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        break;
     default:
-        return "";
+        break;
     }
-    return "(" + left->arithmeticalInsight() + operSymbol + right->arithmeticalInsight() + ")";
+    if (operSymbol != ""){
+        line.appendTextChunk("(");
+        line.appendLines(left->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(operSymbol);
+        line.appendLines(right->arithmeticalInsight(gameState, level+1));
+        line.appendTextChunk(")");
+    }
+    if (level == 0) line.appendWordGapChunk(1);
+    return {line};
 }
 
 void createSubtree(std::stack<std::unique_ptr<Node>>& nodeStack, Operand oper){
