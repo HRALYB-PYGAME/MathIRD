@@ -1,6 +1,8 @@
 #include "game_state.hpp"
 #include "expressiontree.hpp"
 #include <iostream>
+#include "variable.hpp"
+#include "term.hpp"
 
 GameState::GameState() : currentInsight() {
 }
@@ -107,4 +109,19 @@ double GameState::getVarValueAsDouble(std::string name){
     if (this->variables.find(name) != this->variables.end())
         return variables.at(name).value.getAsDouble();
     return 0.0;
+}
+
+void GameState::updateVariableSets(Term* term){
+    for(auto& name : term->getDependencies()){
+        if (variables.find(name) != variables.end())
+            variables.at(name).definition->addTermAsDependency(term);
+    }
+    for(auto& name : term->getInputs()){
+        if (variables.find(name) != variables.end())
+            variables.at(name).definition->addTermAsInput(term);
+    }
+    for(auto& name : term->getOutputs()){
+        if (variables.find(name) != variables.end())
+            variables.at(name).definition->addTermAsOutput(term);
+    }
 }

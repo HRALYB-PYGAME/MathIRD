@@ -29,9 +29,8 @@ struct Node : public Insightable{
     virtual VariableValue evaluate(GameState& gameState) = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
 
-    //virtual std::string insight(GameState& gameState, int level) = 0;
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
-    virtual std::string arithmeticalInsight() = 0; 
+    virtual std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) = 0; 
 
     virtual std::set<std::string> getDependencies() = 0;
     virtual std::set<std::string> getInputs(bool root) = 0;
@@ -55,7 +54,7 @@ struct ConstantNode : public Node{
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
-    std::string arithmeticalInsight() override { return formatDouble(val.getAsDouble()); };
+    std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() override { std::set<std::string> deps; return deps; };
     std::set<std::string> getInputs([[maybe_unused]] bool root) override { std::set<std::string> deps; return deps; };
@@ -74,7 +73,7 @@ struct GeneralConstantNode : ConstantNode{
     GeneralConstantNode() : ConstantNode(VariableValue(0.0)) {};
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
-    std::string arithmeticalInsight() override { return "C"; };
+    std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     NodeType getType() override { return NodeType::GeneralConstant; };
 };
@@ -89,7 +88,7 @@ struct VariableNode : public Node{
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
-    std::string arithmeticalInsight() override { if (var == "_R" || var == "_NR") return "R"; return var; };
+    std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() override;
     std::set<std::string> getInputs(bool root) override;
@@ -114,7 +113,7 @@ struct OperandNode : public Node{
     VariableChanges simulate(GameState& gameState) override;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
-    std::string arithmeticalInsight() override;
+    std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() override;
     std::set<std::string> getInputs(bool root) override;

@@ -4,6 +4,7 @@
 #include <memory>
 #include "utils.hpp"
 #include <vector>
+#include <iostream>
 
 class GameState;
 class Insightable;
@@ -17,23 +18,30 @@ enum class Alignment{
 enum class DisplayType{
     Text,
     Var,
-    NewLine
+    NewLine,
+    Indent,
+    WordGap
 };
 
 struct DisplayChunk{
-    std::string val;
+    std::string text;
     DisplayType type;
     std::vector<DisplayChunk> hover;
     Insightable* link;
+    double scalar;
 
-    DisplayChunk(std::string val, std::vector<DisplayChunk> hover = {}, Insightable* link = nullptr)
-        : val(std::move(val)), type(DisplayType::Text), hover(std::move(hover)), link(link) {};
-    DisplayChunk(std::string val, DisplayType type, std::vector<DisplayChunk> hover = {}, Insightable* link = nullptr)
-        : val(std::move(val)), type(type), hover(std::move(hover)), link(link) {};
+    DisplayChunk(std::string text, std::vector<DisplayChunk> hover = {}, Insightable* link = nullptr)
+        : text(std::move(text)), type(DisplayType::Text), hover(std::move(hover)), link(link) {};
+    DisplayChunk(std::string text, DisplayType type, std::vector<DisplayChunk> hover = {}, Insightable* link = nullptr)
+        : text(std::move(text)), type(type), hover(std::move(hover)), link(link) {};
+    DisplayChunk(double scalar, DisplayType type)
+        : scalar(scalar), type(type) {};
     std::string getDisplay(GameState& gameState);
 
     void setHover(std::vector<DisplayChunk> hover) { this->hover = std::move(hover); };
     void setLink(Insightable* link){ this->link = link; };
+
+    void printChunk();
 };
 
 struct DisplayLine{
@@ -49,11 +57,17 @@ struct DisplayLine{
     void appendChunk(DisplayChunk& chunk);
 
     void appendTextChunk(std::string name);
-
     void appendVarChunk(std::string name);
+    void appendIndentChunk(double mul);
+    void appendWordGapChunk(double mul);
+    void appendNewLineChunk();
 
     void appendLines(std::vector<DisplayLine> lines);
+
+    void printLine();
 };
+
+void printLines(std::vector<DisplayLine>& lines);
 
 class Insightable{
 public:
