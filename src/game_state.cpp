@@ -22,7 +22,7 @@ Variable* GameState::getVar(std::string name){
 
 void GameState::applyChanges(VariableChanges changes){
     for (auto& [var, val] : changes.changes){
-        addVarValue(var, VariableValue(val));
+        addVarValue(var, VariableValue(val.rand));
     }
     this->updateVariables();
 }

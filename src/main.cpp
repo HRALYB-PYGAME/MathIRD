@@ -98,9 +98,10 @@ int main(int argc, char** argv){
     gameState.addVariable(&s);
     gameState.addVariable(&mq);
 
-    std::unique_ptr<Node> expr = construct(tokenize("y=4+x+6 "));
+    std::unique_ptr<Node> expr = construct(tokenize("y=(4+x+6)*_NR "));
     std::unique_ptr<Node> cond = construct(tokenize("mq>=0"));
-    gameState.setCurrentInsight(expr->insight(gameState, 0));
+    std::vector<DisplayLine> i = expr->insight(gameState, 0);
+    gameState.setCurrentInsight(i);
     printLines(gameState.currentInsight);
 
     auto out = expr->getOutputs(true);
@@ -116,6 +117,10 @@ int main(int argc, char** argv){
     gameState.updateVariableSets(&term);
 
     gameState.getVar("y")->printDependencies();
+
+    VariableChanges vc;
+    vc = vc.add("x", 0, 5, 2);
+    std::cout << "length of changes: " << vc.changes.size() << std::endl;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

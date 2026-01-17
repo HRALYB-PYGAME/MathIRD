@@ -108,19 +108,24 @@ VariableChanges OperandNode::simulate(GameState& gameState){
 
     double varValue = gameState.getVarValueAsDouble(var);
 
-    double rightValue = this->right->evaluate(gameState).getAsDouble();
+    gameState.forceRandom(0);
+    double minValue = this->right->evaluate(gameState).getAsDouble();
+    gameState.forceRandom(1);
+    double maxValue = this->right->evaluate(gameState).getAsDouble();
+    gameState.freeRandom();
+    double randValue = this->right->evaluate(gameState).getAsDouble();
 
     switch(this->oper){
         case Operand::Assign:
-            return changes.add(var, rightValue-varValue);
+            return changes.add(var, minValue-varValue, maxValue-varValue, randValue-varValue);
         case Operand::AddAssign:
-            return changes.add(var, rightValue);
+            return changes.add(var, minValue, maxValue, randValue);
         case Operand::SubAssign:
-            return changes.add(var, -rightValue);
+            return changes.add(var, -minValue, -maxValue, -randValue);
         case Operand::MulAssign:
-            return changes.add(var, rightValue/varValue - varValue);
+            return changes.add(var, minValue/varValue - varValue, maxValue/varValue - varValue, randValue/varValue - varValue);
         case Operand::DivAssign:
-            return changes.add(var, rightValue*varValue - varValue);
+            return changes.add(var, minValue*varValue - varValue, maxValue*varValue - varValue, randValue*varValue - varValue);
         case Operand::If:
             if (left->evaluate(gameState).getAsBool())
                 return this->right->simulate(gameState);
@@ -250,7 +255,9 @@ std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
     }
     switch(oper){
         case Operand::Add:
-            l.appendTextChunk("Sum of");
+            return addInsight(*left, *right, gameState, level+1);
+        case Operand::Multiply:
+            l.appendTextChunk("Product of");
             l.appendLines(leftInsight);
             l.appendTextChunk("and");
             l.appendLines(rightInsight);
