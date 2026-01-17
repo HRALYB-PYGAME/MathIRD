@@ -51,13 +51,22 @@ class VariableValue{
         void set(VariableValue v);
 };
 
+struct Range{
+    double min;
+    double max;
+    double rand;
+
+    Range(double min, double max, double rand): min(min), max(max), rand(rand) {};
+};
+
 class VariableChanges : Insightable{
 public:
-    std::unordered_map<std::string, double> changes;
+    std::unordered_map<std::string, Range> changes;
 
     VariableChanges(): changes({}) {};
     VariableChanges add(const VariableChanges& varc) const;
     VariableChanges add(std::string var, double val) const;
+    VariableChanges add(std::string var, double min, double max, double rand) const;
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
 };
 

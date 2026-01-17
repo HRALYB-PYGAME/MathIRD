@@ -1,34 +1,35 @@
 #include "insight.hpp"
 using namespace std::string_literals;
 
+std::vector<DisplayLine> addInsight (Node& left, Node& right, GameState& gameState, int level){
+    std::vector<DisplayLine> leftInsight;
+    std::vector<DisplayLine> rightInsight;
+    if (level == 0){
+        leftInsight = left.insight(gameState, level+1);
+        rightInsight = right.insight(gameState, level+1);
+    }
+    else{
+        leftInsight = left.arithmeticalInsight(gameState, 0);
+        rightInsight = right.arithmeticalInsight(gameState, 0);
+    }
 
-std::vector<DisplayChunk> addInsight (Node& left, Node& right, GameState& gameState, int level){
-    return {};
-    // std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
-    // std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
-    // std::vector<DisplayChunk> s;
-    // if (left.isConstantValue(gameState, 0))
-    //     return rightInsight;
-    // if (right.isConstantValue(gameState, 0))
-    //     return leftInsight;
-    // if (left.isConstant(gameState) && right.isConstant(gameState))
-    //     return { DisplayChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()), DisplayType::Text) };
-    // if (level <= 1){
-    //     // s.appendTextChunk("the sum of ");
-    //     // appendChunks(s, leftInsight);
-    //     // appendTextChunk(s, " and ");
-    //     // appendChunks(s, rightInsight);
-    //     return s;
-    // }
-    // // appendTextChunk(s, "(");
-    // // appendChunks(s, leftInsight);
-    // // appendTextChunk(s, " plus ");
-    // // appendChunks(s, rightInsight);
-    // // appendTextChunk(s, ")");
-    // return s;
+    DisplayLine line;
+    if (left.isConstantValue(gameState, 0))
+        return rightInsight;
+    if (right.isConstantValue(gameState, 0))
+        return leftInsight;
+    if (left.isConstant(gameState) && right.isConstant(gameState)){
+        line.appendTextChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()));
+        return { line };
+    }
+    line.appendTextChunk("the sum of ");
+    line.appendLines(leftInsight);
+    line.appendTextChunk("and");
+    line.appendLines(rightInsight);
+    return { line };
 }
 
-std::vector<DisplayChunk> subtractInsight (Node& left, Node& right, GameState& gameState, int level){
+std::vector<DisplayLine> subtractInsight (Node& left, Node& right, GameState& gameState, int level){
     return {};
     /*std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
     std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
@@ -43,7 +44,7 @@ std::vector<DisplayChunk> subtractInsight (Node& left, Node& right, GameState& g
     return "(" + leftInsight + " minus " + rightInsight + ")";*/
 }
 
-std::vector<DisplayChunk> multiplyInsight (Node& left, Node& right, GameState& gameState, int level){
+std::vector<DisplayLine> multiplyInsight (Node& left, Node& right, GameState& gameState, int level){
     return {};
     /*double rightValue = right.evaluate(gameState).getAsDouble();
     std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
@@ -66,7 +67,7 @@ std::vector<DisplayChunk> multiplyInsight (Node& left, Node& right, GameState& g
     return "(" + leftInsight + " times " + rightInsight + ")";*/
 }
 
-std::vector<DisplayChunk> divideInsight (Node& left, Node& right, GameState& gameState, int level){
+std::vector<DisplayLine> divideInsight (Node& left, Node& right, GameState& gameState, int level){
     return {};
     /*double leftValue = left.evaluate(gameState).getAsDouble();
     double rightValue = right.evaluate(gameState).getAsDouble();

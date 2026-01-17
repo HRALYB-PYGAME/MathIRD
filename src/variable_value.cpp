@@ -128,20 +128,46 @@ VariableValue VariableValue::divide(const VariableValue& other) const{
 VariableChanges VariableChanges::add(const VariableChanges& varc) const{
     VariableChanges result = *this;
     for (auto& [var, delta] : varc.changes){
-        if (result.changes.find(var) != result.changes.end())
-            result.changes[var] += delta;
-        else
-            result.changes[var] = delta;
+        if (result.changes.find(var) != result.changes.end()){
+            result.changes.at(var).min += delta.min;
+            result.changes.at(var).max += delta.max;
+            result.changes.at(var).rand += delta.rand;
+        }
+        else{
+            result.changes.insert({var, Range(delta.min, delta.max, delta.rand)});
+        }
     }
     return result;
 }
 
 VariableChanges VariableChanges::add(std::string var, double val) const{
     VariableChanges result = *this;
-    if (result.changes.find(var) != result.changes.end())
-        result.changes[var] += val;
-    else
-        result.changes[var] = val;
+    if (result.changes.find(var) != result.changes.end()){
+        result.changes.at(var).min += val;
+        result.changes.at(var).max += val;
+        result.changes.at(var).rand += val;
+    }
+    else{
+        result.changes.insert({var, Range(val, val, val)});
+    }
+    return result;
+}
+
+VariableChanges VariableChanges::add(std::string var, double min, double max, double rand) const{
+    VariableChanges result = *this;
+    if (min > max){
+        double tmp = min;
+        min = max;
+        max = tmp;
+    }
+    if (result.changes.find(var) != result.changes.end()){
+        result.changes.at(var).min += min;
+        result.changes.at(var).max += max;
+        result.changes.at(var).rand += rand;
+    }
+    else{
+        result.changes.insert({var, Range(min, max, rand)});
+    }
     return result;
 }
 
@@ -153,9 +179,16 @@ std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& ga
         varChunk.setHover({ valChunk });
         varChunk.setLink(gameState.getVar(name));
         chunks.push_back(varChunk);
-
-        DisplayChunk deltaChunk(": " + formatDouble(delta) + "\n", DisplayType::Text);
-        chunks.push_back(deltaChunk);
+        if (delta.min == delta.max){
+            std::cout << ": " + formatDouble(delta.min) + "\n" << std::endl;
+            DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "\n", DisplayType::Text);
+            chunks.push_back(deltaChunk);
+        }
+        else{
+            std::cout << ": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n" << std::endl;
+            DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n", DisplayType::Text);
+            chunks.push_back(deltaChunk);
+        }
     }
 
     return { DisplayLine(chunks) };
