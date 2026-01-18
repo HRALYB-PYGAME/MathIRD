@@ -19,6 +19,7 @@ class VariableValue{
         Type type;
     
     public:
+        VariableValue() : value(0), type(Type::DOUBLE) {};
         VariableValue(int v) : value(v), type(Type::INT) {};
         VariableValue(double v) : value(v), type(Type::DOUBLE) {};
         VariableValue(bool v) : value(v), type(Type::BOOL) {};

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "variable.hpp"
 #include "term.hpp"
+#include "button.hpp"
 
 GameState::GameState() : currentInsight() {
 }
@@ -47,18 +48,49 @@ void GameState::updateVariables(){
 
 bool GameState::isVariableUnlocked(std::string name){
     if (variables.find(name) == variables.end()) return false;
-    return variables.at(name).isUnlocked;
+    return variables.at(name).unlocked;
 }
 
 void GameState::addVariable(Variable* variable){
-    VariableEntry entry = {variable->getDefaultValue(), false};
+    VariableEntry entry(variable->getDefaultValue());
     std::string name = variable->getName();
     variables.insert({name, entry});
 }
 
+VariableEntry::VariableEntry(VariableValue value){
+    this->value = value;
+    lock();
+}
+
+ButtonEntry::ButtonEntry(){
+    lock();
+}
+
+void GameState::addButton(Button* button){
+    ButtonEntry entry;
+    std::string name = button->getName();
+    buttons.insert({name, entry});
+}
+
+bool GameState::isButtonUnlocked(std::string name){
+    if (buttons.find(name) == buttons.end()) return false;
+    return buttons.at(name).unlocked;
+}
+
+void GameState::updateButtons(){
+    for (auto& [name, entry] : buttons){
+        Button* btn = Defs::getButton(name);
+
+        if (btn == nullptr) continue;
+        
+        if (!isButtonUnlocked(name) && btn->isUnlocked(*this))
+            entry.unlock();
+    }
+}
+
 void GameState::printUnlocked(){
     for (auto& [name, entry] : variables){
-        if (entry.isUnlocked)
+        if (entry.unlocked)
             std::cout << "unlocked: " << name << std::endl;
     }
 }

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++17 -I./raylib/include
+CXXFLAGS = -std=c++17 -Wall -I.libs/raylib/include
 # -L tells the linker where to look for the file, -Wl,-rpath tells the program where to look when it RUNS
 LDFLAGS = -L./raylib/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -Wl,-rpath,./raylib/lib
 BUILD_DIR = build
@@ -17,8 +17,7 @@ SRCS = main.cpp \
        utils.cpp \
        rangeobject.cpp \
        button.cpp \
-	   insightable.cpp \
-	   loader.cpp
+	   insightable.cpp
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
 

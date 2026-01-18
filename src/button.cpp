@@ -52,3 +52,11 @@ void Button::addTerm(std::unique_ptr<Term> term){
     term->parent = this;
     terms.push_back(std::move(term));
 }
+
+bool Button::isUnlocked(GameState& gameState){
+    for(auto& term : terms){
+        if (term->isUnlocked(gameState))
+            return true;
+    }
+    return false;
+}

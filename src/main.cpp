@@ -6,7 +6,6 @@
 #include "raylib.h"
 #include "insightable.hpp"
 #include <set>
-#include "loader.hpp"
 #include <memory>
 
 constexpr float fontSize = 20.0f;
@@ -85,7 +84,10 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
 
 int main(int argc, char** argv){
     std::cout << argv[0] << std::endl;
-    InitWindow(800, 450, "test");
+
+    Defs::loadVariables("assets/variables");
+
+    InitWindow(800, 450, "MathIRD");
     Vector2 cursor = { 100, 100 };
     auto color = BLACK;
     Variable x ("x",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("1"))),        VariableValue(0.0));
@@ -95,10 +97,10 @@ int main(int argc, char** argv){
 
     GameState gameState;
 
-    Defs::addVariable("x", std::move(x));
-    Defs::addVariable("y", std::move(y));
-    Defs::addVariable("s", std::move(s));
-    Defs::addVariable("mq", std::move(mq));
+    Defs::addVariable(std::move(x));
+    Defs::addVariable(std::move(y));
+    Defs::addVariable(std::move(s));
+    Defs::addVariable(std::move(mq));
 
     std::unique_ptr<Node> expr = construct(tokenize("y=(4+x+6)*_NR "));
     std::unique_ptr<Node> cond = construct(tokenize("mq>=0"));
@@ -127,9 +129,12 @@ int main(int argc, char** argv){
     Button b("testbtn");
     b.addTerm(std::make_unique<Term>(std::move(term)));
     b.setDisplay("{x}");
+    Defs::addButton(std::move(b));
+
+    Button* testbtn = Defs::getButton("testbtn");
 
     std::cout << "parent of terms\n";
-    for(auto& i : b.getTerms()){
+    for(auto& i : testbtn->getTerms()){
         std::cout << i->parent->getName() << std::endl;
     }
 
@@ -140,7 +145,7 @@ int main(int argc, char** argv){
 
     Defs::getVariable("x")->setHomeButton(&b);
     std::cout << "x's home button \n";
-    std::cout << Defs::getVariable("x")->homeButton->getName() << std::endl;
+    std::cout << Defs::getVariable("x")->getHomeButton()->getName() << std::endl;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
