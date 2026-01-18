@@ -269,7 +269,10 @@ std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
             l.appendTextChunk("to");
             l.appendLines(rightInsight);
             return { l };
+        default:
+            return { l };
     }
+    return { l };
 }
 
 std::vector<DisplayLine> ConstantNode::arithmeticalInsight(GameState& gameState, int level){

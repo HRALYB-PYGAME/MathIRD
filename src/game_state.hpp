@@ -23,23 +23,29 @@ struct ConditionProbability{
     };
 };
 
-struct VariableEntry {
-    VariableValue value;
-    bool isUnlocked;
-
+struct Entry {
+    bool unlocked = false;
     void unlock(){
-        isUnlocked = true;
+        unlocked = true;
     };
-
     void lock(){
-        isUnlocked = false;
+        unlocked = false;
     };
+};
+
+struct VariableEntry : Entry {
+    VariableValue value;
+    VariableEntry(VariableValue value);
+};
+
+struct ButtonEntry : Entry {
+    ButtonEntry();
 };
 
 class GameState{
     private:
-        // std::unordered_map<std::string, Variable> variables;
         std::unordered_map<std::string, VariableEntry> variables;
+        std::unordered_map<std::string, ButtonEntry> buttons;
 
         uint64_t currentSeed;
         double forcedRandom = -1;
@@ -53,7 +59,6 @@ class GameState{
         double getTotalScore();
 
         // Variables
-        //Variable* getVar(std::string name);
         VariableValue getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);
@@ -62,6 +67,11 @@ class GameState{
         void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
+
+        // Buttons
+        bool isButtonUnlocked(std::string name);
+        void updateButtons();
+        void addButton(Button* button);
 
         // Debug
         void printUnlocked();
@@ -78,8 +88,7 @@ class GameState{
         void freeRandom() { forcedRandom = -1; };
 
         void setCurrentInsight(std::vector<DisplayLine> insight) {
-            //if (insight.size() > 0)
-                this->currentInsight = std::move(insight);
+            this->currentInsight = std::move(insight);
         };
 
         void updateVariableSets(Term* term);

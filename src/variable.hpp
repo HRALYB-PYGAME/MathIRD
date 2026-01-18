@@ -35,14 +35,17 @@ class Variable : public Insightable{
     private:
         std::string name;
         ScoreParams scoreParams;
-        VariableValue defaultValue;
     public:
         std::unique_ptr<Node> unlockCondition;
+    private:
+        VariableValue defaultValue;
+        Button* homeButton;
+    public:
         std::set<Term*> asDependencyInTerms;
         std::set<Term*> asInputInTerms;
         std::set<Term*> asOutputInTerms;
         std::set<Button*> displayedAtButtons;
-        Button* homeButton;
+        
         Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, VariableValue defaultValue);
 
         std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
@@ -55,6 +58,7 @@ class Variable : public Insightable{
         std::string getName() {return name;};
         ScoreParams getScoreParams() {return scoreParams;};
         VariableValue getDefaultValue() {return defaultValue;};
+        Button* getHomeButton() {return homeButton;};
 
         void printDependencies();
 };

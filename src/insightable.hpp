@@ -34,8 +34,8 @@ struct DisplayChunk{
         : text(std::move(text)), type(DisplayType::Text), hover(std::move(hover)), link(link) {};
     DisplayChunk(std::string text, DisplayType type, std::vector<DisplayChunk> hover = {}, Insightable* link = nullptr)
         : text(std::move(text)), type(type), hover(std::move(hover)), link(link) {};
-    DisplayChunk(double scalar, DisplayType type)
-        : scalar(scalar), type(type) {};
+    DisplayChunk(DisplayType type, double scalar)
+        : type(type), scalar(scalar) {};
     std::string getDisplay(GameState& gameState);
 
     void setHover(std::vector<DisplayChunk> hover) { this->hover = std::move(hover); };

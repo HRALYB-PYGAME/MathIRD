@@ -57,12 +57,12 @@ void DisplayLine::appendVarChunk(std::string name){
 }
 
 void DisplayLine::appendIndentChunk(double mul){
-    DisplayChunk chunk(mul, DisplayType::Indent);
+    DisplayChunk chunk(DisplayType::Indent, mul);
     chunks.insert(chunks.end(), chunk);
 }
 
 void DisplayLine::appendWordGapChunk(double mul){
-    DisplayChunk chunk(mul, DisplayType::WordGap);
+    DisplayChunk chunk(DisplayType::WordGap, mul);
     chunks.insert(chunks.end(), chunk);
 }
 

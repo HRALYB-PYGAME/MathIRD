@@ -19,9 +19,11 @@ public:
 
     const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
     std::string& getName() {return name;};
+    
+    void setName(const std::string& name) {this->name = name;};
+    bool isUnlocked(GameState& gameState);
     // simulate
     // insight
-    // isUnlocked
     // 
 };
 
