@@ -25,7 +25,7 @@ struct GeneralConstantNode;
 
 struct Node : public Insightable{
     virtual ~Node() = default;
-    Operand oper = Operand::NoOperand;
+    
     virtual VariableValue evaluate(GameState& gameState) = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
 
@@ -45,7 +45,7 @@ struct Node : public Insightable{
     virtual std::unique_ptr<Node> getRandomDistribution() = 0;
 };
 
-struct ConstantNode : public Node{
+struct ConstantNode : Node{
     VariableValue val;
     Operand oper = Operand::NoOperand;
     ConstantNode(VariableValue val): val(val) {};
@@ -78,7 +78,7 @@ struct GeneralConstantNode : ConstantNode{
     NodeType getType() override { return NodeType::GeneralConstant; };
 };
 
-struct VariableNode : public Node{
+struct VariableNode : Node{
     std::string var;
     bool soft;
     Operand oper = Operand::NoOperand;

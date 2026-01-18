@@ -24,13 +24,8 @@ struct ConditionProbability{
 };
 
 struct VariableEntry {
-    Variable* definition;
     VariableValue value;
     bool isUnlocked;
-
-    double getScore(){
-        return definition->scoreParams.getScore(value.getAsDouble());
-    };
 
     void unlock(){
         isUnlocked = true;
@@ -58,7 +53,7 @@ class GameState{
         double getTotalScore();
 
         // Variables
-        Variable* getVar(std::string name);
+        //Variable* getVar(std::string name);
         VariableValue getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "expressiontree.hpp"
 #include "term.hpp"
+#include "button.hpp"
 
 double ScoreParams::getScore(double val){
     if (polarity == Polarity::Neutral)
@@ -50,6 +51,14 @@ void Variable::addTermAsInput(Term* term){
 
 void Variable::addTermAsOutput(Term* term){
     asOutputInTerms.insert(term);
+}
+
+void Variable::addButtonAsDisplay(Button* button){
+    displayedAtButtons.insert(button);
+}
+
+void Variable::setHomeButton(Button* button){
+    homeButton = button;
 }
 
 void Variable::printDependencies(){

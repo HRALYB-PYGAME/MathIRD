@@ -177,7 +177,8 @@ std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& ga
         DisplayChunk valChunk(name, DisplayType::Var);
         DisplayChunk varChunk(name, DisplayType::Text);
         varChunk.setHover({ valChunk });
-        varChunk.setLink(gameState.getVar(name));
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr) varChunk.setLink(var);
         chunks.push_back(varChunk);
         if (delta.min == delta.max){
             std::cout << ": " + formatDouble(delta.min) + "\n" << std::endl;

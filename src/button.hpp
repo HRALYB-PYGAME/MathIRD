@@ -6,13 +6,19 @@
 class Button : Insightable{
 private:
     std::string name;
-    std::vector<Term> terms;
+    std::vector<std::unique_ptr<Term>> terms;
     std::vector<DisplayChunk> display;
 public:
+    Button(std::string name): name(name) {};
+
     std::string getDisplay(GameState& gameState);
     void setDisplay(std::string t);
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
+    void addTerm(std::unique_ptr<Term>);
+
+    const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
+    std::string& getName() {return name;};
     // simulate
     // insight
     // isUnlocked

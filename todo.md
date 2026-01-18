@@ -4,12 +4,12 @@
 
 - work on basic insights
 - predictive insights
+- change raw ptrs in term, variable classes or whatever for weak ptr
 
 ## priority 4
 
-- each term should know by which button it is owned
-- each variable should know which buttons it is displayed on + what button is its home one
 - expandable chunk type
+- public/private class members
 
 ## priority 3
 
@@ -21,8 +21,10 @@
 - responsive button grid
 - centered hover displays
 - fix warnings
+- operator parsing map
 
 ## priority 1
 
 - scrollable insights
 - particle/bubbles system
+- tests

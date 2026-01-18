@@ -7,6 +7,7 @@
 #include "insightable.hpp"
 #include <set>
 #include "loader.hpp"
+#include <memory>
 
 constexpr float fontSize = 20.0f;
 constexpr float spacing = 2.0f;
@@ -93,10 +94,11 @@ int main(int argc, char** argv){
     Variable mq("mq", getScoreParams(25, 0, Polarity::Normal),  std::move(construct(tokenize("x*y >= 0"))), VariableValue(5.0));
 
     GameState gameState;
-    gameState.addVariable(&x);
-    gameState.addVariable(&y);
-    gameState.addVariable(&s);
-    gameState.addVariable(&mq);
+
+    Defs::addVariable("x", std::move(x));
+    Defs::addVariable("y", std::move(y));
+    Defs::addVariable("s", std::move(s));
+    Defs::addVariable("mq", std::move(mq));
 
     std::unique_ptr<Node> expr = construct(tokenize("y=(4+x+6)*_NR "));
     std::unique_ptr<Node> cond = construct(tokenize("mq>=0"));
@@ -116,11 +118,29 @@ int main(int argc, char** argv){
     term.updateSets();
     gameState.updateVariableSets(&term);
 
-    gameState.getVar("y")->printDependencies();
+    Defs::getVariable("y")->printDependencies();
 
     VariableChanges vc;
     vc = vc.add("x", 0, 5, 2);
     std::cout << "length of changes: " << vc.changes.size() << std::endl;
+
+    Button b("testbtn");
+    b.addTerm(std::make_unique<Term>(std::move(term)));
+    b.setDisplay("{x}");
+
+    std::cout << "parent of terms\n";
+    for(auto& i : b.getTerms()){
+        std::cout << i->parent->getName() << std::endl;
+    }
+
+    std::cout << "x is displayed at buttons \n";
+    for(auto i : Defs::getVariable("x")->displayedAtButtons){
+        std::cout << i->getName() << std::endl;
+    }
+
+    Defs::getVariable("x")->setHomeButton(&b);
+    std::cout << "x's home button \n";
+    std::cout << Defs::getVariable("x")->homeButton->getName() << std::endl;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
