@@ -236,7 +236,8 @@ std::vector<DisplayLine> VariableNode::insight(GameState& gameState, [[maybe_unu
     std::string name = this->var;
     DisplayChunk c(name, DisplayType::Text);
     DisplayChunk h(name, DisplayType::Var);
-    c.setLink(gameState.getVar(name));
+    Variable* var = Defs::getVariable(name);
+    if (var != nullptr) c.setLink(var);
     c.setHover({ h });
     return { DisplayLine({ c }) };
 }
@@ -292,7 +293,8 @@ std::vector<DisplayLine> VariableNode::arithmeticalInsight(GameState& gameState,
     std::string name = this->var;
     DisplayChunk c(name, DisplayType::Text);
     DisplayChunk h(name, DisplayType::Var);
-    c.setLink(gameState.getVar(name));
+    Variable* var = Defs::getVariable(name);
+    if (var != nullptr) c.setLink(var);
     c.setHover({ h });
     line.appendChunk(c);
     return { line };

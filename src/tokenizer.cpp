@@ -234,16 +234,16 @@ std::vector<Token> tokenize(std::string text){
                 state = TokenizeState::Constant;
             }
             else if (c == '['){
-                tokens.insert(tokens.end(), Operand::LeftPar);
-                tokens.insert(tokens.end(), Operand::LeftPar);
+                tokens.push_back(Operand::LeftPar);
+                tokens.push_back(Operand::LeftPar);
             }
             else if (c == ']'){
-                tokens.insert(tokens.end(), Operand::RightPar);
-                tokens.insert(tokens.end(), Operand::RightPar);
+                tokens.push_back(Operand::RightPar);
+                tokens.push_back(Operand::RightPar);
             }
             else if (c == ','){
-                tokens.insert(tokens.end(), Operand::RightPar);
-                tokens.insert(tokens.end(), Operand::LeftPar);
+                tokens.push_back(Operand::RightPar);
+                tokens.push_back(Operand::LeftPar);
             }
             else if (isLetter(c) || c == '_'){
                 acc += c;
@@ -290,16 +290,16 @@ std::vector<Token> tokenize(std::string text){
                 state = TokenizeState::Or;
             }
             else if (c == ')'){
-                tokens.insert(tokens.end(), Operand::RightPar);
+                tokens.push_back(Operand::RightPar);
             }
             else if (c == '('){
-                tokens.insert(tokens.end(), Operand::LeftPar);
+                tokens.push_back(Operand::LeftPar);
             }
             else if (c == '%'){
-                tokens.insert(tokens.end(), Operand::Modulo);
+                tokens.push_back(Operand::Modulo);
             }
             else if (c == '^'){
-                tokens.insert(tokens.end(), Operand::Power);
+                tokens.push_back(Operand::Power);
             }
             break;
         case TokenizeState::Constant:
@@ -307,7 +307,7 @@ std::vector<Token> tokenize(std::string text){
                 acc += c;
             }
             else{
-                tokens.insert(tokens.end(), Token(stod(acc)));
+                tokens.push_back(Token(stod(acc)));
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -319,21 +319,21 @@ std::vector<Token> tokenize(std::string text){
             }
             else{
                 if (acc.compare("min") == 0)
-                    tokens.insert(tokens.end(), Token(Operand::Min));
+                    tokens.push_back(Token(Operand::Min));
                 else if (acc.compare("max") == 0)
-                    tokens.insert(tokens.end(), Token(Operand::Max));
+                    tokens.push_back(Token(Operand::Max));
                 else if (acc.compare("abs") == 0)
-                    tokens.insert(tokens.end(), Token(Operand::Abs));
+                    tokens.push_back(Token(Operand::Abs));
                 else if (acc.compare("true") == 0)
-                    tokens.insert(tokens.end(), Token(1));
+                    tokens.push_back(Token(1));
                 else if (acc.compare("false") == 0)
-                    tokens.insert(tokens.end(), Token(0));
+                    tokens.push_back(Token(0));
                 else if (acc.compare("if") == 0)
-                    tokens.insert(tokens.end(), Token(Operand::If));
+                    tokens.push_back(Token(Operand::If));
                 else if (acc[0] == '~')
-                    tokens.insert(tokens.end(), Token(acc.substr(1), true));
+                    tokens.push_back(Token(acc.substr(1), true));
                 else
-                    tokens.insert(tokens.end(), Token(acc, false));
+                    tokens.push_back(Token(acc, false));
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -341,12 +341,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Plus:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::AddAssign);
+                tokens.push_back(Operand::AddAssign);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Add);
+                tokens.push_back(Operand::Add);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -354,15 +354,15 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Minus:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::SubAssign);
+                tokens.push_back(Operand::SubAssign);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
                 if (tokens.empty() || !tokens[tokens.size()-1].isValue())
-                    tokens.insert(tokens.end(), Operand::Neg);
+                    tokens.push_back(Operand::Neg);
                 else
-                    tokens.insert(tokens.end(), Operand::Subtract);
+                    tokens.push_back(Operand::Subtract);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -370,12 +370,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Times:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::MulAssign);
+                tokens.push_back(Operand::MulAssign);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Multiply);
+                tokens.push_back(Operand::Multiply);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -383,12 +383,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Divide:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::DivAssign);
+                tokens.push_back(Operand::DivAssign);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Divide);
+                tokens.push_back(Operand::Divide);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -396,12 +396,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Less:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::LessOrEqual);
+                tokens.push_back(Operand::LessOrEqual);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Less);
+                tokens.push_back(Operand::Less);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -409,12 +409,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Greater:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::GreaterOrEqual);
+                tokens.push_back(Operand::GreaterOrEqual);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Greater);
+                tokens.push_back(Operand::Greater);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -422,12 +422,12 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Not:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::NotEqual);
+                tokens.push_back(Operand::NotEqual);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Not);
+                tokens.push_back(Operand::Not);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -440,7 +440,7 @@ std::vector<Token> tokenize(std::string text){
                 acc.clear();
             }
             else {
-                tokens.insert(tokens.end(), Operand::Assign);
+                tokens.push_back(Operand::Assign);
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
@@ -448,7 +448,7 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::And:
             if (c == '&'){
-                tokens.insert(tokens.end(), Operand::And);
+                tokens.push_back(Operand::And);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
@@ -460,7 +460,7 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Or:
             if (c == '|'){
-                tokens.insert(tokens.end(), Operand::Or);
+                tokens.push_back(Operand::Or);
                 state = TokenizeState::Empty;
                 acc.clear();
             }

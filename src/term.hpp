@@ -5,6 +5,8 @@
 #include <vector>
 #include <set>
 
+class Button;
+
 class Term : public Insightable{
 private:
     std::unique_ptr<Node> condition;
@@ -14,6 +16,7 @@ private:
     std::set<std::string> outputs;
     std::string name;
 public:
+    Button* parent;
     Term(std::string name): name(name) {};
 
     void setCondition(std::unique_ptr<Node> condition);

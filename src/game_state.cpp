@@ -10,14 +10,11 @@ GameState::GameState() : currentInsight() {
 double GameState::getTotalScore(){
     double score = 0;
     for (auto& [name, varEntry] : variables){
-        score += varEntry.getScore();
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            score += var->getScoreParams().getScore(varEntry.value.getAsDouble());
     }
     return score;
-}
-
-Variable* GameState::getVar(std::string name){
-    if (variables.find(name) == variables.end()) return nullptr;
-    return variables.at(name).definition;
 }
 
 void GameState::applyChanges(VariableChanges changes){
@@ -39,8 +36,11 @@ void GameState::addVarValue(std::string name, VariableValue value){
 
 void GameState::updateVariables(){
     for (auto& [name, entry] : variables){
-        if (!isVariableUnlocked(name) && entry.definition->unlockCondition->evaluate(*this).getAsBool()){
-            entry.unlock();
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr){
+            if (!isVariableUnlocked(name) && var->unlockCondition->evaluate(*this).getAsBool()){
+                entry.unlock();
+            }
         }
     }
 }
@@ -51,8 +51,8 @@ bool GameState::isVariableUnlocked(std::string name){
 }
 
 void GameState::addVariable(Variable* variable){
-    VariableEntry entry = {variable, variable->defaultValue, false};
-    std::string name = variable->name;
+    VariableEntry entry = {variable->getDefaultValue(), false};
+    std::string name = variable->getName();
     variables.insert({name, entry});
 }
 
@@ -91,9 +91,15 @@ VariableValue GameState::getVarValue(std::string name){
         if (forcedRandom != -1) return VariableValue(forcedRandom);
         return VariableValue(currentSeed/RANDOM_MAX);
     }
-    if (this->variables.find(name) != this->variables.end())
+    if (this->variables.find(name) != this->variables.end()){
         return variables.at(name).value;
-    return VariableValue(0.f);
+    }
+
+    auto var = Defs::getVariable(name);
+    if (var == nullptr)
+        return VariableValue(0.f);
+    addVariable(var);
+    return getVarValue(name);
 }
 
 double GameState::getVarValueAsDouble(std::string name){
@@ -106,22 +112,37 @@ double GameState::getVarValueAsDouble(std::string name){
         if (forcedRandom != -1) return forcedRandom;
         return currentSeed/RANDOM_MAX;
     }
-    if (this->variables.find(name) != this->variables.end())
+    if (this->variables.find(name) != this->variables.end()){
         return variables.at(name).value.getAsDouble();
-    return 0.0;
+    }
+    
+    auto var = Defs::getVariable(name);
+    if (var == nullptr)
+        return 0.0;
+    addVariable(var);
+    return getVarValueAsDouble(name);
 }
 
 void GameState::updateVariableSets(Term* term){
     for(auto& name : term->getDependencies()){
-        if (variables.find(name) != variables.end())
-            variables.at(name).definition->addTermAsDependency(term);
+        if (variables.find(name) != variables.end()){
+            Variable* var = Defs::getVariable(name);
+            if (var != nullptr)
+                var->addTermAsDependency(term);
+        }
     }
     for(auto& name : term->getInputs()){
-        if (variables.find(name) != variables.end())
-            variables.at(name).definition->addTermAsInput(term);
+        if (variables.find(name) != variables.end()){
+            Variable* var = Defs::getVariable(name);
+            if (var != nullptr)
+                var->addTermAsInput(term);
+        }
     }
     for(auto& name : term->getOutputs()){
-        if (variables.find(name) != variables.end())
-            variables.at(name).definition->addTermAsOutput(term);
+        if (variables.find(name) != variables.end()){
+            Variable* var = Defs::getVariable(name);
+            if (var != nullptr)
+                var->addTermAsOutput(term);
+        }
     }
 }

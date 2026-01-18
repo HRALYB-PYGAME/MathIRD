@@ -24,7 +24,11 @@ void Button::setDisplay(std::string t){
             inTextState = false;
         }
         else if (t[i] == '}' && !inQuotations){
-            display.insert(display.end(), DisplayChunk(tmp, DisplayType::Var));
+            Variable* var = Defs::getVariable(tmp);
+            if (var != nullptr){
+                var->addButtonAsDisplay(this);
+                display.insert(display.end(), DisplayChunk(tmp, DisplayType::Var));
+            }
             tmp.clear();
             inTextState = true;
         }
@@ -42,4 +46,9 @@ void Button::setDisplay(std::string t){
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
     return {}; 
+}
+
+void Button::addTerm(std::unique_ptr<Term> term){
+    term->parent = this;
+    terms.push_back(std::move(term));
 }
