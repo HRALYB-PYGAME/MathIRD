@@ -39,7 +39,7 @@ void GameState::updateVariables(){
     for (auto& [name, entry] : variables){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr){
-            if (!isVariableUnlocked(name) && var->unlockCondition->evaluate(*this).getAsBool()){
+            if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this).getAsBool()){
                 entry.unlock();
             }
         }

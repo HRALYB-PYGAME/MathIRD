@@ -49,7 +49,7 @@ std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
 }
 
 void Button::addTerm(std::unique_ptr<Term> term){
-    term->parent = this;
+    term->setParent(*this);
     terms.push_back(std::move(term));
 }
 

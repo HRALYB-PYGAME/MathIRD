@@ -15,8 +15,8 @@ private:
     std::set<std::string> inputs;
     std::set<std::string> outputs;
     std::string name;
-public:
     Button* parent;
+public:
     Term(std::string name): name(name) {};
 
     void setCondition(std::unique_ptr<Node> condition);
@@ -34,6 +34,8 @@ public:
     std::set<std::string>& getInputs()       {return inputs;};
     std::set<std::string>& getOutputs()      {return outputs;};
     std::string getName() {return name;};
+    Button& getParent() {return *parent;};
+    void setParent(Button& ref) {parent = &ref;};
 };
 
 #endif

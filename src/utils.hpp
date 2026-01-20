@@ -20,7 +20,9 @@ public:
     static void addButton(Button btn);
     static Button* getButton(std::string name);
 
-    static void loadVariables(std::string path);
+    static void loadVariables(std::string path, std::unordered_map<std::string, std::string>&);
+
+    static void linkVariableHomeButtons(std::unordered_map<std::string, std::string>&);
     // Load()
 };
 
