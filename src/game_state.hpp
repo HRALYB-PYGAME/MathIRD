@@ -67,6 +67,7 @@ class GameState{
         void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
+        void updateVariableSets(Term* term);
 
         // Buttons
         bool isButtonUnlocked(std::string name);
@@ -87,11 +88,11 @@ class GameState{
         void forceRandom(double val) { forcedRandom = val; };
         void freeRandom() { forcedRandom = -1; };
 
+        // Insight
+        std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};
         void setCurrentInsight(std::vector<DisplayLine> insight) {
             this->currentInsight = std::move(insight);
         };
-
-        void updateVariableSets(Term* term);
 };
 
 #endif

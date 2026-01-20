@@ -39,7 +39,7 @@ Button* Defs::getButton(std::string name){
     return &(btns.at(name));
 }
 
-void Defs::loadVariables(std::string path){
+void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::string>& linkerMap){
     using json = nlohmann::json;
 
     for (const auto& entry : std::filesystem::directory_iterator(path)){
@@ -53,7 +53,7 @@ void Defs::loadVariables(std::string path){
             ScoreParams scoreParams = {100, 0, Polarity::Neutral};
             double defaultValue = 0;
             std::string homeButton = "";
-            std::string condition;
+            std::string condition = "1";
 
             if (j.find("name") == j.end()){
                 std::cerr << entry.path().filename() << " doesnt contain name attribute. Skipping." << std::endl;
@@ -101,14 +101,35 @@ void Defs::loadVariables(std::string path){
                 }
             }
 
-            if (j.find("defaultValue") == j.end()){
+            if (j.find("defaultValue") == j.end())
                 std::cerr << entry.path().filename() << " doesnt contain defaultValue attribute. Using 0 as default." << std::endl;
+            else
+                defaultValue = j["defaultValue"];
+
+            if (j.find("homeButton") != j.end())
+                linkerMap.insert_or_assign(name, j["homeButton"]);
+
+            if (j.find("unlockCondition") == j.end()){
+                std::cerr << entry.path().filename() << " doesnt contain unlockCondition attribute. Using \"1\" as default." << std::endl;
             }
             else{
-                defaultValue = j["defaultValue"];
+                condition = j["unlockCondition"];
             }
 
-            std::cout << "var located: " << name << std::endl;
+            Variable var(name, scoreParams, construct(tokenize(condition)), VariableValue(defaultValue));
+
+            Defs::addVariable(std::move(var));
         }
+    }
+}
+
+void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>& linkerMap){
+    for(auto [varName, btnName] : linkerMap){
+        Button* btn = getButton(btnName);
+        if (btn != nullptr){
+            Variable* var = getVariable(varName);
+            if (var != nullptr) var->setHomeButton(*btn);
+        }
+        else std::cout << "Button specified in " << varName << "'s config doesnt exist (" << btnName << ").\n";
     }
 }

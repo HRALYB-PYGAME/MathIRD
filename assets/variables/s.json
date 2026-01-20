@@ -1,0 +1,11 @@
+{
+    "name": "s",
+    "scoreParams": {
+        "knee": 100,
+        "offset": 0,
+        "polarity": "normal" 
+    },
+    "defaultValue": 5,
+    "homeButton": "testbtn",
+    "unlockCondition": "x>=0"
+}

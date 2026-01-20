@@ -85,23 +85,19 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
 int main(int argc, char** argv){
     std::cout << argv[0] << std::endl;
 
-    Defs::loadVariables("assets/variables");
+    // var to btn
 
     InitWindow(800, 450, "MathIRD");
     Vector2 cursor = { 100, 100 };
     auto color = BLACK;
-    Variable x ("x",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("1"))),        VariableValue(0.0));
-    Variable y ("y",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("1"))),        VariableValue(5.0));
-    Variable s ("s",  getScoreParams(100, 0, Polarity::Normal), std::move(construct(tokenize("x >= 0"))),   VariableValue(5.0));
-    Variable mq("mq", getScoreParams(25, 0, Polarity::Normal),  std::move(construct(tokenize("x*y >= 0"))), VariableValue(5.0));
 
     GameState gameState;
 
-    Defs::addVariable(std::move(x));
-    Defs::addVariable(std::move(y));
-    Defs::addVariable(std::move(s));
-    Defs::addVariable(std::move(mq));
+    // VARIABLES
+    std::unordered_map<std::string, std::string> linkerMap;
+    Defs::loadVariables("assets/variables", linkerMap);
 
+    // FOLLOWING
     std::unique_ptr<Node> expr = construct(tokenize("y=(4+x+6)*_NR "));
     std::unique_ptr<Node> cond = construct(tokenize("mq>=0"));
     std::vector<DisplayLine> i = expr->insight(gameState, 0);
@@ -113,14 +109,10 @@ int main(int argc, char** argv){
     for(auto o:out){
         std::cout << o << std::endl;
     }
-
     Term term("test");
     term.addExpression(std::move(expr));
     term.setCondition(std::move(cond));
     term.updateSets();
-    gameState.updateVariableSets(&term);
-
-    Defs::getVariable("y")->printDependencies();
 
     VariableChanges vc;
     vc = vc.add("x", 0, 5, 2);
@@ -131,11 +123,15 @@ int main(int argc, char** argv){
     b.setDisplay("{x}");
     Defs::addButton(std::move(b));
 
+    gameState.updateVariableSets(&term);
+
+    Defs::getVariable("y")->printDependencies();
+
     Button* testbtn = Defs::getButton("testbtn");
 
     std::cout << "parent of terms\n";
     for(auto& i : testbtn->getTerms()){
-        std::cout << i->parent->getName() << std::endl;
+        std::cout << i->getParent().getName() << std::endl;
     }
 
     std::cout << "x is displayed at buttons \n";
@@ -143,9 +139,14 @@ int main(int argc, char** argv){
         std::cout << i->getName() << std::endl;
     }
 
-    Defs::getVariable("x")->setHomeButton(&b);
+    Defs::linkVariableHomeButtons(linkerMap);
+
     std::cout << "x's home button \n";
-    std::cout << Defs::getVariable("x")->getHomeButton()->getName() << std::endl;
+    Button* homeBtn = Defs::getVariable("x")->getHomeButton();
+    if (homeBtn != nullptr)
+        std::cout << homeBtn->getName() << std::endl;
+    else
+        std::cout << "null homebtn\n";
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

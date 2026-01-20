@@ -35,9 +35,7 @@ class Variable : public Insightable{
     private:
         std::string name;
         ScoreParams scoreParams;
-    public:
         std::unique_ptr<Node> unlockCondition;
-    private:
         VariableValue defaultValue;
         Button* homeButton;
     public:
@@ -53,12 +51,13 @@ class Variable : public Insightable{
         void addTermAsInput(Term* term);
         void addTermAsOutput(Term* term);
         void addButtonAsDisplay(Button* button);
-        void setHomeButton(Button* button);
 
         std::string getName() {return name;};
         ScoreParams getScoreParams() {return scoreParams;};
         VariableValue getDefaultValue() {return defaultValue;};
         Button* getHomeButton() {return homeButton;};
+        void setHomeButton(Button& ref) {homeButton = &ref;};
+        Node& getUnlockCondition() {return *unlockCondition;};
 
         void printDependencies();
 };

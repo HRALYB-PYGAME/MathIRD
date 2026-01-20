@@ -32,7 +32,8 @@ Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<No
     : name(std::move(name)), 
       scoreParams(scoreParams), 
       unlockCondition(std::move(unlockCondition)), 
-      defaultValue(defaultValue) 
+      defaultValue(defaultValue),
+      homeButton(nullptr)
 {
     
 }
@@ -55,10 +56,6 @@ void Variable::addTermAsOutput(Term* term){
 
 void Variable::addButtonAsDisplay(Button* button){
     displayedAtButtons.insert(button);
-}
-
-void Variable::setHomeButton(Button* button){
-    homeButton = button;
 }
 
 void Variable::printDependencies(){

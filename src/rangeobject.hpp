@@ -7,8 +7,7 @@
 class Node;
 enum class Operand : int;
 
-class RangeObject{
-public:
+struct RangeObject{
     std::unique_ptr<Node> min, max;
     std::unique_ptr<Node> distribution;
 
