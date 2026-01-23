@@ -20,7 +20,9 @@ double GameState::getTotalScore(){
 
 void GameState::applyChanges(VariableChanges changes){
     for (auto& [var, val] : changes.changes){
+        std::cout << "adding " << val.rand << " to " << var << "\n";
         addVarValue(var, VariableValue(val.rand));
+        std::cout << "x val: " << getVarValueAsDouble("x") << "\n";
     }
     this->updateVariables();
 }
@@ -31,8 +33,11 @@ void GameState::setVarValue(std::string name, VariableValue value){
 }
 
 void GameState::addVarValue(std::string name, VariableValue value){
-    if (variables.find(name) != variables.end())
-        variables.at(name).value.add(value);
+    if (variables.find(name) != variables.end()){
+        variables.at(name) = variables.at(name).value.add(value);
+    }
+    else
+        std::cout << "not found\n";
 }
 
 void GameState::updateVariables(){

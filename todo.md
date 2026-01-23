@@ -16,7 +16,7 @@
 
 ## priority 2
 
-- responsive button grid
+- responsive button grid (kinda)
 - centered hover displays
 - operator parsing map
 

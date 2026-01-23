@@ -97,7 +97,9 @@ VariableValue VariableNode::evaluate(GameState& gameState){
 
 VariableChanges OperandNode::simulate(GameState& gameState){
     if (this->left == nullptr) return VariableChanges();
+    std::cout << "not null\n";
     if (this->left->getType() != NodeType::Variable) return VariableChanges();
+    std::cout << "left is var\n";
     
     VariableNode* vNode = static_cast<VariableNode*>(this->left.get());
     std::string var = vNode->var;
@@ -105,6 +107,7 @@ VariableChanges OperandNode::simulate(GameState& gameState){
 
     if (isAssignment(oper) && !gameState.isVariableUnlocked(var))
         return changes.add(var, 0);
+    std::cout << "whatever\n";
 
     double varValue = gameState.getVarValueAsDouble(var);
 
@@ -117,6 +120,7 @@ VariableChanges OperandNode::simulate(GameState& gameState){
 
     switch(this->oper){
         case Operand::Assign:
+            std::cout << minValue << " " << randValue << " " << maxValue << "\n";
             return changes.add(var, minValue-varValue, maxValue-varValue, randValue-varValue);
         case Operand::AddAssign:
             return changes.add(var, minValue, maxValue, randValue);
@@ -257,6 +261,8 @@ std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
     switch(oper){
         case Operand::Add:
             return addInsight(*left, *right, gameState, level+1);
+        case Operand::Subtract:
+            return subtractInsight(*left, *right, gameState, level+1);
         case Operand::Multiply:
             l.appendTextChunk("Product of");
             l.appendLines(leftInsight);
@@ -411,7 +417,12 @@ std::vector<DisplayLine> OperandNode::arithmeticalInsight(GameState& gameState, 
         line.appendLines(right->arithmeticalInsight(gameState, level+1));
         line.appendTextChunk(")");
     }
-    if (level == 0) line.appendWordGapChunk(1);
+    if (level == 0){
+        auto lastChunk = line.chunks.back();
+        line.chunks.pop_back();
+        line.appendWordGapChunk(1);
+        line.appendChunk(lastChunk);
+    }
     return {line};
 }
 

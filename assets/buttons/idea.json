@@ -1,0 +1,18 @@
+{
+    "name": "testbtn",
+    "display": "{x}/{y}",
+    "position": {
+        "row": 0,
+        "col": 0
+    },
+    "terms": [
+        {
+            "name": "term",
+            "condition": "x>0",
+            "expressions": [
+                "x+=1",
+                "y=~mq*(y+3)"
+            ]
+        }
+    ]
+}
