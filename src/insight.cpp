@@ -30,18 +30,33 @@ std::vector<DisplayLine> addInsight (Node& left, Node& right, GameState& gameSta
 }
 
 std::vector<DisplayLine> subtractInsight (Node& left, Node& right, GameState& gameState, int level){
-    return {};
-    /*std::vector<DisplayChunk> leftInsight = left.insight(gameState, level+1);
-    std::vector<DisplayChunk> rightInsight = right.insight(gameState, level+1);
-    if (left.isConstantValue(gameState, 0))
-        return rightInsight;
+    std::vector<DisplayLine> leftInsight;
+    std::vector<DisplayLine> rightInsight;
+    if (level == 0){
+        leftInsight = left.insight(gameState, level+1);
+        rightInsight = right.insight(gameState, level+1);
+    }
+    else{
+        leftInsight = left.arithmeticalInsight(gameState, 0);
+        rightInsight = right.arithmeticalInsight(gameState, 0);
+    }
+
+    DisplayLine line;
+    if (left.isConstantValue(gameState, 0)){
+        line.appendTextChunk("negative ");
+        line.appendLines(rightInsight);
+        return { line };
+    }
     if (right.isConstantValue(gameState, 0))
         return leftInsight;
-    if (left.isConstant(gameState) && right.isConstant(gameState))
-        return formatDouble(left.evaluate(gameState).getAsDouble() - right.evaluate(gameState).getAsDouble());
-    if (level <= 1)
-        return REVERSE + leftInsight + RESET + " decreased by " + REVERSE + rightInsight + RESET;
-    return "(" + leftInsight + " minus " + rightInsight + ")";*/
+    if (left.isConstant(gameState) && right.isConstant(gameState)){
+        line.appendTextChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()));
+        return { line };
+    }
+    line.appendLines(leftInsight);
+    line.appendTextChunk("decreased by");
+    line.appendLines(rightInsight);
+    return { line };
 }
 
 std::vector<DisplayLine> multiplyInsight (Node& left, Node& right, GameState& gameState, int level){

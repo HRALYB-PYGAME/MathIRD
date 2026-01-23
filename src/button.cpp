@@ -45,7 +45,10 @@ void Button::setDisplay(std::string t){
 }
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
-    return {}; 
+    DisplayLine dl;
+    bool isXUnlocked = gameState.isVariableUnlocked("x");
+    dl.appendTextChunk(isXUnlocked ? "ano" : "ne ):");
+    return {dl}; 
 }
 
 void Button::addTerm(std::unique_ptr<Term> term){
@@ -59,4 +62,22 @@ bool Button::isUnlocked(GameState& gameState){
             return true;
     }
     return false;
+}
+
+VariableChanges Button::simulate(GameState& gameState){
+    VariableChanges changes;
+    for(auto& term : terms){
+        if (term->isUnlocked(gameState)){
+            std::cout << "unlocked\n";
+            VariableChanges c = term->simulate(gameState);
+            std::cout << "return val\n";
+            c.insight(gameState, 0);
+            changes.add(c);
+        }
+        else
+            std::cout << "locked\n";
+    }
+    std::cout << "button ci\n";
+    changes.insight(gameState, 0);
+    return changes;
 }

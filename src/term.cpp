@@ -8,9 +8,12 @@ VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     GameState tmpState = gameState;
     for(size_t i=0; i<this->expressions.size(); i++){
-        changes = changes.add(this->expressions[i]->simulate(tmpState));
+        std::cout << "expression\n";
+        changes.add(this->expressions[i]->simulate(tmpState));
         tmpState.applyChanges(changes);
     }
+    std::cout << "term ci\n";
+    changes.insight(gameState, 0);
     return changes;
 }
 

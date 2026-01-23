@@ -125,54 +125,52 @@ VariableValue VariableValue::divide(const VariableValue& other) const{
     return VariableValue(this->getAsDouble() / other.getAsDouble());
 }
 
-VariableChanges VariableChanges::add(const VariableChanges& varc) const{
-    VariableChanges result = *this;
+VariableChanges VariableChanges::add(const VariableChanges& varc){
     for (auto& [var, delta] : varc.changes){
-        if (result.changes.find(var) != result.changes.end()){
-            result.changes.at(var).min += delta.min;
-            result.changes.at(var).max += delta.max;
-            result.changes.at(var).rand += delta.rand;
+        if (this->changes.find(var) != this->changes.end()){
+            this->changes.at(var).min += delta.min;
+            this->changes.at(var).max += delta.max;
+            this->changes.at(var).rand += delta.rand;
         }
         else{
-            result.changes.insert({var, Range(delta.min, delta.max, delta.rand)});
+            this->changes.insert({var, Range(delta.min, delta.max, delta.rand)});
         }
     }
-    return result;
+    return *this;
 }
 
-VariableChanges VariableChanges::add(std::string var, double val) const{
-    VariableChanges result = *this;
-    if (result.changes.find(var) != result.changes.end()){
-        result.changes.at(var).min += val;
-        result.changes.at(var).max += val;
-        result.changes.at(var).rand += val;
+VariableChanges VariableChanges::add(std::string var, double val){
+    if (this->changes.find(var) != this->changes.end()){
+        this->changes.at(var).min += val;
+        this->changes.at(var).max += val;
+        this->changes.at(var).rand += val;
     }
     else{
-        result.changes.insert({var, Range(val, val, val)});
+        this->changes.insert({var, Range(val, val, val)});
     }
-    return result;
+    return *this;
 }
 
-VariableChanges VariableChanges::add(std::string var, double min, double max, double rand) const{
-    VariableChanges result = *this;
+VariableChanges VariableChanges::add(std::string var, double min, double max, double rand){
     if (min > max){
         double tmp = min;
         min = max;
         max = tmp;
     }
-    if (result.changes.find(var) != result.changes.end()){
-        result.changes.at(var).min += min;
-        result.changes.at(var).max += max;
-        result.changes.at(var).rand += rand;
+    if (this->changes.find(var) != this->changes.end()){
+        this->changes.at(var).min += min;
+        this->changes.at(var).max += max;
+        this->changes.at(var).rand += rand;
     }
     else{
-        result.changes.insert({var, Range(min, max, rand)});
+        this->changes.insert({var, Range(min, max, rand)});
     }
-    return result;
+    return *this;
 }
 
 std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level){
     std::vector<DisplayChunk> chunks;
+    std::cout << "total changes: " << this->changes.size() << "\n";
     for (auto& [name, delta] : this->changes){
         DisplayChunk valChunk(name, DisplayType::Var);
         DisplayChunk varChunk(name, DisplayType::Text);
@@ -181,12 +179,12 @@ std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& ga
         if (var != nullptr) varChunk.setLink(var);
         chunks.push_back(varChunk);
         if (delta.min == delta.max){
-            std::cout << ": " + formatDouble(delta.min) + "\n" << std::endl;
+            std::cout << name << ": " + formatDouble(delta.min) + "\n" << std::endl;
             DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "\n", DisplayType::Text);
             chunks.push_back(deltaChunk);
         }
         else{
-            std::cout << ": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n" << std::endl;
+            std::cout << name << ": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n" << std::endl;
             DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n", DisplayType::Text);
             chunks.push_back(deltaChunk);
         }

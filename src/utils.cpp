@@ -35,8 +35,9 @@ void Defs::addButton(Button btn){
 
 // returns a pointer to a button with given name or a nullptr if not found
 Button* Defs::getButton(std::string name){
-    if (btns.find(name) == btns.end()) return nullptr;
-    return &(btns.at(name));
+    auto it = btns.find(name);
+    if (it == btns.end()) return nullptr;
+    return &(it->second);
 }
 
 void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::string>& linkerMap){

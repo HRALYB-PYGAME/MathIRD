@@ -65,9 +65,9 @@ public:
     std::unordered_map<std::string, Range> changes;
 
     VariableChanges(): changes({}) {};
-    VariableChanges add(const VariableChanges& varc) const;
-    VariableChanges add(std::string var, double val) const;
-    VariableChanges add(std::string var, double min, double max, double rand) const;
+    VariableChanges add(const VariableChanges& varc);
+    VariableChanges add(std::string var, double val);
+    VariableChanges add(std::string var, double min, double max, double rand);
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
 };
 
