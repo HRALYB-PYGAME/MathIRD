@@ -67,7 +67,6 @@ class GameState{
         void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
-        void updateVariableSets(Term* term);
 
         // Buttons
         bool isButtonUnlocked(std::string name);
@@ -94,5 +93,7 @@ class GameState{
             this->currentInsight = std::move(insight);
         };
 };
+
+void updateVariableSets(Term* term);
 
 #endif

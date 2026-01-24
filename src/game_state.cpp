@@ -45,6 +45,7 @@ void GameState::updateVariables(){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr){
             if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this).getAsBool()){
+                std::cout << "unlocking " << name << "\n";
                 entry.unlock();
             }
         }
@@ -160,26 +161,20 @@ double GameState::getVarValueAsDouble(std::string name){
     return getVarValueAsDouble(name);
 }
 
-void GameState::updateVariableSets(Term* term){
+void updateVariableSets(Term* term){
     for(auto& name : term->getDependencies()){
-        if (variables.find(name) != variables.end()){
-            Variable* var = Defs::getVariable(name);
-            if (var != nullptr)
-                var->addTermAsDependency(term);
-        }
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsDependency(term);
     }
     for(auto& name : term->getInputs()){
-        if (variables.find(name) != variables.end()){
-            Variable* var = Defs::getVariable(name);
-            if (var != nullptr)
-                var->addTermAsInput(term);
-        }
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsInput(term);
     }
     for(auto& name : term->getOutputs()){
-        if (variables.find(name) != variables.end()){
-            Variable* var = Defs::getVariable(name);
-            if (var != nullptr)
-                var->addTermAsOutput(term);
-        }
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsOutput(term);
     }
 }

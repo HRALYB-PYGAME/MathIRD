@@ -7,6 +7,8 @@ bool Term::isConditionMet(GameState& gameState){
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     GameState tmpState = gameState;
+    if (!this->condition->evaluate(gameState).getAsBool())
+        return changes;
     for(size_t i=0; i<this->expressions.size(); i++){
         std::cout << "expression\n";
         changes.add(this->expressions[i]->simulate(tmpState));

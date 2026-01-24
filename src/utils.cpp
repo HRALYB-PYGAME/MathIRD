@@ -8,6 +8,8 @@
 #include <fstream>
 #include <iostream>
 
+using json = nlohmann::json;
+
 std::string formatDouble(double val, bool includeSign){
     if (val == 0) return "0";
     std::string n = std::to_string(val);
@@ -40,87 +42,105 @@ Button* Defs::getButton(std::string name){
     return &(it->second);
 }
 
-void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::string>& linkerMap){
-    using json = nlohmann::json;
-
+void Defs::loadButtons(std::string path){
     for (const auto& entry : std::filesystem::directory_iterator(path)){
         if (!entry.is_regular_file()) continue;
 
         std::ifstream file(entry.path());
 
-        if (file.is_open()){
-            json j = json::parse(file);
-            std::string name;
-            ScoreParams scoreParams = {100, 0, Polarity::Neutral};
-            double defaultValue = 0;
-            std::string homeButton = "";
-            std::string condition = "1";
+        if (!file.is_open()) continue;
 
-            if (j.find("name") == j.end()){
-                std::cerr << entry.path().filename() << " doesnt contain name attribute. Skipping." << std::endl;
-                continue;
-            }
-            name = j["name"];
+        json j = json::parse(file);
 
-            if (j.find("scoreParams") == j.end()){
-                std::cerr << entry.path().filename() << " doesnt contain scoreParams attribute. Using default." << std::endl;
-            }
-            else{
-                json jScoreParams = j["scoreParams"];
-
-                if (jScoreParams.find("knee") == jScoreParams.end()){
-                    std::cerr << entry.path().filename() << " doesnt contain knee attribute. Using default (100)." << std::endl;
-                }
-                else scoreParams.knee = jScoreParams["knee"];
-
-                if (jScoreParams.find("offset") == jScoreParams.end()){
-                    std::cerr << entry.path().filename() << " doesnt contain offset attribute. Using default (0)." << std::endl;
-                }
-                else scoreParams.offset = jScoreParams["offset"];
-
-                if (jScoreParams.find("polarity") == jScoreParams.end()){
-                    std::cerr << entry.path().filename() << " doesnt contain knee attribute. Using default (neutral)." << std::endl;
-                }
-                else{
-                    std::string pol = jScoreParams["polarity"];
-                    if (pol == "normal"){
-                        scoreParams.polarity = Polarity::Normal;
-                    }
-                    else if (pol == "neutral"){
-                        scoreParams.polarity = Polarity::Neutral;
-                    }
-                    else if (pol == "inverted"){
-                        scoreParams.polarity = Polarity::Inverted;
-                    }
-                    else if (pol == "absolute"){
-                        scoreParams.polarity = Polarity::Absolute;
-                    }
-                    else{
-                        std::cerr << entry.path().filename() << " contains an invalid polarity name (" << pol << "). Using default (normal)." << std::endl;
-                        scoreParams.polarity = Polarity::Normal;
-                    }
-                }
-            }
-
-            if (j.find("defaultValue") == j.end())
-                std::cerr << entry.path().filename() << " doesnt contain defaultValue attribute. Using 0 as default." << std::endl;
-            else
-                defaultValue = j["defaultValue"];
-
-            if (j.find("homeButton") != j.end())
-                linkerMap.insert_or_assign(name, j["homeButton"]);
-
-            if (j.find("unlockCondition") == j.end()){
-                std::cerr << entry.path().filename() << " doesnt contain unlockCondition attribute. Using \"1\" as default." << std::endl;
-            }
-            else{
-                condition = j["unlockCondition"];
-            }
-
-            Variable var(name, scoreParams, construct(tokenize(condition)), VariableValue(defaultValue));
-
-            Defs::addVariable(std::move(var));
+        if (!j.contains("name")){
+            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
+            continue;
         }
+
+        if (!j.contains("position")){
+            std::cerr << entry.path().filename() << " missing 'position'. Skipping." << std::endl;
+            continue;
+        }
+
+        std::string name = j["name"];
+
+        Button button(name);
+
+        if (j.contains("displayStates")){
+            auto& displayStates = j["displayStates"];
+            for(const auto& state : displayStates){
+                if (!state.contains("text")) continue;
+                std::unique_ptr<Node> condition = construct(tokenize(state.value("condition", "1")));
+                button.setDisplay(std::move(condition), state["text"]);
+                if (!state.contains("condition")) break;
+            }
+        }
+
+        auto& jp = j["position"];
+        button.setPosition(jp.value("row", 0), jp.value("col", 0));
+
+        if (j.contains("terms")){
+            auto& terms = j["terms"];
+            for(const auto& t : terms){
+                if (!t.contains("name")) continue;
+                if (!t.contains("expressions")) continue;
+                Term term(t["name"]);
+                std::unique_ptr<Node> condition = construct(tokenize(t.value("condition", "1")));
+                term.setCondition(std::move(condition));
+                for(const auto& expr : t["expressions"]){
+                    std::unique_ptr<Node> expression = construct(tokenize(expr));
+                    term.addExpression(std::move(expression));
+                }
+                updateVariableSets(&term);
+                term.updateSets();
+                button.addTerm(std::make_unique<Term>(std::move(term)));
+            }
+        }
+
+        Defs::addButton(std::move(button));
+    }
+}
+
+Polarity stringToPolarity(std::string polarity){
+    if (polarity == "normal") return Polarity::Normal;
+    if (polarity == "inverted") return Polarity::Inverted;
+    if (polarity == "absolute") return Polarity::Absolute;
+    return Polarity::Neutral;
+}
+
+void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::string>& linkerMap){
+    for (const auto& entry : std::filesystem::directory_iterator(path)){
+        if (!entry.is_regular_file()) continue;
+
+        std::ifstream file(entry.path());
+
+        if (!file.is_open()) continue;
+
+        json j = json::parse(file);
+
+        if (!j.contains("name")){
+            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
+            continue;
+        }
+
+        std::string name = j["name"];
+
+        ScoreParams scoreParams = {100, 0, Polarity::Neutral};;
+        if (j.contains("scoreParams")){
+            auto& js = j["scoreParams"];
+            scoreParams.knee = js.value("knee", 100);
+            scoreParams.offset = js.value("offset", 0);
+            scoreParams.polarity = stringToPolarity(js.value("polarity", "neutral"));
+        }
+
+        Variable var(
+            name, 
+            scoreParams, 
+            construct(tokenize(j.value("unlockCondition", "1"))), 
+            VariableValue(j.value("defaultValue", 0.0))
+        );
+
+        Defs::addVariable(std::move(var));
     }
 }
 

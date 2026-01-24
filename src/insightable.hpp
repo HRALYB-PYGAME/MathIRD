@@ -8,6 +8,7 @@
 
 class GameState;
 class Insightable;
+class Node;
 
 enum class Alignment{
     Left,
@@ -45,11 +46,12 @@ struct DisplayChunk{
 };
 
 struct DisplayLine{
+    std::vector<DisplayChunk> chunks;
+    Alignment alignment = Alignment::Left;
+
     DisplayLine() {};
     DisplayLine(std::vector<DisplayChunk> chunks): chunks(std::move(chunks)) {}
 
-    std::vector<DisplayChunk> chunks;
-    Alignment alignment = Alignment::Left;
     float indent = 0.0f;
 
     void appendChunks(std::vector<DisplayChunk>& chunks);
@@ -65,6 +67,15 @@ struct DisplayLine{
     void appendLines(std::vector<DisplayLine> lines);
 
     void printLine();
+};
+
+struct ConditionalDisplayLine{
+    DisplayLine displayLine;
+    std::unique_ptr<Node> condition;
+
+    ConditionalDisplayLine(DisplayLine displayLine, std::unique_ptr<Node> condition);
+
+    bool isConditionTrue(GameState& gameState);
 };
 
 void printLines(std::vector<DisplayLine>& lines);
