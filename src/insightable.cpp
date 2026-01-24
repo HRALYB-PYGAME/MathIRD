@@ -1,5 +1,6 @@
 #include "insightable.hpp"
 #include "game_state.hpp"
+#include "expressiontree.hpp"
 
 std::string DisplayChunk::getDisplay(GameState& gameState) {
     if (type == DisplayType::Text) return text;
@@ -75,4 +76,11 @@ void DisplayLine::appendLines(std::vector<DisplayLine> lines){
     for(auto& line : lines){
         appendChunks(line.chunks);
     }
+}
+
+ConditionalDisplayLine::ConditionalDisplayLine(DisplayLine displayLine, std::unique_ptr<Node> condition):
+    displayLine(displayLine), condition(std::move(condition)) {};
+
+bool ConditionalDisplayLine::isConditionTrue(GameState& gameState){
+    return condition->evaluate(gameState).getAsBool();
 }

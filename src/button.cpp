@@ -3,15 +3,22 @@
 std::string Button::getDisplay(GameState& gameState){
     std::string display = "";
     for(size_t i=0; i<this->display.size(); i++){
-        display += this->display[i].getDisplay(gameState);
+        if (!this->display[i].isConditionTrue(gameState))
+            continue;
+        for(auto& chunk : this->display[i].displayLine.chunks){
+            display += chunk.getDisplay(gameState);
+        }
+        return display;
     }
     return display;
 }
 
-void Button::setDisplay(std::string t){
+void Button::setDisplay(std::unique_ptr<Node> condition, std::string t){
     bool inTextState = true;
     bool inQuotations = false;
     std::string tmp = "";
+
+    DisplayLine line;
 
     for(size_t i=0; i<t.size(); i++){
         if (t[i] == '\"'){
@@ -19,7 +26,7 @@ void Button::setDisplay(std::string t){
             else inQuotations = true;
         }
         else if (t[i] == '{' && !inQuotations){
-            display.insert(display.end(), DisplayChunk(tmp, DisplayType::Text));
+            line.appendTextChunk(tmp);
             tmp.clear();
             inTextState = false;
         }
@@ -27,7 +34,7 @@ void Button::setDisplay(std::string t){
             Variable* var = Defs::getVariable(tmp);
             if (var != nullptr){
                 var->addButtonAsDisplay(this);
-                display.insert(display.end(), DisplayChunk(tmp, DisplayType::Var));
+                line.appendVarChunk(tmp);
             }
             tmp.clear();
             inTextState = true;
@@ -38,10 +45,12 @@ void Button::setDisplay(std::string t){
 
     if (!tmp.empty()){
         if (inTextState)
-            display.insert(display.end(), DisplayChunk(tmp, DisplayType::Text));
+            line.appendTextChunk(tmp);
         else
-            display.insert(display.end(), DisplayChunk(tmp, DisplayType::Var));
+            line.appendVarChunk(tmp);
     }
+
+    display.emplace_back(line, std::move(condition));
 }
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {

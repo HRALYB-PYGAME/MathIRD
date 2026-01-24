@@ -123,73 +123,13 @@ int main(int argc, char** argv){
     std::unordered_map<std::string, std::string> linkerMap;
     Defs::loadVariables("assets/variables", linkerMap);
 
-    // FOLLOWING
-    std::unique_ptr<Node> expr = construct(tokenize("x=x-1 "));
-    std::unique_ptr<Node> cond = construct(tokenize("1"));
-
-    printLines(gameState.currentInsight);
-
-    auto out = expr->getOutputs(true);
-    std::cout << "outs:\n";
-    for(auto o:out){
-        std::cout << o << std::endl;
-    }
-    Term term("test");
-    term.addExpression(std::move(expr));
-    term.setCondition(std::move(cond));
-    term.updateSets();
-
-    VariableChanges vc;
-    vc.add("x", 0, 5, 2);
-    std::cout << "length of changes: " << vc.changes.size() << std::endl;
-
-    Button b("testbtn");
-    b.addTerm(std::make_unique<Term>(std::move(term)));
-    b.setDisplay("{x}");
-    Defs::addButton(std::move(b));
-
-    gameState.updateVariableSets(&term);
-
-    Defs::getVariable("y")->printDependencies();
-
-    Button* testbtn = Defs::getButton("testbtn");
-    testbtn->setPosition(2,0);
-
-    std::cout << "parent of terms\n";
-    for(auto& i : testbtn->getTerms()){
-        std::cout << i->getParent().getName() << std::endl;
-    }
-
-    std::cout << "x is displayed at buttons \n";
-    for(auto i : Defs::getVariable("x")->displayedAtButtons){
-        std::cout << i->getName() << std::endl;
-    }
-
+    Defs::loadButtons("assets/buttons");
     Defs::linkVariableHomeButtons(linkerMap);
-
-    std::cout << "x's home button \n";
-    Button* homeBtn = Defs::getVariable("x")->getHomeButton();
-    if (homeBtn != nullptr)
-        std::cout << homeBtn->getName() << std::endl;
-    else
-        std::cout << "null homebtn\n";
-
-    std::cout << "btn list start\n";
-    for(auto& [name, entry] : Defs::btns){
-        std::cout << "\"" << name << "\": \"" << entry.getName() << "\"" << std::endl;
-    }
-    std::cout << "btn list end\n";
-
-    Button* tb = Defs::getButton("testbtn");
-    if (tb == nullptr) std::cout << "?\n";
 
     for (auto& [name, var] : Defs::vars){
         gameState.addVariable(&var);
     }
     gameState.updateVariables();
-
-    std::vector<DisplayLine> i = tb->insight(gameState, 0);
-    gameState.setCurrentInsight(i);
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

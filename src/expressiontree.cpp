@@ -105,8 +105,10 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     std::string var = vNode->var;
     VariableChanges changes;
 
-    if (isAssignment(oper) && !gameState.isVariableUnlocked(var))
+    if (isAssignment(oper) && !gameState.isVariableUnlocked(var)){
+        std::cout << var << " isnt unlocked so adding 0 " << std::endl;
         return changes.add(var, 0);
+    }
     std::cout << "whatever\n";
 
     double varValue = gameState.getVarValueAsDouble(var);

@@ -13,16 +13,14 @@ class Button : Insightable{
 private:
     std::string name;
     std::vector<std::unique_ptr<Term>> terms;
-    std::vector<DisplayChunk> display;
+    std::vector<ConditionalDisplayLine> display;
     ButtonPosition position;
-    // bool pressedDownLeft = false;
-    // bool pressedDownRight = false;
 public:
     Button(std::string name): name(name) {};
 
     // Display
     std::string getDisplay(GameState& gameState);
-    void setDisplay(std::string t);
+    void setDisplay(std::unique_ptr<Node> condition, std::string t);
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
 
@@ -42,14 +40,6 @@ public:
     bool isUnlocked(GameState& gameState);
 
     VariableChanges simulate(GameState& gameState);
-
-    // void pressDownLeft() {pressedDownLeft = true;};
-    // void pressDownRight() {pressedDownRight = true;};
-    // void release() {pressedDownLeft = false; pressedDownRight = false;};
-    // void releaseLeft() {pressedDownLeft = false;};
-    // void releaseRight() {pressedDownRight = false;};
-    // bool isPressedDownLeft() {return pressedDownLeft;};
-    // bool isPressedDownRight() {return pressedDownRight;};
 };
 
 #endif
