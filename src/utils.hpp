@@ -3,6 +3,12 @@
 #include <string>
 #include <unordered_map>
 
+#ifndef NDEBUG
+    #define LOG(msg) std::cout << "[DEBUG] " << msg << "\n"
+#else
+    #define LOG(msg)  // Does nothing in Release
+#endif
+
 class Variable;
 class GameState;
 class Button;
