@@ -97,19 +97,18 @@ VariableValue VariableNode::evaluate(GameState& gameState){
 
 VariableChanges OperandNode::simulate(GameState& gameState){
     if (this->left == nullptr) return VariableChanges();
-    std::cout << "not null\n";
+    LOG("expressiontree.cpp\tsimulate() LEFT IS NOT NULL");
     if (this->left->getType() != NodeType::Variable) return VariableChanges();
-    std::cout << "left is var\n";
+    LOG("expressiontree.cpp\tsimulate() LEFT IS VAR");
     
     VariableNode* vNode = static_cast<VariableNode*>(this->left.get());
     std::string var = vNode->var;
     VariableChanges changes;
 
     if (isAssignment(oper) && !gameState.isVariableUnlocked(var)){
-        std::cout << var << " isnt unlocked so adding 0 " << std::endl;
+        LOG("expressiontree.cpp\tsimulate() " << var << " NOT UNLOCKED");
         return changes.add(var, 0);
     }
-    std::cout << "whatever\n";
 
     double varValue = gameState.getVarValueAsDouble(var);
 
@@ -120,9 +119,10 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     gameState.freeRandom();
     double randValue = this->right->evaluate(gameState).getAsDouble();
 
+    LOG("expressiontree.cpp\tsimulate() VALUES CALCULATED minValue=" << minValue << " randValue=" << randValue << " maxValue=" << maxValue);
+
     switch(this->oper){
         case Operand::Assign:
-            std::cout << minValue << " " << randValue << " " << maxValue << "\n";
             return changes.add(var, minValue-varValue, maxValue-varValue, randValue-varValue);
         case Operand::AddAssign:
             return changes.add(var, minValue, maxValue, randValue);
@@ -429,16 +429,15 @@ std::vector<DisplayLine> OperandNode::arithmeticalInsight(GameState& gameState, 
 }
 
 void createSubtree(std::stack<std::unique_ptr<Node>>& nodeStack, Operand oper){
-    //std::cout << "creating subtree with nodestack of size: " << nodeStack.size() << std::endl;
+    LOG("expressiontree.cpp\tcreating subtree with nodestack of size: " << nodeStack.size());
     std::unique_ptr<Node> rightChild = std::move(nodeStack.top()); nodeStack.pop();
-    //std::cout << "successfully popped right child\n";
     std::unique_ptr<Node> leftChild = nullptr;
     if (!isUnary(oper)){
         leftChild = std::move(nodeStack.top()); nodeStack.pop();
     }
     auto parent = std::make_unique<OperandNode>(oper, std::move(leftChild), std::move(rightChild));
     nodeStack.push(std::move(parent));
-    //std::cout << std::endl;
+    LOG("expressiontree.cpp\tcreating subtree with nodestack of size: " << nodeStack.size() << " succesfull");
 }
 
 void printNodeStack(std::stack<std::unique_ptr<Node>>& nodeStack) {
@@ -502,13 +501,9 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
 }
 
 RangeObject OperandNode::getRangeObject(){
-    //printf("1");
     RangeObject l = left->getRangeObject();
-    //printf("2");
     RangeObject r = right->getRangeObject();
-    //printf("3");
     l.combine(r, oper); return l;
-    //printf("4");
 };
 
 std::unique_ptr<Node> ConstantNode::getRandomDistribution() { 

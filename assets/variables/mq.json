@@ -7,5 +7,5 @@
     },
     "defaultValue": 5,
     "homeButton": "testbtn",
-    "unlockCondition": "x*y>=0"
+    "unlockCondition": "x*y>1"
 }

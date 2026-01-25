@@ -10,15 +10,16 @@ VariableChanges Term::simulate(GameState& gameState){
     if (!this->condition->evaluate(gameState).getAsBool())
         return changes;
     for(size_t i=0; i<this->expressions.size(); i++){
-        std::cout << "expression\n";
         changes.add(this->expressions[i]->simulate(tmpState));
         tmpState.applyChanges(changes);
     }
-    std::cout << "term ci\n";
-    changes.insight(gameState, 0);
     return changes;
 }
 
+/// @brief Returns the insight of a term. Can differ depending on the GameState provided.
+/// @param gameState reference to current GameState
+/// @param level level of the insight where 0 is root
+/// @return vector of DisplayLines, ready to be printed on the screen
 std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     gameState.setCurrentTerm(this->name);
     std::vector<DisplayLine> lines;
@@ -46,23 +47,42 @@ std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     return lines;
 }
 
+/// @brief Changes term's condition.
+/// @param condition unique_ptr to a Node
 void Term::setCondition(std::unique_ptr<Node> condition) {
     this->condition = std::move(condition);
-    // updateDependencies();
 }
 
+/// @brief Expands term's behavior by adding a new expression.
+/// @param expression unique_ptr to a Node
 void Term::addExpression(std::unique_ptr<Node> expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
-    // updateDependencies();
-    // updateInputs();
 }
 
+/// @brief Updates set of dependencies, inputs and outputs. These updates will reflect into variables.
 void Term::updateSets(){
     updateDependencies();
     updateInputs();
     updateOutputs();
+
+    for(auto& name : getDependencies()){
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsDependency(this);
+    }
+    for(auto& name : getInputs()){
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsInput(this);
+    }
+    for(auto& name : getOutputs()){
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsOutput(this);
+    }
 }
 
+/// @brief Updates term's dependencies set. Dependencies are variables that needs to be unlocked in order for term to be unlocked as well.
 void Term::updateDependencies(){
     dependencies.clear();
     auto condDeps = condition->getDependencies();
@@ -73,6 +93,7 @@ void Term::updateDependencies(){
     }
 }
 
+/// @brief Updates term's inputs set. Inputs are variables that can change behavior of such term.
 void Term::updateInputs(){
     inputs.clear();
     for (size_t i=0; i<expressions.size(); i++){
@@ -81,6 +102,7 @@ void Term::updateInputs(){
     }
 }
 
+/// @brief Updates term's outputs set. Outputs are variables than can be changed by the term's execution.
 void Term::updateOutputs(){
     outputs.clear();
     for (size_t i=0; i<expressions.size(); i++){
@@ -89,6 +111,9 @@ void Term::updateOutputs(){
     }
 }
 
+/// @brief Checks if all dependent variables are unlocked.
+/// @param gameState reference to current GameState
+/// @return true when term is unlocked, false otherwise
 bool Term::isUnlocked(GameState& gameState){
     for (const std::string& var : dependencies) {
         if (!gameState.isVariableUnlocked(var))

@@ -91,8 +91,6 @@ void Defs::loadButtons(std::string path){
                     std::unique_ptr<Node> expression = construct(tokenize(expr));
                     term.addExpression(std::move(expression));
                 }
-                updateVariableSets(&term);
-                term.updateSets();
                 button.addTerm(std::make_unique<Term>(std::move(term)));
             }
         }

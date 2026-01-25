@@ -115,109 +115,10 @@ bool isLetter(char c){
 }
 
 int getPrecedence(Operand oper){
-    switch(oper){
-    case Operand::Power:
-        return 6;
-        break;
-    case Operand::Add:
-        return 3;
-        break;
-    case Operand::Subtract:
-        return 3;
-        break;
-    case Operand::Multiply:
-        return 4;
-        break;
-    case Operand::Divide:
-        return 4;
-        break;
-    case Operand::Modulo:
-        return 4;
-        break;
-    case Operand::Equal:
-        return 2;
-        break;
-    case Operand::NotEqual:
-        return 2;
-        break;
-    case Operand::Less:
-        return 2;
-        break;
-    case Operand::Greater:
-        return 2;
-        break;
-    case Operand::LessOrEqual:
-        return 2;
-        break;
-    case Operand::GreaterOrEqual:
-        return 2;
-        break;
-    case Operand::And:
-        return 2;
-        break;
-    case Operand::Or:
-        return 2;
-        break;
-    case Operand::Not:
-        return 5;
-        break;
-    case Operand::Neg:
-        return 5;
-        break;
-    case Operand::Abs:
-        return 5;
-        break;
-    case Operand::Min:
-        return 5;
-        break;
-    case Operand::Max:
-        return 5;
-        break;
-    case Operand::If:
-        return 5;
-        break;
-    case Operand::Assign:
-        return 0;
-        break;
-    case Operand::AddAssign:
-        return 0;
-        break;
-    case Operand::SubAssign:
-        return 0;
-        break;
-    case Operand::MulAssign:
-        return 0;
-        break;
-    case Operand::DivAssign:
-        return 0;
-        break;
-    case Operand::LeftPar:
-        return -1;
-        break;
-    case Operand::RightPar:
-        return -1;
-        break;
-    default:
-        return 0;
-    }
+    auto it = precedenceMap.find(oper);
+    if (it == precedenceMap.end()) return 0;
+    return it->second;
 }
-
-enum class TokenizeState{
-    Empty,
-    Constant,
-    Variable,
-    Plus,
-    Minus,
-    Times,
-    Divide,
-
-    Less,
-    Greater,
-    Not,
-    Equal,
-    And,
-    Or
-};
 
 std::vector<Token> tokenize(std::string text){
     text = text.append(" ");
@@ -249,57 +150,12 @@ std::vector<Token> tokenize(std::string text){
                 acc += c;
                 state = TokenizeState::Variable;
             }
-            else if (c == '+'){
+            else if (tokenizeStateMap.count(c)){
                 acc += c;
-                state = TokenizeState::Plus;
+                state = tokenizeStateMap.at(c);
             }
-            else if (c == '-'){
-                acc += c;
-                state = TokenizeState::Minus;
-            }
-            else if (c == '*'){
-                acc += c;
-                state = TokenizeState::Times;
-            }
-            else if (c == '/'){
-                acc += c;
-                state = TokenizeState::Divide;
-            }
-            else if (c == '<'){
-                acc += c;
-                state = TokenizeState::Less;
-            }
-            else if (c == '>'){
-                acc += c;
-                state = TokenizeState::Greater;
-            }
-            else if (c == '!'){
-                acc += c;
-                state = TokenizeState::Not;
-            }
-            else if (c == '='){
-                acc += c;
-                state = TokenizeState::Equal;
-            }
-            else if (c == '&'){
-                acc += c;
-                state = TokenizeState::And;
-            }
-            else if (c == '|'){
-                acc += c;
-                state = TokenizeState::Or;
-            }
-            else if (c == ')'){
-                tokens.push_back(Operand::RightPar);
-            }
-            else if (c == '('){
-                tokens.push_back(Operand::LeftPar);
-            }
-            else if (c == '%'){
-                tokens.push_back(Operand::Modulo);
-            }
-            else if (c == '^'){
-                tokens.push_back(Operand::Power);
+            else if (tokenMap.count(std::to_string(c))){
+                tokens.push_back(tokenMap.at(std::to_string(c)));
             }
             break;
         case TokenizeState::Constant:
@@ -318,18 +174,8 @@ std::vector<Token> tokenize(std::string text){
                 acc += c;
             }
             else{
-                if (acc.compare("min") == 0)
-                    tokens.push_back(Token(Operand::Min));
-                else if (acc.compare("max") == 0)
-                    tokens.push_back(Token(Operand::Max));
-                else if (acc.compare("abs") == 0)
-                    tokens.push_back(Token(Operand::Abs));
-                else if (acc.compare("true") == 0)
-                    tokens.push_back(Token(1));
-                else if (acc.compare("false") == 0)
-                    tokens.push_back(Token(0));
-                else if (acc.compare("if") == 0)
-                    tokens.push_back(Token(Operand::If));
+                if (tokenMap.count(acc))
+                    tokens.push_back(tokenMap.at(acc));
                 else if (acc[0] == '~')
                     tokens.push_back(Token(acc.substr(1), true));
                 else
@@ -435,7 +281,7 @@ std::vector<Token> tokenize(std::string text){
             break;
         case TokenizeState::Equal:
             if (c == '='){
-                tokens.insert(tokens.end(), Operand::Equal);
+                tokens.push_back(Operand::Equal);
                 state = TokenizeState::Empty;
                 acc.clear();
             }
@@ -477,9 +323,7 @@ std::vector<Token> tokenize(std::string text){
 }
 
 bool isFunction(Operand oper){
-    if (oper == Operand::Abs || oper == Operand::Min || oper == Operand::Max || oper == Operand::If)
-        return true;
-    return false;
+    return functionOperands.count(oper);
 }
 
 bool isLeftAssociative(Operand oper){
@@ -489,13 +333,9 @@ bool isLeftAssociative(Operand oper){
 }
 
 bool isUnary(Operand oper){
-    if (oper == Operand::Abs || oper == Operand::Not || oper == Operand::Neg)
-        return true;
-    return false;
+    return unaryOperands.count(oper);
 }
 
 bool isAssignment(Operand oper){
-    if (oper == Operand::Assign || oper == Operand::AddAssign || oper == Operand::SubAssign || oper == Operand::MulAssign || oper == Operand::DivAssign)
-        return true;
-    return false;
+    return assignmentOperands.count(oper);
 }

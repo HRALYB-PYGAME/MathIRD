@@ -30,13 +30,16 @@ void drawButtons(GameState& gameState){
 
         if (CheckCollisionPointRec(GetMousePosition(), rect)){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
                 VariableChanges c = button.simulate(gameState);
                 c.insight(gameState, 0);
                 gameState.applyChanges(c);
+                gameState.updateCurrentInsight();
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
-
+                LOG("main.cpp\tdrawButtons()" << button.getName() << " RIGHT CLICK");
+                gameState.setCurrentInsightable(&button);
             } 
         }
     }
@@ -70,7 +73,6 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
                         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
                             gameState.setCurrentInsight(chunk.link->insight(gameState, 0));
                     }
-                    //DrawRectangle(wordRect.x, wordRect.y, wordRect.width + currWordGap + 5, wordRect.height, GREEN);
                     DrawTextEx(GetFontDefault(), chunk.text.c_str(), cursor, fontSize, spacing, textColor);
                     cursor.x += wordSize.x + currWordGap;
                     break;
@@ -88,6 +90,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
                 }
                 case DisplayType::NewLine: {
                     cursor.y += 25;
+                    cursor.x = startPos.x;
                     break;
                 }
                 case DisplayType::Indent: {
@@ -126,10 +129,9 @@ int main(int argc, char** argv){
     Defs::loadButtons("assets/buttons");
     Defs::linkVariableHomeButtons(linkerMap);
 
-    for (auto& [name, var] : Defs::vars){
-        gameState.addVariable(&var);
-    }
-    gameState.updateVariables();
+    gameState.addVariables();
+
+    gameState.addButtons();
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

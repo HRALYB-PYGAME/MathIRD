@@ -19,25 +19,37 @@ double GameState::getTotalScore(){
 }
 
 void GameState::applyChanges(VariableChanges changes){
+    LOG("game_state.cpp\tapplyChanges(changes) FUNCTION BEG");
     for (auto& [var, val] : changes.changes){
-        std::cout << "adding " << val.rand << " to " << var << "\n";
         addVarValue(var, VariableValue(val.rand));
-        std::cout << "x val: " << getVarValueAsDouble("x") << "\n";
+        LOG("game_state.cpp\tapplyChanges(changes) ADDED (" << var << " value=" << getVarValueAsDouble(var) << ")");
     }
     this->updateVariables();
+    LOG("game_state.cpp\tapplyChanges(changes) VARIABLES UPDATED");
 }
 
 void GameState::setVarValue(std::string name, VariableValue value){
-    if (variables.find(name) != variables.end())
-        variables.at(name).value.set(value);
-}
-
-void GameState::addVarValue(std::string name, VariableValue value){
+    LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") FUNCTION BEG");
     if (variables.find(name) != variables.end()){
-        variables.at(name) = variables.at(name).value.add(value);
+        variables.at(name).value.set(value);
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE SET");
     }
     else
-        std::cout << "not found\n";
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") " << name << " NOT FOUND");
+}  
+
+void GameState::addVarValue(std::string name, VariableValue value){
+    LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") FUNCTION BEG");
+    if (variables.empty()){
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VARIABLES MAP EMPTY");
+        return;
+    }
+    if (variables.find(name) != variables.end()){
+        variables.at(name) = variables.at(name).value.add(value);
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE ADDED");
+    }
+    else
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") " << name << " NOT FOUND");
 }
 
 void GameState::updateVariables(){
@@ -45,7 +57,7 @@ void GameState::updateVariables(){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr){
             if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this).getAsBool()){
-                std::cout << "unlocking " << name << "\n";
+                LOG("game_state.cpp\tupdateVariables() " << name << " UNLOCKED");
                 entry.unlock();
             }
         }
@@ -63,6 +75,13 @@ void GameState::addVariable(Variable* variable){
     variables.insert({name, entry});
 }
 
+void GameState::addVariables(){
+    for (auto& [name, var] : Defs::vars){
+        addVariable(&var);
+    }
+    updateVariables();
+}
+
 VariableEntry::VariableEntry(VariableValue value){
     this->value = value;
     lock();
@@ -76,6 +95,13 @@ void GameState::addButton(Button* button){
     ButtonEntry entry;
     std::string name = button->getName();
     buttons.insert({name, entry});
+}
+
+void GameState::addButtons(){
+    for(auto& [name, btn] : Defs::btns){
+        addButton(&btn);
+    }
+    updateButtons();
 }
 
 bool GameState::isButtonUnlocked(std::string name){
@@ -159,22 +185,4 @@ double GameState::getVarValueAsDouble(std::string name){
         return 0.0;
     addVariable(var);
     return getVarValueAsDouble(name);
-}
-
-void updateVariableSets(Term* term){
-    for(auto& name : term->getDependencies()){
-        Variable* var = Defs::getVariable(name);
-        if (var != nullptr)
-            var->addTermAsDependency(term);
-    }
-    for(auto& name : term->getInputs()){
-        Variable* var = Defs::getVariable(name);
-        if (var != nullptr)
-            var->addTermAsInput(term);
-    }
-    for(auto& name : term->getOutputs()){
-        Variable* var = Defs::getVariable(name);
-        if (var != nullptr)
-            var->addTermAsOutput(term);
-    }
 }

@@ -54,14 +54,19 @@ void Button::setDisplay(std::unique_ptr<Node> condition, std::string t){
 }
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
+    LOG("button.cpp\tinsight() of " << name << " FUNCTION BEG");
     DisplayLine dl;
-    bool isXUnlocked = gameState.isVariableUnlocked("x");
-    dl.appendTextChunk(isXUnlocked ? "ano" : "ne ):");
+    dl.appendTextChunk("insight of " + name + " button");
+    dl.appendNewLineChunk();
+    dl.appendLines(simulate(gameState).insight(gameState, 0));
+    dl.appendNewLineChunk();
+    LOG("button.cpp\tinsight() of " << name << " returning insight");
     return {dl}; 
 }
 
 void Button::addTerm(std::unique_ptr<Term> term){
     term->setParent(*this);
+    term->updateSets();
     terms.push_back(std::move(term));
 }
 
@@ -77,16 +82,13 @@ VariableChanges Button::simulate(GameState& gameState){
     VariableChanges changes;
     for(auto& term : terms){
         if (term->isUnlocked(gameState)){
-            std::cout << "unlocked\n";
+            LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION STARTED");
             VariableChanges c = term->simulate(gameState);
-            std::cout << "return val\n";
-            c.insight(gameState, 0);
+            LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION DONE");
             changes.add(c);
         }
         else
-            std::cout << "locked\n";
+            LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " LOCKED");
     }
-    std::cout << "button ci\n";
-    changes.insight(gameState, 0);
     return changes;
 }

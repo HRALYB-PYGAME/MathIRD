@@ -75,6 +75,7 @@ void DisplayLine::appendNewLineChunk(){
 void DisplayLine::appendLines(std::vector<DisplayLine> lines){
     for(auto& line : lines){
         appendChunks(line.chunks);
+        appendNewLineChunk();
     }
 }
 

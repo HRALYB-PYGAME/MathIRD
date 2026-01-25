@@ -1,0 +1,480 @@
+make clean
+make[1]: Entering directory '/root/MathIRD'
+rm -rf build
+clear
+[H[2J[3Jmake[1]: Leaving directory '/root/MathIRD'
+make run
+make[1]: Entering directory '/root/MathIRD'
+mkdir -p build
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/main.cpp -o build/main.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/game_state.cpp -o build/game_state.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable.cpp -o build/variable.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable_value.cpp -o build/variable_value.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/tokenizer.cpp -o build/tokenizer.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/expressiontree.cpp -o build/expressiontree.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/insight.cpp -o build/insight.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/term.cpp -o build/term.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/utils.cpp -o build/utils.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/rangeobject.cpp -o build/rangeobject.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/button.cpp -o build/button.o
+g++ -std=c++17 -Wall -I.libs/raylib/include -c src/insightable.cpp -o build/insightable.o
+g++ -std=c++17 -Wall -I.libs/raylib/include build/main.o build/game_state.o build/variable.o build/variable_value.o build/tokenizer.o build/expressiontree.o build/insight.o build/term.o build/utils.o build/rangeobject.o build/button.o build/insightable.o -o build/MathIRD -L./raylib/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -Wl,-rpath,./raylib/lib
+./build/MathIRD
+./build/MathIRD
+INFO: Initializing raylib 5.5
+INFO: Platform backend: DESKTOP (GLFW)
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 1920 x 1080
+INFO:     > Screen size:  800 x 450
+INFO:     > Render size:  800 x 450
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 176
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Microsoft Corporation
+INFO:     > Renderer: D3D12 (Intel(R) UHD Graphics)
+INFO:     > Version:  4.1 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.3
+INFO:     > GLSL:     4.10
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: PLATFORM: DESKTOP (GLFW - X11): Initialized successfully
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: SYSTEM: Working Directory: /root/MathIRD
+[DEBUG] game_state.cpp	updateVariables() s UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+drawButtons() RIGHT CLICK
+setCurrentInsightable() FUNCTION BEG
+setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=0) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=0) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=0)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=1)
+[DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+28 28 28
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=28)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 1
+
+y: 23
+
+[DEBUG] button.cpp	insight() of testbtn returning insight
+setCurrentInsightable() CURRENT INSIGHT UPDATED
+drawButtons() CURRENT INSIGHTABLE SET
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=0) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=0) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=0)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=1)
+[DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+28 28 28
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=28)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 1
+
+y: 23
+
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=1)
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=28)
+[DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+143 143 143
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=143)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 115
+
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+143 143 143
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=143)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 115
+
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=3)
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=143)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+718 718 718
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=718)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 575
+
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+718 718 718
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=718)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 575
+
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=5)
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=718)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+3593 3593 3593
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 2875
+
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+3593 3593 3593
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 2875
+
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=7)
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+17968 17968 17968
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=14375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=14375) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=17968)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=12)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+total changes: 2
+x: 2
+
+y: 14375
+
+[DEBUG] button.cpp	insight() of testbtn returning insight
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully
+make[1]: Leaving directory '/root/MathIRD'

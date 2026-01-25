@@ -53,7 +53,9 @@ class GameState{
         std::unordered_map<std::string, std::vector<ConditionProbability>> probabilities;
         std::string currentTerm;
         size_t currentIndex;
+        Insightable* currentInsightable;
     public:
+
         std::vector<DisplayLine> currentInsight;
         GameState();
         double getTotalScore();
@@ -64,6 +66,7 @@ class GameState{
         bool isVariableUnlocked(std::string name);
         void setVarValue(std::string name, VariableValue value);
         void addVarValue(std::string name, VariableValue value);
+        void addVariables();
         void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
@@ -71,6 +74,7 @@ class GameState{
         // Buttons
         bool isButtonUnlocked(std::string name);
         void updateButtons();
+        void addButtons();
         void addButton(Button* button);
 
         // Debug
@@ -92,8 +96,26 @@ class GameState{
         void setCurrentInsight(std::vector<DisplayLine> insight) {
             this->currentInsight = std::move(insight);
         };
+        void setCurrentInsightable(Insightable* insightable){
+            if (insightable == nullptr){
+                currentInsight.clear();
+                return;
+            }
+            std::cout << "setCurrentInsightable() FUNCTION BEG\n";
+            currentInsightable = insightable;
+            std::cout << "setCurrentInsightable() CURRENT INSIGHTABLE UPDATED\n";
+            setCurrentInsight(currentInsightable->insight(*this, 0));
+            std::cout << "setCurrentInsightable() CURRENT INSIGHT UPDATED\n";
+        };
+        void updateCurrentInsight(){
+            if (currentInsightable == nullptr){
+                currentInsight.clear();
+                return;
+            }
+            setCurrentInsight(currentInsightable->insight(*this, 0));
+        }
 };
 
-void updateVariableSets(Term* term);
+// void updateVariableSets(Term* term);
 
 #endif

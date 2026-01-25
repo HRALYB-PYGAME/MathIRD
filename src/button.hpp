@@ -9,7 +9,7 @@ struct ButtonPosition{
     int col;
 };
 
-class Button : Insightable{
+class Button : public Insightable{
 private:
     std::string name;
     std::vector<std::unique_ptr<Term>> terms;

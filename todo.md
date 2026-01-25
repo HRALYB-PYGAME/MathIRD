@@ -2,13 +2,13 @@
 
 ## priority 5
 
-- fix dependencies/variable sets or whatever when loading from file (figure out how it works)
 - work on basic insights
 - predictive insights
 
 ## priority 4
 
 - expandable chunk type
+- variable insights
 
 ## priority 3
 
