@@ -18,6 +18,12 @@ double GameState::getTotalScore(){
     return score;
 }
 
+void GameState::applyChange(std::string var, double delta){
+    LOG("game_state.cpp\tapplyChange(var=" << var << ", delta=" << delta << ") FUNCTION BEG");
+    addVarValue(var, VariableValue(delta));
+    LOG("game_state.cpp\tapplyChange(var=" << var << ", delta=" << delta << ") ADDED");
+}
+
 void GameState::applyChanges(VariableChanges changes){
     LOG("game_state.cpp\tapplyChanges(changes) FUNCTION BEG");
     for (auto& [var, val] : changes.changes){
@@ -185,4 +191,62 @@ double GameState::getVarValueAsDouble(std::string name){
         return 0.0;
     addVariable(var);
     return getVarValueAsDouble(name);
+}
+
+void GameState::addPacket(Packet packet) {
+    // packets with lowest arrivalTime at the end
+    auto it = packets.begin();
+
+    while (it != packets.end()){
+        if (it->arrivalTime < packet.arrivalTime)
+            break;
+        it++;
+    }
+    packets.insert(it, std::move(packet));
+
+    LOG("game_state.cpp\taddPacket() CURRENT PACKETS ARRIVAL TIMES");
+
+    it = packets.begin();
+    while (it != packets.end()){
+        std::cout << it->arrivalTime.time_since_epoch().count() << "\n";
+        it++;
+    }
+}
+
+void GameState::addPackets(std::vector<Packet> packets) {
+    for(const auto& packet : packets){
+        addPacket(packet);
+    }
+}
+
+void GameState::setCurrentInsight(std::vector<DisplayLine> insight) {
+    LOG("game_state.hpp\tsetCurrentInsight() FUNCTION BEG");
+    this->currentInsight = std::move(insight);
+    LOG("game_state.hpp\tsetCurrentInsight() FUNCTION END");
+};
+
+void GameState::setCurrentInsightable(Insightable* insightable){
+    LOG("game_state.hpp\tsetCurrentInsightable() FUNCTION BEG");
+    if (insightable == nullptr){
+        currentInsight.clear();
+        return;
+    }
+    LOG("game_state.hpp\tsetCurrentInsightable() FUNCTION BEG");
+    currentInsightable = insightable;
+    LOG("game_state.hpp\tsetCurrentInsightable() CURRENT INSIGHTABLE UPDATED");
+    setCurrentInsight(currentInsightable->insight(*this, 0));
+    LOG("game_state.hpp\tsetCurrentInsightable() CURRENT INSIGHT UPDATED");
+};
+
+void GameState::updateCurrentInsight(){
+    LOG("game_state.hpp\tupdateCurrentInsight() FUNCTION BEG");
+    if (currentInsightable == nullptr){
+        LOG("game_state.hpp\tupdateCurrentInsight() Insightable is null - clearing");
+        currentInsight.clear();
+        return;
+    }
+    auto in = currentInsightable->insight(*this, 0);
+    LOG("game_state.hpp\tupdateCurrentInsight() Setting current Insight");
+    setCurrentInsight(in);
+    LOG("game_state.hpp\tupdateCurrentInsight() Current insight set");
 }

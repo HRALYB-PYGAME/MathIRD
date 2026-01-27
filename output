@@ -1,24 +1,5 @@
-make clean
-make[1]: Entering directory '/root/MathIRD'
-rm -rf build
-clear
-[H[2J[3Jmake[1]: Leaving directory '/root/MathIRD'
-make run
-make[1]: Entering directory '/root/MathIRD'
-mkdir -p build
 g++ -std=c++17 -Wall -I.libs/raylib/include -c src/main.cpp -o build/main.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/game_state.cpp -o build/game_state.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable.cpp -o build/variable.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable_value.cpp -o build/variable_value.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/tokenizer.cpp -o build/tokenizer.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/expressiontree.cpp -o build/expressiontree.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/insight.cpp -o build/insight.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/term.cpp -o build/term.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/utils.cpp -o build/utils.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/rangeobject.cpp -o build/rangeobject.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/button.cpp -o build/button.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/insightable.cpp -o build/insightable.o
-g++ -std=c++17 -Wall -I.libs/raylib/include build/main.o build/game_state.o build/variable.o build/variable_value.o build/tokenizer.o build/expressiontree.o build/insight.o build/term.o build/utils.o build/rangeobject.o build/button.o build/insightable.o -o build/MathIRD -L./raylib/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -Wl,-rpath,./raylib/lib
+g++ -std=c++17 -Wall -I.libs/raylib/include build/main.o build/game_state.o build/variable.o build/variable_value.o build/tokenizer.o build/expressiontree.o build/insight.o build/term.o build/utils.o build/rangeobject.o build/button.o build/insightable.o build/packet.o -o build/MathIRD -L./raylib/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -Wl,-rpath,./raylib/lib
 ./build/MathIRD
 ./build/MathIRD
 INFO: Initializing raylib 5.5
@@ -60,18 +41,54 @@ INFO: RLGL: Default OpenGL state initialized successfully
 INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
 INFO: FONT: Default font loaded successfully (224 glyphs)
 INFO: SYSTEM: Working Directory: /root/MathIRD
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] utils.cpp	linkVariableHomeButtons() FUNCTION BEG.
+[DEBUG] utils.cpp	linkVariableHomeButtons() xlinked to (testbtn2).
+[DEBUG] utils.cpp	linkVariableHomeButtons() ylinked to (testbtn).
+[DEBUG] utils.cpp	linkVariableHomeButtons() slinked to (testbtn).
+[DEBUG] utils.cpp	linkVariableHomeButtons() mqlinked to (testbtn).
 [DEBUG] game_state.cpp	updateVariables() s UNLOCKED
 [DEBUG] game_state.cpp	updateVariables() y UNLOCKED
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 INFO: TIMER: Target time per frame: 16.667 milliseconds
-drawButtons() RIGHT CLICK
-setCurrentInsightable() FUNCTION BEG
-setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
-[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=0) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=0) VALUE ADDED
@@ -80,7 +97,9 @@ setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
@@ -90,8 +109,9 @@ setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-28 28 28
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=28 randValue=28 maxValue=28
+[DEBUG] variable_value.cpp add(var=y, min=23, max=23, rand=23) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=23, max=23, rand=23) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
@@ -103,70 +123,48 @@ setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 1
-
-y: 23
-
-[DEBUG] button.cpp	insight() of testbtn returning insight
-setCurrentInsightable() CURRENT INSIGHT UPDATED
-drawButtons() CURRENT INSIGHTABLE SET
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=0) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=0) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=0)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=1)
-[DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-28 28 28
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=1 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=1 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=23
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=23 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=23 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27131499967109
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27131499967109
+27127894415834
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=23)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=23) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=28)
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=23) ADDED
 [DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 1
-
-y: 23
-
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=23)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=23) GAMESTATE packet length=1
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=1)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=1)
-[DEBUG] game_state.cpp	addVarValue(name=y, value=23) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=23) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=28)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=1) ADDED
 [DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=1)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=1) GAMESTATE packet length=0
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
@@ -175,7 +173,9 @@ y: 23
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
@@ -184,8 +184,9 @@ y: 23
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-143 143 143
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=143 randValue=143 maxValue=143
+[DEBUG] variable_value.cpp add(var=y, min=115, max=115, rand=115) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=115, max=115, rand=115) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
@@ -197,66 +198,47 @@ y: 23
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 115
-
-[DEBUG] button.cpp	insight() of testbtn returning insight
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=2)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-143 143 143
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=115
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=115 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=115 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27135970970025
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27135970970025
+27132365418750
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=115)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=115) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=143)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=115) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=115)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=115) GAMESTATE packet length=1
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 115
-
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=3)
-[DEBUG] game_state.cpp	addVarValue(name=y, value=115) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=115) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=143)
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=0
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
@@ -265,7 +247,9 @@ y: 115
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
@@ -274,8 +258,9 @@ y: 115
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-718 718 718
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=718 randValue=718 maxValue=718
+[DEBUG] variable_value.cpp add(var=y, min=575, max=575, rand=575) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=575, max=575, rand=575) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
@@ -287,16 +272,37 @@ y: 115
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 575
-
-[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=575
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=575 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=575 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27140531552560
+27136926001285
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=575)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=575) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=575) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=575)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=575) GAMESTATE packet length=1
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
@@ -305,7 +311,9 @@ y: 575
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
@@ -314,12 +322,13 @@ y: 575
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-718 718 718
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=3593 randValue=3593 maxValue=3593
+[DEBUG] variable_value.cpp add(var=y, min=2875, max=2875, rand=2875) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2875, max=2875, rand=2875) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=718)
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
 [DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
@@ -327,154 +336,551 @@ y: 575
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 575
-
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=5)
-[DEBUG] game_state.cpp	addVarValue(name=y, value=575) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=575) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=718)
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=2875
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=2875 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=2875 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27140931976329
+27140531552560
+27137326425054
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=2875)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=2875) ADDED
 [DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=2875)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=2875) GAMESTATE packet length=2
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
 [DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
 [DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-3593 3593 3593
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 2875
-
-[DEBUG] button.cpp	insight() of testbtn returning insight
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-3593 3593 3593
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 2875
-
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=7)
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=y, value=2875) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=3593)
-[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
-[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
-[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=10)
-[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
-[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
-[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
-[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
-[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED
-17968 17968 17968
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=17968 randValue=17968 maxValue=17968
+[DEBUG] variable_value.cpp add(var=y, min=14375, max=14375, rand=14375) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=14375, max=14375, rand=14375) CHANGES SUCCESFULL
 [DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=14375) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=y, value=14375) VALUE ADDED
 [DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=17968)
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
 [DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
-[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=12)
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
 [DEBUG] game_state.cpp	updateVariables() y UNLOCKED
 [DEBUG] game_state.cpp	updateVariables() x UNLOCKED
 [DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
 [DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
-total changes: 2
-x: 2
-
-y: 14375
-
-[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=14375
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=14375 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=14375 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141116132453
+27140931976329
+27140531552560
+27137510581178
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=14375)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=14375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=14375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=14375) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=14375) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=14375)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=14375) GAMESTATE packet length=3
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=89843 randValue=89843 maxValue=89843
+[DEBUG] variable_value.cpp add(var=y, min=71875, max=71875, rand=71875) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=71875, max=71875, rand=71875) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=71875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=71875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=89843)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=71875
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=71875 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=71875 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+27137660088879
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=71875)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=71875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=71875) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=71875) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=71875) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=71875)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=71875) GAMESTATE packet length=4
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=449218 randValue=449218 maxValue=449218
+[DEBUG] variable_value.cpp add(var=y, min=359375, max=359375, rand=359375) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=359375, max=359375, rand=359375) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=359375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=359375) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=449218)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=359375
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=359375 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=359375 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+27137810031980
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=359375)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=359375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=359375) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=359375) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=359375) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=359375)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=359375) GAMESTATE packet length=5
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2.24609e+06 randValue=2.24609e+06 maxValue=2.24609e+06
+[DEBUG] variable_value.cpp add(var=y, min=1.79688e+06, max=1.79688e+06, rand=1.79688e+06) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=1.79688e+06, max=1.79688e+06, rand=1.79688e+06) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=1.79688e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=1.79688e+06) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=2.24609e+06)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=1.79688e+06
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=1.79688e+06 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=1.79688e+06 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+27137978088092
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=1.79688e+06)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=1.79688e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=1.79688e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=1.79688e+06) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=1.79688e+06) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=1.79688e+06)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=1.79688e+06) GAMESTATE packet length=6
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1.12305e+07 randValue=1.12305e+07 maxValue=1.12305e+07
+[DEBUG] variable_value.cpp add(var=y, min=8.98438e+06, max=8.98438e+06, rand=8.98438e+06) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=8.98438e+06, max=8.98438e+06, rand=8.98438e+06) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=8.98438e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=8.98438e+06) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=1.12305e+07)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=8.98438e+06
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=8.98438e+06 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=8.98438e+06 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141716187952
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141716187952
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+27138110636677
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=8.98438e+06)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=8.98438e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=8.98438e+06) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=8.98438e+06) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=8.98438e+06) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=8.98438e+06)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=8.98438e+06) GAMESTATE packet length=7
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=1) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=4)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=6)
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=5.61523e+07 randValue=5.61523e+07 maxValue=5.61523e+07
+[DEBUG] variable_value.cpp add(var=y, min=4.49219e+07, max=4.49219e+07, rand=4.49219e+07) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=4.49219e+07, max=4.49219e+07, rand=4.49219e+07) CHANGES SUCCESFULL
+[DEBUG] game_state.cpp	applyChanges(changes) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=4.49219e+07) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=4.49219e+07) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (y value=5.61523e+07)
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChanges(changes) ADDED (x value=8)
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] game_state.cpp	applyChanges(changes) VARIABLES UPDATED
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=2 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=4.49219e+07
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=4.49219e+07 PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=4.49219e+07 PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141866169811
+27141716187952
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+27141866169811
+27141716187952
+27141583639367
+27141415583255
+27141265640154
+27141116132453
+27140931976329
+27140531552560
+27138260618536
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, delta=4.49219e+07)
+[DEBUG] game_state.cpp	applyChange(var=y, delta=4.49219e+07) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=4.49219e+07) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=y, value=4.49219e+07) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=y, delta=4.49219e+07) ADDED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, delta=4.49219e+07)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, delta=4.49219e+07) GAMESTATE packet length=8
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=7
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=6
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=5
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=4
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=3
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=2
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=1
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, delta=2)
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.cpp	addVarValue(name=x, value=2) VALUE ADDED
+[DEBUG] game_state.cpp	applyChange(var=x, delta=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, delta=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	updateCurrentInsight() Insightable is null - clearing
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, delta=2) GAMESTATE packet length=0
 INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
 INFO: SHADER: [ID 3] Default shader unloaded successfully
 INFO: TEXTURE: [ID 1] Default texture unloaded successfully
 INFO: Window closed successfully
-make[1]: Leaving directory '/root/MathIRD'

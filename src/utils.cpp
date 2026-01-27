@@ -117,7 +117,7 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
         json j = json::parse(file);
 
         if (!j.contains("name")){
-            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
+            LOG("utils.cpp\tDefs::loadVariables " << entry.path().filename() << " missing 'name'. Skipping.");
             continue;
         }
 
@@ -129,6 +129,10 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
             scoreParams.knee = js.value("knee", 100);
             scoreParams.offset = js.value("offset", 0);
             scoreParams.polarity = stringToPolarity(js.value("polarity", "neutral"));
+        }
+
+        if (j.contains("homeButton")){
+            linkerMap[name] = j["homeButton"];
         }
 
         Variable var(
@@ -143,12 +147,18 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
 }
 
 void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>& linkerMap){
+    LOG("utils.cpp\tlinkVariableHomeButtons() FUNCTION BEG.");
     for(auto [varName, btnName] : linkerMap){
         Button* btn = getButton(btnName);
         if (btn != nullptr){
+            LOG("utils.cpp\tlinkVariableHomeButtons() " << varName << "linked to (" << btnName << ").");
             Variable* var = getVariable(varName);
             if (var != nullptr) var->setHomeButton(*btn);
         }
-        else std::cout << "Button specified in " << varName << "'s config doesnt exist (" << btnName << ").\n";
+        else LOG("utils.cpp\tlinkVariableHomeButtons() Button specified in " << varName << "s config doesnt exist (" << btnName << ").");
     }
+}
+
+double getDistance(ButtonPosition start, ButtonPosition end){
+    return sqrt(pow(start.row - end.row, 2) + pow(start.col - end.col, 2));
 }

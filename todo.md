@@ -4,6 +4,7 @@
 
 - work on basic insights
 - predictive insights
+- look into variable unlocking/locking
 
 ## priority 4
 

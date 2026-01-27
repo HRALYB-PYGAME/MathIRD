@@ -4,11 +4,6 @@
 #include "insightable.hpp"
 #include "variable_value.hpp"
 
-struct ButtonPosition{
-    int row;
-    int col;
-};
-
 class Button : public Insightable{
 private:
     std::string name;
