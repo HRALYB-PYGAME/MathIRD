@@ -5,8 +5,12 @@
 #include "button.hpp"
 #include "raylib.h"
 #include "insightable.hpp"
+#include "packet.hpp"
 #include <set>
 #include <memory>
+#include <chrono>
+
+using Clock = std::chrono::steady_clock;
 
 constexpr float fontSize = 20.0f;
 constexpr float spacing = 2.0f;
@@ -32,9 +36,9 @@ void drawButtons(GameState& gameState){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
                 VariableChanges c = button.simulate(gameState);
-                c.insight(gameState, 0);
-                gameState.applyChanges(c);
-                gameState.updateCurrentInsight();
+                LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
+                gameState.addPackets(getPackets(c, buttonPos, Clock::now()));
+                
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
@@ -111,6 +115,21 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
     }
 }
 
+void updatePackets(GameState& gameState){
+    auto now = Clock::now();
+    auto& packets = gameState.getPackets();
+    while(!packets.empty() && packets.back().arrivalTime < now){
+        auto& packet = packets.back();
+        LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", delta=" << packet.delta << ")");
+        gameState.applyChange(packet.variable, packet.delta);
+        gameState.updateVariables();
+        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", delta=" << packet.delta << ")");
+        gameState.updateCurrentInsight();
+        packets.pop_back();
+        LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", delta=" << packet.delta << ") GAMESTATE packet length=" << packets.size());
+    }
+}
+
 int main(int argc, char** argv){
     std::cout << argv[0] << std::endl;
 
@@ -140,6 +159,7 @@ int main(int argc, char** argv){
         cursor = { (float)GetScreenWidth()/2, 35 };
         drawInsight(gameState.currentInsight, cursor, gameState);
         drawButtons(gameState);
+        updatePackets(gameState);
         EndDrawing();
     }
 

@@ -1,0 +1,26 @@
+{
+    "name": "testbtn2",
+    "displayStates": [  
+        {
+            "condition": "x<10",
+            "text": "X:{x}/Y:{y}"
+        },
+        {
+            "condition": "x<20",
+            "text": "X:{x}//Y:{y}"
+        },
+        {
+            "text": "X:{x}///Y:{y}"
+        }
+    ],
+    "position": { "row": 3, "col": 2 },
+    "terms": [
+        {
+            "name": "term",
+            "condition": "x>=0",
+            "expressions": [
+                "y+=2"
+            ]
+        }
+    ]
+}

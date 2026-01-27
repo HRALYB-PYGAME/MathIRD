@@ -152,6 +152,7 @@ VariableChanges VariableChanges::add(std::string var, double val){
 }
 
 VariableChanges VariableChanges::add(std::string var, double min, double max, double rand){
+    LOG("variable_value.cpp add(var=" << var << ", min=" << min << ", max=" << max << ", rand=" << rand << ") FUNCTION BEG");
     if (min > max){
         double tmp = min;
         min = max;
@@ -165,6 +166,7 @@ VariableChanges VariableChanges::add(std::string var, double min, double max, do
     else{
         this->changes.insert({var, Range(min, max, rand)});
     }
+    LOG("variable_value.cpp add(var=" << var << ", min=" << min << ", max=" << max << ", rand=" << rand << ") CHANGES SUCCESFULL");
     return *this;
 }
 

@@ -7,6 +7,7 @@ bool Term::isConditionMet(GameState& gameState){
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     GameState tmpState = gameState;
+    tmpState.addVariables();
     if (!this->condition->evaluate(gameState).getAsBool())
         return changes;
     for(size_t i=0; i<this->expressions.size(); i++){
@@ -116,8 +117,10 @@ void Term::updateOutputs(){
 /// @return true when term is unlocked, false otherwise
 bool Term::isUnlocked(GameState& gameState){
     for (const std::string& var : dependencies) {
-        if (!gameState.isVariableUnlocked(var))
+        if (!gameState.isVariableUnlocked(var)){
+            LOG("term.cpp\tisUnlocked() TERM " << name << " is locked because " << var << " is.");
             return false;
+        }
     }
     return true;
 }

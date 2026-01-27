@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include "insightable.hpp"
+#include "packet.hpp"
 
 #define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
 
@@ -53,7 +54,9 @@ class GameState{
         std::unordered_map<std::string, std::vector<ConditionProbability>> probabilities;
         std::string currentTerm;
         size_t currentIndex;
-        Insightable* currentInsightable;
+        Insightable* currentInsightable = nullptr;
+
+        std::vector<Packet> packets;
     public:
 
         std::vector<DisplayLine> currentInsight;
@@ -70,6 +73,7 @@ class GameState{
         void addVariable(Variable* variable);
         void updateVariables();
         void applyChanges(VariableChanges changes);
+        void applyChange(std::string var, double delta);
 
         // Buttons
         bool isButtonUnlocked(std::string name);
@@ -91,29 +95,19 @@ class GameState{
         void forceRandom(double val) { forcedRandom = val; };
         void freeRandom() { forcedRandom = -1; };
 
+        // Packets
+        std::vector<Packet>& getPackets() {return packets;};
+        void addPacket(Packet packet);
+        void addPackets(std::vector<Packet> packets);
+
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};
-        void setCurrentInsight(std::vector<DisplayLine> insight) {
-            this->currentInsight = std::move(insight);
-        };
-        void setCurrentInsightable(Insightable* insightable){
-            if (insightable == nullptr){
-                currentInsight.clear();
-                return;
-            }
-            std::cout << "setCurrentInsightable() FUNCTION BEG\n";
-            currentInsightable = insightable;
-            std::cout << "setCurrentInsightable() CURRENT INSIGHTABLE UPDATED\n";
-            setCurrentInsight(currentInsightable->insight(*this, 0));
-            std::cout << "setCurrentInsightable() CURRENT INSIGHT UPDATED\n";
-        };
-        void updateCurrentInsight(){
-            if (currentInsightable == nullptr){
-                currentInsight.clear();
-                return;
-            }
-            setCurrentInsight(currentInsightable->insight(*this, 0));
-        }
+
+        void setCurrentInsight(std::vector<DisplayLine> insight);
+
+        void setCurrentInsightable(Insightable* insightable);
+
+        void updateCurrentInsight();
 };
 
 // void updateVariableSets(Term* term);
