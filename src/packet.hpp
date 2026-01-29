@@ -18,6 +18,8 @@ struct Packet{
 
     ButtonPosition startPos;
     ButtonPosition endPos;
+
+    double getProgress(Clock::time_point time) const;
 };
 
 std::vector<Packet> getPackets(VariableChanges deltas, ButtonPosition startPos, Clock::time_point time);

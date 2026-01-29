@@ -12,6 +12,7 @@
 #include <chrono>
 
 #define PACKET_SPEED 1
+#define PACKET_LOOPBACK_DURATION 1
 
 class Variable;
 class GameState;
@@ -40,14 +41,22 @@ public:
 struct ButtonPosition{
     int row;
     int col;
+
+    bool isSameAs(ButtonPosition other){
+        return other.row == row && other.col == col;
+    }
 };
 
 double getDistance(ButtonPosition start, ButtonPosition end);
 
-inline std::chrono::steady_clock::duration to_duration(double seconds) {
+inline std::chrono::steady_clock::duration secondsToDuration(double seconds) {
     return std::chrono::duration_cast<std::chrono::steady_clock::duration>(
         std::chrono::duration<double>(seconds)
     );
+}
+
+inline double durationToSeconds(std::chrono::steady_clock::duration duration) {
+    return std::chrono::duration_cast<std::chrono::duration<double>>(duration).count();;
 }
 
 #endif

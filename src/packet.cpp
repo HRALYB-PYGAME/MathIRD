@@ -17,8 +17,9 @@ std::vector<Packet> getPackets(VariableChanges deltas, ButtonPosition startPos, 
         }
         p.endPos = var->getHomeButton()->getPosition();
         p.startTime = time;
-        p.duration = getDistance(startPos, p.endPos)/PACKET_SPEED;
-        p.arrivalTime = p.startTime + to_duration(p.duration);
+        if (p.endPos.isSameAs(p.startPos)) p.duration = PACKET_LOOPBACK_DURATION;
+        else p.duration = getDistance(startPos, p.endPos)/PACKET_SPEED;
+        p.arrivalTime = p.startTime + secondsToDuration(p.duration);
         LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << delta.rand << " PACKET CREATED");
 
         packets.push_back(p);
@@ -26,4 +27,10 @@ std::vector<Packet> getPackets(VariableChanges deltas, ButtonPosition startPos, 
     }
     LOG("packet.cpp\tgetPackets() FUNCTION END");
     return packets;
+}
+
+double Packet::getProgress(Clock::time_point time) const{
+    double timePassed = durationToSeconds(time - startTime);
+    if (timePassed > duration) return 1;
+    return timePassed/duration;
 }
