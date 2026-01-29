@@ -20,17 +20,38 @@ const short buttonsPerRow = 4;
 const float outerPadding = 0.05; // percentage of the screen height/width
 const float buttonPadding = 0.05; // percentage of button width to be used as a gap in between
 
+Vector2 getCoordsFromButtonPosition(const ButtonPosition& buttonPos, double& buttonSize, bool getCenter){
+    double screenWidth = GetScreenWidth();
+    double buttonSectionWidth = (screenWidth/2)-outerPadding*screenWidth;
+    double buttonWidth = buttonSectionWidth/(buttonsPerRow + buttonPadding*(buttonsPerRow-1));
+
+    Vector2 coords = { 0,0 };
+    coords.x = (buttonPos.col)*(buttonWidth + buttonPadding*buttonWidth) + outerPadding*screenWidth;
+    coords.y = (buttonPos.row)*(buttonWidth + buttonPadding*buttonWidth) + outerPadding*screenWidth;
+
+    if (getCenter){
+        coords.x += buttonWidth/2;
+        coords.y += buttonWidth/2;
+    }
+
+    buttonSize = buttonWidth;
+
+    return coords;
+}
+
 void drawButtons(GameState& gameState){
-    Vector2 startPos = {outerPadding*GetScreenWidth(), outerPadding*GetScreenHeight()};
-
-    float buttonWidth = (GetScreenWidth()/2-2*GetScreenWidth()*outerPadding)/buttonsPerRow;
-
     for(auto& [key, button] : Defs::btns){
         ButtonPosition buttonPos = button.getPosition();
-        Vector2 relativePos = {buttonWidth*buttonPos.row, buttonWidth*buttonPos.col};
-        Rectangle rect = {startPos.x + relativePos.x, startPos.y + relativePos.y, buttonWidth*(1-buttonPadding), buttonWidth*(1-buttonPadding)};
+        const char* displayText = button.getDisplay(gameState).c_str();
+        double buttonWidth;
+
+        Vector2 pos = getCoordsFromButtonPosition(buttonPos, buttonWidth, false);
+        Rectangle rect = { pos.x, pos.y, buttonWidth, buttonWidth };
         DrawRectanglePro(rect, {0,0}, 0, GREEN);
-        DrawText(button.getDisplay(gameState).c_str(), startPos.x + relativePos.x + buttonWidth/2, startPos.y + relativePos.y + buttonWidth/2, fontSize, WHITE);
+
+        Vector2 textDimensions = MeasureTextEx(GetFontDefault(), displayText, fontSize, spacing);
+        Vector2 textOffset = { (buttonWidth-textDimensions.x)/2, (buttonWidth-textDimensions.y)/2 };
+        DrawText(displayText, pos.x+textOffset.x, pos.y+textOffset.y, fontSize, WHITE);
 
         if (CheckCollisionPointRec(GetMousePosition(), rect)){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -38,7 +59,6 @@ void drawButtons(GameState& gameState){
                 VariableChanges c = button.simulate(gameState);
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
                 gameState.addPackets(getPackets(c, buttonPos, Clock::now()));
-                
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
@@ -118,7 +138,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
 void updatePackets(GameState& gameState){
     auto now = Clock::now();
     auto& packets = gameState.getPackets();
-    while(!packets.empty() && packets.back().arrivalTime < now){
+    while(!packets.empty() && packets.back().getProgress(now) >= 1){
         auto& packet = packets.back();
         LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", delta=" << packet.delta << ")");
         gameState.applyChange(packet.variable, packet.delta);
@@ -127,6 +147,24 @@ void updatePackets(GameState& gameState){
         gameState.updateCurrentInsight();
         packets.pop_back();
         LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", delta=" << packet.delta << ") GAMESTATE packet length=" << packets.size());
+    }
+}
+
+void drawPackets(GameState& gameState){
+    auto now = Clock::now();
+    for(const auto& packet :gameState.getPackets()){
+        double buttonWidth;
+        Vector2 startCoords = getCoordsFromButtonPosition(packet.startPos, buttonWidth, true);
+        Vector2 endCoords = getCoordsFromButtonPosition(packet.endPos, buttonWidth, true);
+        double progress = packet.getProgress(now);
+
+        Vector2 currentCoords = { startCoords.x + (endCoords.x - startCoords.x)*progress,
+                                  startCoords.y + (endCoords.y - startCoords.y)*progress };
+
+        if (packet.delta > 0)
+            DrawCircle(currentCoords.x, currentCoords.y, 20, GREEN);
+        else
+            DrawCircle(currentCoords.x, currentCoords.y, 20, RED);
     }
 }
 
@@ -160,6 +198,7 @@ int main(int argc, char** argv){
         drawInsight(gameState.currentInsight, cursor, gameState);
         drawButtons(gameState);
         updatePackets(gameState);
+        drawPackets(gameState);
         EndDrawing();
     }
 
