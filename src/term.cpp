@@ -8,8 +8,10 @@ VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     GameState tmpState = gameState;
     tmpState.addVariables();
-    if (!this->condition->evaluate(gameState).getAsBool())
+    if (!this->condition->evaluate(gameState).getAsBool()){
+        LOG("term.cpp\tsimulate() of TERM " << name << " IS NOT UNLOCKED");
         return changes;
+    }
     for(size_t i=0; i<this->expressions.size(); i++){
         changes.add(this->expressions[i]->simulate(tmpState));
         tmpState.applyChanges(changes);
@@ -24,8 +26,14 @@ VariableChanges Term::simulate(GameState& gameState){
 std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     gameState.setCurrentTerm(this->name);
     std::vector<DisplayLine> lines;
-    std::vector<DisplayChunk> chunks;
-    VariableChanges simulationResult = this->simulate(gameState);
+
+    DisplayLine line;
+    if (isConditionMet(gameState)) line.appendTextChunk("TERM IS UNLOCKED");
+    else line.appendTextChunk("TERM IS LOCKED");
+    lines.push_back(line);
+
+    auto simulationResultInsight = simulate(gameState).insight(gameState, 0);
+    lines.insert(lines.end(), simulationResultInsight.begin(), simulationResultInsight.end());
 
     /*chunks.push_back(DisplayChunk("Immediate changes:", DisplayType::Text));
     lines.insert(lines.back(), chunks.begin(), chunks.back());

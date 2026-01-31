@@ -6,6 +6,7 @@
         "polarity": "normal" 
     },
     "defaultValue": 5,
-    "homeButton": "testbtn",
-    "unlockCondition": "1"
+    "homeButton": "testbtn2",
+    "unlockCondition": "1",
+    "granularity": 0.05
 }

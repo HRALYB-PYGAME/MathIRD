@@ -142,6 +142,10 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
             VariableValue(j.value("defaultValue", 0.0))
         );
 
+        if (j.contains("granularity")){
+            var.setGranularity(j["granularity"]);
+        }
+
         Defs::addVariable(std::move(var));
     }
 }

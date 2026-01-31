@@ -50,7 +50,8 @@ struct DisplayLine{
     Alignment alignment = Alignment::Left;
 
     DisplayLine() {};
-    DisplayLine(std::vector<DisplayChunk> chunks): chunks(std::move(chunks)) {}
+    DisplayLine(std::vector<DisplayChunk> chunks): chunks(std::move(chunks)) {};
+    DisplayLine(DisplayChunk chunk): chunks({ chunk }) {};
 
     float indent = 0.0f;
 
@@ -65,6 +66,8 @@ struct DisplayLine{
     void appendNewLineChunk();
 
     void appendLines(std::vector<DisplayLine> lines);
+
+    void clear() {chunks.clear();};
 
     void printLine();
 };

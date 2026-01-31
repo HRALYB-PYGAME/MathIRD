@@ -3,14 +3,14 @@
     "displayStates": [  
         {
             "condition": "x<10",
-            "text": "{x}/{y}"
+            "text": "X: {x}"
         },
         {
             "condition": "x<20",
-            "text": "{x}//{y}"
+            "text": "X': {x}"
         },
         {
-            "text": "{x}///{y}"
+            "text": "X'': {x}"
         }
     ],
     "position": { "row": 0, "col": 0 },
@@ -21,7 +21,14 @@
             "expressions": [
                 "x+=min[1, x]",
                 "x+=1",
-                "y=~mq*(y+3)"
+                "y+=min[x*10, 0]"
+            ]
+        },
+        {
+            "name": "y divider",
+            "condition": "x>=15",
+            "expressions": [
+                "y/=3"
             ]
         }
     ]

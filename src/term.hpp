@@ -33,6 +33,7 @@ public:
     std::set<std::string>& getDependencies() {return dependencies;};
     std::set<std::string>& getInputs()       {return inputs;};
     std::set<std::string>& getOutputs()      {return outputs;};
+    const std::vector<std::unique_ptr<Node>>& getExpressions() const {return expressions;};
     std::string getName() {return name;};
     Button& getParent() {return *parent;};
     void setParent(Button& ref) {parent = &ref;};

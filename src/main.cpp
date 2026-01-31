@@ -3,7 +3,6 @@
 #include "expressiontree.hpp"
 #include "term.hpp"
 #include "button.hpp"
-#include "raylib.h"
 #include "insightable.hpp"
 #include "packet.hpp"
 #include <set>
@@ -19,6 +18,7 @@ float currWordGap = 10.0f;
 const short buttonsPerRow = 4;
 const float outerPadding = 0.05; // percentage of the screen height/width
 const float buttonPadding = 0.05; // percentage of button width to be used as a gap in between
+uint64_t seed = 0;
 
 Vector2 getCoordsFromButtonPosition(const ButtonPosition& buttonPos, double& buttonSize, bool getCenter){
     double screenWidth = GetScreenWidth();
@@ -58,7 +58,8 @@ void drawButtons(GameState& gameState){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
                 VariableChanges c = button.simulate(gameState);
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
-                gameState.addPackets(getPackets(c, buttonPos, Clock::now()));
+                auto packets = getPackets(gameState, &button, buttonPos, Clock::now(), seed);
+                gameState.addPackets(packets);
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
@@ -132,6 +133,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
             }
         }
         cursor.y += 25;
+        cursor.x = startPos.x;
     }
 }
 
@@ -140,13 +142,14 @@ void updatePackets(GameState& gameState){
     auto& packets = gameState.getPackets();
     while(!packets.empty() && packets.back().getProgress(now) >= 1){
         auto& packet = packets.back();
-        LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", delta=" << packet.delta << ")");
-        gameState.applyChange(packet.variable, packet.delta);
+        double delta = packet.expression->evaluate(gameState).getAsDouble();
+        LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", delta=" << delta << ")");
+        gameState.applyChange(packet.variable, delta);
         gameState.updateVariables();
-        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", delta=" << packet.delta << ")");
+        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", delta=" << delta << ")");
         gameState.updateCurrentInsight();
         packets.pop_back();
-        LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", delta=" << packet.delta << ") GAMESTATE packet length=" << packets.size());
+        LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", delta=" << delta << ") GAMESTATE packet length=" << packets.size());
     }
 }
 
@@ -161,10 +164,7 @@ void drawPackets(GameState& gameState){
         Vector2 currentCoords = { startCoords.x + (endCoords.x - startCoords.x)*progress,
                                   startCoords.y + (endCoords.y - startCoords.y)*progress };
 
-        if (packet.delta > 0)
-            DrawCircle(currentCoords.x, currentCoords.y, 20, GREEN);
-        else
-            DrawCircle(currentCoords.x, currentCoords.y, 20, RED);
+        DrawCircle(currentCoords.x, currentCoords.y, packet.radius, packet.color);
     }
 }
 

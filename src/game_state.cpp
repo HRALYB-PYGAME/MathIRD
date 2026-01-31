@@ -38,6 +38,7 @@ void GameState::setVarValue(std::string name, VariableValue value){
     LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") FUNCTION BEG");
     if (variables.find(name) != variables.end()){
         variables.at(name).value.set(value);
+        variables.at(name).incrementVersion();
         LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE SET");
     }
     else
@@ -52,6 +53,7 @@ void GameState::addVarValue(std::string name, VariableValue value){
     }
     if (variables.find(name) != variables.end()){
         variables.at(name) = variables.at(name).value.add(value);
+        variables.at(name).incrementVersion();
         LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE ADDED");
     }
     else
@@ -151,6 +153,13 @@ double GameState::insertNewConditionResult(bool result){
     return vec[currentIndex].update(result);
 }
 
+int GameState::getVarVersion(std::string name){
+    if (variables.find(name) != variables.end()){
+        return variables.at(name).version;
+    }
+    return 0;
+}
+
 VariableValue GameState::getVarValue(std::string name){
     if (name == "_R"){
         if (forcedRandom != -1) return VariableValue(forcedRandom);
@@ -193,7 +202,7 @@ double GameState::getVarValueAsDouble(std::string name){
     return getVarValueAsDouble(name);
 }
 
-void GameState::addPacket(Packet packet) {
+void GameState::addPacket(Packet& packet) {
     // packets with lowest arrivalTime at the end
     auto it = packets.begin();
 
@@ -213,8 +222,8 @@ void GameState::addPacket(Packet packet) {
     }
 }
 
-void GameState::addPackets(std::vector<Packet> packets) {
-    for(const auto& packet : packets){
+void GameState::addPackets(std::vector<Packet>& packets) {
+    for(auto& packet : packets){
         addPacket(packet);
     }
 }

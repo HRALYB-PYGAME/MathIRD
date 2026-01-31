@@ -22,6 +22,7 @@ public:
     // Term
     void addTerm(std::unique_ptr<Term>);
     const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
+    const std::vector<std::unique_ptr<Node>> getExpressions(GameState& gameState) const;
 
     // Name
     std::string& getName() {return name;};

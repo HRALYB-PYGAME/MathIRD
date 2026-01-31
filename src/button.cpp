@@ -55,13 +55,30 @@ void Button::setDisplay(std::unique_ptr<Node> condition, std::string t){
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
     LOG("button.cpp\tinsight() of " << name << " FUNCTION BEG");
-    DisplayLine dl;
-    dl.appendTextChunk("insight of " + name + " button");
-    dl.appendNewLineChunk();
-    dl.appendLines(simulate(gameState).insight(gameState, 0));
-    dl.appendNewLineChunk();
+    std::vector<DisplayLine> dl;
+    DisplayLine line;
+    line.appendTextChunk("insight of " + name + " button");
+    line.appendNewLineChunk();
+    line.appendTextChunk("IMMEDIATE CHANGES");
+    line.appendNewLineChunk();
+    line.appendLines(simulate(gameState).insight(gameState, 0));
+    line.appendNewLineChunk();
+    dl.push_back(line);
+
+    for(auto& term : terms){
+        line.clear();
+        line.appendTextChunk("Term ");
+        DisplayChunk termChunk(term->getName());
+        termChunk.setLink(term.get());
+        line.appendChunk(termChunk);
+        dl.push_back(line);
+
+        auto termInsight = term->insight(gameState, 0);
+        dl.insert(dl.end(), termInsight.begin(), termInsight.end());
+        dl.push_back({});
+    }
     LOG("button.cpp\tinsight() of " << name << " returning insight");
-    return {dl}; 
+    return dl;
 }
 
 void Button::addTerm(std::unique_ptr<Term> term){
@@ -81,7 +98,7 @@ bool Button::isUnlocked(GameState& gameState){
 VariableChanges Button::simulate(GameState& gameState){
     VariableChanges changes;
     for(auto& term : terms){
-        if (term->isUnlocked(gameState)){
+        if (term->isUnlocked(gameState) && term->isConditionMet(gameState)){
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION STARTED");
             VariableChanges c = term->simulate(gameState);
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION DONE");
@@ -91,4 +108,16 @@ VariableChanges Button::simulate(GameState& gameState){
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " LOCKED");
     }
     return changes;
+}
+
+const std::vector<std::unique_ptr<Node>> Button::getExpressions(GameState& gameState) const{
+    std::vector<std::unique_ptr<Node>> result;
+    for(const auto& term : terms){
+        if (term->isUnlocked(gameState) && term->isConditionMet(gameState)){
+            for(const auto& expr : term->getExpressions()) {
+                result.push_back(expr->clone()); 
+            }
+        }
+    }
+    return result;
 }

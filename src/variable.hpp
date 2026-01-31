@@ -37,6 +37,7 @@ class Variable : public Insightable{
         ScoreParams scoreParams;
         std::unique_ptr<Node> unlockCondition;
         VariableValue defaultValue;
+        double granularity = 1;
         Button* homeButton;
     public:
         std::set<Term*> asDependencyInTerms;
@@ -58,6 +59,9 @@ class Variable : public Insightable{
         Button* getHomeButton() {return homeButton;};
         void setHomeButton(Button& ref) {homeButton = &ref;};
         Node& getUnlockCondition() {return *unlockCondition;};
+
+        void setGranularity(double value) {granularity=value;};
+        double getGranularity() {return granularity;};
 
         void printDependencies();
 };

@@ -10,9 +10,11 @@
 #include <unordered_map>
 #include <math.h>
 #include <chrono>
+#include "raylib.h"
 
+#define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
+#define PACKET_WEIGHT_MAX 10*M_PI*M_PI
 #define PACKET_SPEED 1
-#define PACKET_LOOPBACK_DURATION 1
 
 class Variable;
 class GameState;
@@ -57,6 +59,13 @@ inline std::chrono::steady_clock::duration secondsToDuration(double seconds) {
 
 inline double durationToSeconds(std::chrono::steady_clock::duration duration) {
     return std::chrono::duration_cast<std::chrono::duration<double>>(duration).count();;
+}
+
+inline double getRandom(uint64_t& currentSeed){
+    uint64_t multiplier = 6364136223846793005ULL;
+    uint64_t increment = 1442695040888963407ULL;
+    currentSeed = currentSeed*multiplier + increment;
+    return currentSeed;
 }
 
 #endif

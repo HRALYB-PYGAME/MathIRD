@@ -25,6 +25,7 @@ struct GeneralConstantNode;
 
 struct Node : public Insightable{
     virtual ~Node() = default;
+    virtual std::unique_ptr<Node> clone() const = 0;
     
     virtual VariableValue evaluate(GameState& gameState) = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
@@ -43,12 +44,15 @@ struct Node : public Insightable{
 
     virtual RangeObject getRangeObject() = 0;
     virtual std::unique_ptr<Node> getRandomDistribution() = 0;
+
+    virtual std::unique_ptr<Node> getPacketExpression(GameState& gameState) const = 0;
 };
 
 struct ConstantNode : Node{
     VariableValue val;
     Operand oper = Operand::NoOperand;
     ConstantNode(VariableValue val): val(val) {};
+    std::unique_ptr<Node> clone() const override;
 
     VariableValue evaluate([[maybe_unused]] GameState& gameState) override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
@@ -67,6 +71,8 @@ struct ConstantNode : Node{
 
     RangeObject getRangeObject() override { return RangeObject(val); };
     std::unique_ptr<Node> getRandomDistribution() override;
+
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override {return nullptr;};
 };
 
 struct GeneralConstantNode : ConstantNode{
@@ -83,6 +89,7 @@ struct VariableNode : Node{
     bool soft;
     Operand oper = Operand::NoOperand;
     VariableNode(std::string var, bool soft): var(var), soft(soft) {};
+    std::unique_ptr<Node> clone() const override;
 
     VariableValue evaluate(GameState& gameState) override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
@@ -101,6 +108,8 @@ struct VariableNode : Node{
 
     RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", false); return RangeObject(var, soft); };
     std::unique_ptr<Node> getRandomDistribution() override;
+
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override {return nullptr;};
 };
 
 struct OperandNode : public Node{
@@ -108,6 +117,7 @@ struct OperandNode : public Node{
     std::unique_ptr<Node> left;
     std::unique_ptr<Node> right;
     OperandNode(Operand oper, std::unique_ptr<Node> left, std::unique_ptr<Node> right): oper(oper), left(std::move(left)), right(std::move(right)) {};
+    std::unique_ptr<Node> clone() const override;
 
     VariableValue evaluate(GameState& gameState) override;
     VariableChanges simulate(GameState& gameState) override;
@@ -126,6 +136,8 @@ struct OperandNode : public Node{
 
     RangeObject getRangeObject() override;
     std::unique_ptr<Node> getRandomDistribution() override;
+
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override;
 };
 
 std::unique_ptr<Node> construct(std::vector<Token> tokens);

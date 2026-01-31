@@ -129,9 +129,9 @@ VariableChanges OperandNode::simulate(GameState& gameState){
         case Operand::SubAssign:
             return changes.add(var, -minValue, -maxValue, -randValue);
         case Operand::MulAssign:
-            return changes.add(var, minValue/varValue - varValue, maxValue/varValue - varValue, randValue/varValue - varValue);
-        case Operand::DivAssign:
             return changes.add(var, minValue*varValue - varValue, maxValue*varValue - varValue, randValue*varValue - varValue);
+        case Operand::DivAssign:
+            return changes.add(var, varValue/minValue - varValue, varValue/maxValue - varValue, varValue/randValue - varValue);
         case Operand::If:
             if (left->evaluate(gameState).getAsBool())
                 return this->right->simulate(gameState);
@@ -531,4 +531,32 @@ std::unique_ptr<Node> OperandNode::getRandomDistribution() {
     if (leftRD->getType() == NodeType::Variable && rightRD->getType() == NodeType::Variable && (oper == Operand::Add || oper == Operand::Subtract))
         return std::make_unique<VariableNode>("_R", false);
     return std::make_unique<OperandNode>(oper, std::move(leftRD), std::move(rightRD));
+}
+
+std::unique_ptr<Node> ConstantNode::clone() const{
+    return std::make_unique<ConstantNode>(this->val);
+}
+
+std::unique_ptr<Node> VariableNode::clone() const{
+    return std::make_unique<VariableNode>(this->var, this->soft);
+}
+
+std::unique_ptr<Node> OperandNode::clone() const{
+    return std::make_unique<OperandNode>(this->oper, this->left->clone(), this->right->clone());
+}
+
+std::unique_ptr<Node> OperandNode::getPacketExpression(GameState& gameState) const{
+    if (isAssignment(oper)){
+        if (oper == Operand::Assign)
+            return this->right->clone();
+        if (oper == Operand::AddAssign)
+            return std::make_unique<OperandNode>(OperandNode(Operand::Add, this->left->clone(), this->right->clone()));
+        if (oper == Operand::SubAssign)
+            return std::make_unique<OperandNode>(OperandNode(Operand::Subtract, this->left->clone(), this->right->clone()));
+        if (oper == Operand::MulAssign)
+            return std::make_unique<OperandNode>(OperandNode(Operand::Multiply, this->left->clone(), this->right->clone()));
+        if (oper == Operand::DivAssign)
+            return std::make_unique<OperandNode>(OperandNode(Operand::Divide, this->left->clone(), this->right->clone()));
+    }
+    return nullptr;
 }

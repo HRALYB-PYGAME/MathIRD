@@ -8,8 +8,6 @@
 #include "insightable.hpp"
 #include "packet.hpp"
 
-#define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
-
 class Node;
 
 struct ConditionProbability{
@@ -36,7 +34,10 @@ struct Entry {
 
 struct VariableEntry : Entry {
     VariableValue value;
+    int version=0;
     VariableEntry(VariableValue value);
+
+    void incrementVersion() {version++;};
 };
 
 struct ButtonEntry : Entry {
@@ -64,6 +65,7 @@ class GameState{
         double getTotalScore();
 
         // Variables
+        int getVarVersion(std::string name);
         VariableValue getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);
@@ -97,8 +99,8 @@ class GameState{
 
         // Packets
         std::vector<Packet>& getPackets() {return packets;};
-        void addPacket(Packet packet);
-        void addPackets(std::vector<Packet> packets);
+        void addPacket(Packet& packet);
+        void addPackets(std::vector<Packet>& packets);
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};

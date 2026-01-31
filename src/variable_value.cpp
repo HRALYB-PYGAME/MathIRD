@@ -171,26 +171,23 @@ VariableChanges VariableChanges::add(std::string var, double min, double max, do
 }
 
 std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level){
-    std::vector<DisplayChunk> chunks;
-    std::cout << "total changes: " << this->changes.size() << "\n";
+    std::vector<DisplayLine> lines;
     for (auto& [name, delta] : this->changes){
+        DisplayLine line;
         DisplayChunk valChunk(name, DisplayType::Var);
         DisplayChunk varChunk(name, DisplayType::Text);
         varChunk.setHover({ valChunk });
         Variable* var = Defs::getVariable(name);
         if (var != nullptr) varChunk.setLink(var);
-        chunks.push_back(varChunk);
+        line.appendChunk(varChunk);
         if (delta.min == delta.max){
-            std::cout << name << ": " + formatDouble(delta.min) + "\n" << std::endl;
-            DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "\n", DisplayType::Text);
-            chunks.push_back(deltaChunk);
+            line.appendTextChunk(": " + formatDouble(delta.min));
         }
         else{
-            std::cout << name << ": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n" << std::endl;
-            DisplayChunk deltaChunk(": " + formatDouble(delta.min) + "-" + formatDouble(delta.max) + "\n", DisplayType::Text);
-            chunks.push_back(deltaChunk);
+            line.appendTextChunk(": " + formatDouble(delta.min) + "-" + formatDouble(delta.max));
         }
+        lines.push_back(line);
     }
 
-    return { DisplayLine(chunks) };
+    return lines;
 }
