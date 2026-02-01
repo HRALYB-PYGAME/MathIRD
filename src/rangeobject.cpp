@@ -23,15 +23,15 @@ RangeObject::RangeObject(VariableValue val){
     this->distribution = nullptr;
 }
 
-RangeObject::RangeObject(std::string str, bool soft){
+RangeObject::RangeObject(std::string str, VariableFlags flags){
     if (str == "_R" || str == "_NR"){
         this->min = std::make_unique<ConstantNode>(ConstantNode(0));
         this->max = std::make_unique<ConstantNode>(ConstantNode(1));
-        this->distribution = std::make_unique<VariableNode>(VariableNode(str, soft));
+        this->distribution = std::make_unique<VariableNode>(VariableNode(str, flags));
     }
     else{
-        this->min = std::make_unique<VariableNode>(VariableNode(str, soft));
-        this->max = std::make_unique<VariableNode>(VariableNode(str, soft));
+        this->min = std::make_unique<VariableNode>(VariableNode(str, flags));
+        this->max = std::make_unique<VariableNode>(VariableNode(str, flags));
         this->distribution = nullptr;
     }
 }

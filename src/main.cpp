@@ -142,20 +142,22 @@ void updatePackets(GameState& gameState){
     auto& packets = gameState.getPackets();
     while(!packets.empty() && packets.back().getProgress(now) >= 1){
         auto& packet = packets.back();
-        double delta = packet.expression->evaluate(gameState).getAsDouble();
-        LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", delta=" << delta << ")");
-        gameState.applyChange(packet.variable, delta);
+        double newValue = packet.expression->evaluate(gameState).getAsDouble();
+        LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", newValue=" << newValue << ")");
+        gameState.applyNewValue(packet.variable, newValue);
         gameState.updateVariables();
-        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", delta=" << delta << ")");
+        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", newValue=" << newValue << ")");
         gameState.updateCurrentInsight();
         packets.pop_back();
-        LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", delta=" << delta << ") GAMESTATE packet length=" << packets.size());
+        LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", newValue=" << newValue << ") GAMESTATE packet length=" << packets.size());
+
+        gameState.updatePackets();
     }
 }
 
 void drawPackets(GameState& gameState){
     auto now = Clock::now();
-    for(const auto& packet :gameState.getPackets()){
+    for(auto& packet :gameState.getPackets()){
         double buttonWidth;
         Vector2 startCoords = getCoordsFromButtonPosition(packet.startPos, buttonWidth, true);
         Vector2 endCoords = getCoordsFromButtonPosition(packet.endPos, buttonWidth, true);

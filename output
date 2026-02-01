@@ -1,17 +1,1289 @@
-make clean
-make[1]: Entering directory '/root/MathIRD'
-rm -rf build
-clear
-[H[2J[3Jmake[1]: Leaving directory '/root/MathIRD'
-make run
-make[1]: Entering directory '/root/MathIRD'
-mkdir -p build
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/main.cpp -o build/main.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/game_state.cpp -o build/game_state.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable.cpp -o build/variable.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/variable_value.cpp -o build/variable_value.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/tokenizer.cpp -o build/tokenizer.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/expressiontree.cpp -o build/expressiontree.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/insight.cpp -o build/insight.o
-g++ -std=c++17 -Wall -I.libs/raylib/include -c src/term.cpp -o build/term.o
-make[1]: Leaving directory '/root/MathIRD'
+./build/MathIRD
+./build/MathIRD
+INFO: Initializing raylib 5.5
+INFO: Platform backend: DESKTOP (GLFW)
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 1920 x 1080
+INFO:     > Screen size:  800 x 450
+INFO:     > Render size:  800 x 450
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 176
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Microsoft Corporation
+INFO:     > Renderer: D3D12 (Intel(R) UHD Graphics)
+INFO:     > Version:  4.1 (Core Profile) Mesa 23.2.1-1ubuntu3.1~22.04.3
+INFO:     > GLSL:     4.10
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: PLATFORM: DESKTOP (GLFW - X11): Initialized successfully
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: SYSTEM: Working Directory: /root/MathIRD
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 3
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 2
+[DEBUG] expressiontree.cpp	creating subtree with nodestack of size: 1 succesfull
+[DEBUG] utils.cpp	linkVariableHomeButtons() FUNCTION BEG.
+[DEBUG] utils.cpp	linkVariableHomeButtons() xlinked to (testbtn).
+[DEBUG] utils.cpp	linkVariableHomeButtons() ylinked to (testbtn2).
+[DEBUG] utils.cpp	linkVariableHomeButtons() slinked to (testbtn).
+[DEBUG] utils.cpp	linkVariableHomeButtons() mqlinked to (testbtn).
+[DEBUG] game_state.cpp	updateVariables() s UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() y UNLOCKED
+[DEBUG] game_state.cpp	updateVariables() x UNLOCKED
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+[DEBUG] main.cpp	drawButtons()testbtn2 RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-4 randValue=-4 maxValue=-4
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-4 randValue=-4 maxValue=-4
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn2 RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-4 randValue=-4 maxValue=-4
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-4 randValue=-4 maxValue=-4
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn2 LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-4 randValue=-4 maxValue=-4
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-4, max=-4, rand=-4) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-5, max=-5, rand=-5) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn2 SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=?
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=0
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	getPackets() DURATION=2.08476
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=0
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	getPackets() DURATION=2.16946
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=0
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=0
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=?
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61921144321866
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61923229082819
+61921144321866
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61923313777598
+61923229082819
+61921144321866
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61923313777598
+61923229082819
+61921144321866
+61921144321866
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, newValue=7)
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=7) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=y, value=7) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=1
+[DEBUG] game_state.cpp	setVarValue(name=y, value=7 version=1) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=7) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, newValue=7)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-6 randValue=-6 maxValue=-6
+[DEBUG] variable_value.cpp add(var=x, min=-6, max=-6, rand=-6) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-6, max=-6, rand=-6) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-7, max=-7, rand=-7) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-7, max=-7, rand=-7) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-6 randValue=-6 maxValue=-6
+[DEBUG] variable_value.cpp add(var=x, min=-6, max=-6, rand=-6) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-6, max=-6, rand=-6) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-7, max=-7, rand=-7) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-7, max=-7, rand=-7) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, newValue=7) GAMESTATE packet length=3
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=0 currentVersion=0
+[DEBUG] packet.cpp	update() variable=y version=0 currentVersion=1
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=0 currentVersion=0
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, newValue=0)
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=2
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0 version=2) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, newValue=0)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, newValue=0) GAMESTATE packet length=2
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=0 currentVersion=0
+[DEBUG] packet.cpp	update() variable=y version=1 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=0 currentVersion=0
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=0)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=0) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=0) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=1
+[DEBUG] game_state.cpp	setVarValue(name=x, value=0 version=1) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=0) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=0)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=0) GAMESTATE packet length=1
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=0 currentVersion=1
+[DEBUG] packet.cpp	update() variable=y version=2 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=1)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=1) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=1) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=2
+[DEBUG] game_state.cpp	setVarValue(name=x, value=1 version=2) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=1) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=1)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=1) GAMESTATE packet length=0
+[DEBUG] main.cpp	drawButtons()testbtn2 RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn2 LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] main.cpp	drawButtons()testbtn2 SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=?
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	getPackets() DURATION=3.9853
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	getPackets() DURATION=3.24938
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=2
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=?
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61931685601947
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61935670901862
+61931685601947
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61935670901862
+61934934983179
+61931685601947
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61935670901862
+61934934983179
+61931685601947
+61931685601947
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, newValue=2)
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=2) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=y, value=2) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=3
+[DEBUG] game_state.cpp	setVarValue(name=y, value=2 version=3) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=2) ADDED
+[DEBUG] game_state.cpp	updateVariables() mq UNLOCKED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, newValue=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-1 randValue=-1 maxValue=-1
+[DEBUG] variable_value.cpp add(var=x, min=-1, max=-1, rand=-1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-1, max=-1, rand=-1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-2, max=-2, rand=-2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-2, max=-2, rand=-2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=-1 randValue=-1 maxValue=-1
+[DEBUG] variable_value.cpp add(var=x, min=-1, max=-1, rand=-1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=-1, max=-1, rand=-1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=-2, max=-2, rand=-2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=-2, max=-2, rand=-2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, newValue=2) GAMESTATE packet length=3
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=2 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=2 currentVersion=2
+[DEBUG] packet.cpp	update() variable=y version=2 currentVersion=3
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, newValue=0)
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=4
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0 version=4) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, newValue=0)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, newValue=0) GAMESTATE packet length=2
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=2 currentVersion=2
+[DEBUG] packet.cpp	update() toBeUpdated=0 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=2 currentVersion=2
+[DEBUG] packet.cpp	update() variable=y version=3 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=2)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=2) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=2) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=3
+[DEBUG] game_state.cpp	setVarValue(name=x, value=2 version=3) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=2) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=2)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=2) GAMESTATE packet length=1
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=2 currentVersion=3
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=3)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=3) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=3) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=4
+[DEBUG] game_state.cpp	setVarValue(name=x, value=3 version=4) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=3) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=3)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=3) GAMESTATE packet length=0
+[DEBUG] main.cpp	drawButtons()testbtn RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn2 RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn2 FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn2 TERM testterm SIMULATION DONE
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=2 randValue=2 maxValue=2
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=2, max=2, rand=2) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	insight() of testbtn2 returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn RIGHT CLICK
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHTABLE UPDATED
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	setCurrentInsightable() CURRENT INSIGHT UPDATED
+[DEBUG] main.cpp	drawButtons()testbtn LEFT CLICK
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] main.cpp	drawButtons()testbtn SUCCESFULL SIMULATION
+[DEBUG] packet.cpp	getPackets() FUNCTION BEG
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=?
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=4
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=x DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=?
+[DEBUG] packet.cpp	getPackets() DURATION=3.18596
+[DEBUG] packet.cpp	update() variable=x version=-1 currentVersion=4
+[DEBUG] packet.cpp	update() variable=y version=-1 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=1
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET CREATED
+[DEBUG] packet.cpp	getPackets() NAME=y DELTA=? PACKET PUSHED
+[DEBUG] packet.cpp	getPackets() FUNCTION END
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61947208878206
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61947208878206
+61947208878206
+[DEBUG] game_state.cpp	addPacket() CURRENT PACKETS ARRIVAL TIMES
+61950394836324
+61947208878206
+61947208878206
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=4)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=4) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=4) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=5
+[DEBUG] game_state.cpp	setVarValue(name=x, value=4 version=5) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=4) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=4)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=4) GAMESTATE packet length=2
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=4 currentVersion=5
+[DEBUG] packet.cpp	update() variable=y version=4 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=4 currentVersion=5
+[DEBUG] packet.cpp	update() variable=y version=4 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=x, newValue=5)
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=5) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=x, value=5) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=6
+[DEBUG] game_state.cpp	setVarValue(name=x, value=5 version=6) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=x, newValue=5) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=x, newValue=5)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=x, newValue=5) GAMESTATE packet length=1
+[DEBUG] game_state.cpp	updatePackets()
+[DEBUG] packet.cpp	update() variable=x version=5 currentVersion=6
+[DEBUG] packet.cpp	update() variable=y version=4 currentVersion=4
+[DEBUG] packet.cpp	update() toBeUpdated=1 forced=0
+[DEBUG] main.cpp	updatePackets() PACKET TO BE EATEN (var=y, newValue=0)
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) FUNCTION BEG
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0) FUNCTION BEG
+[DEBUG] game_state.hpp	incrementVersion() newVersion=5
+[DEBUG] game_state.cpp	setVarValue(name=y, value=0 version=5) VALUE SET
+[DEBUG] game_state.cpp	applyChange(var=y, newValue=0) ADDED
+[DEBUG] main.cpp	updatePackets() CHANGES APPLIED (var=y, newValue=0)
+[DEBUG] game_state.hpp	updateCurrentInsight() FUNCTION BEG
+[DEBUG] button.cpp	insight() of testbtn FUNCTION BEG
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION STARTED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] button.cpp	simulate() of testbtn TERM term SIMULATION DONE
+[DEBUG] button.cpp	simulate() of testbtn TERM y divider LOCKED
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=1 randValue=1 maxValue=1
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=x, min=1, max=1, rand=1) CHANGES SUCCESFULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS NOT NULL
+[DEBUG] expressiontree.cpp	simulate() LEFT IS VAR
+[DEBUG] expressiontree.cpp	simulate() VALUES CALCULATED minValue=0 randValue=0 maxValue=0
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) FUNCTION BEG
+[DEBUG] variable_value.cpp add(var=y, min=0, max=0, rand=0) CHANGES SUCCESFULL
+[DEBUG] term.cpp	simulate() of TERM y divider IS NOT UNLOCKED
+[DEBUG] button.cpp	insight() of testbtn returning insight
+[DEBUG] game_state.hpp	updateCurrentInsight() Setting current Insight
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION BEG
+[DEBUG] game_state.hpp	setCurrentInsight() FUNCTION END
+[DEBUG] game_state.hpp	updateCurrentInsight() Current insight set
+[DEBUG] main.cpp	updatePackets() PACKET EATEN (var=y, newValue=0) GAMESTATE packet length=0
+INFO: TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+INFO: SHADER: [ID 3] Default shader unloaded successfully
+INFO: TEXTURE: [ID 1] Default texture unloaded successfully
+INFO: Window closed successfully

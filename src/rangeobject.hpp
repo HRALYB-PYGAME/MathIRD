@@ -15,7 +15,7 @@ struct RangeObject{
 
     RangeObject(VariableValue min, VariableValue max);
     RangeObject(VariableValue val);
-    RangeObject(std::string str, bool soft);
+    RangeObject(std::string str, VariableFlags flags);
     RangeObject(int min, int max);
 };
 

@@ -10,7 +10,7 @@ std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosit
         if (outputs.empty()) continue;
         std::string name = *outputs.begin();
 
-        std::unique_ptr<Node> expr = expression->getPacketExpression(gameState);
+        std::unique_ptr<Node> expr = expression->getPacketExpression(gameState, true);
 
         LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?");
         Variable* var = Defs::getVariable(name);
@@ -30,27 +30,46 @@ std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosit
             LOG("packet.cpp\tgetPackets() DURATION=" << p.duration);
         }
         p.arrivalTime = p.startTime + secondsToDuration(p.duration);
-        p.lastVersion = -1;
 
-        p.update(gameState);
+        auto inputs = p.expression->getInputs(false);
+        for(auto& input : inputs){
+            p.lastInputsVersions.insert_or_assign(input, -1);
+        }
+
+        p.update(gameState, true);
         
         LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?" << " PACKET CREATED");
 
-        packets.push_back(p);
+        packets.push_back(std::move(p));
         LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?" << " PACKET PUSHED");
     }
     LOG("packet.cpp\tgetPackets() FUNCTION END");
     return packets;
 }
 
-void Packet::update(GameState& gameState){
-    int version = gameState.getVarVersion(variable);
-    if (lastVersion < version){
-        lastVersion = version;
+void Packet::update(GameState& gameState, bool forced){
+    bool toUpdate = false;
+    for(auto& [variable, version] : lastInputsVersions){
+        int currentVersion = gameState.getVarVersion(variable);
+        LOG("packet.cpp\tupdate() variable=" << variable << " version=" << version << " currentVersion=" << currentVersion);
+        if (version < currentVersion){
+            version = currentVersion;
+            toUpdate = true;
+        }
+    }
+
+    LOG("packet.cpp\tupdate() toBeUpdated=" << toUpdate << " forced=" << forced);
+    if (toUpdate || forced){
         double currentValue = gameState.getVarValueAsDouble(variable);
         double expressionEvaluation = expression->evaluate(gameState).getAsDouble();
+        //LOG("packet.cpp\tupdate() exprEvaluation=" << expressionEvaluation);
         double delta = expressionEvaluation - currentValue;
         // update color and radius
+        if (delta > 0) color = GREEN;
+        else if (delta < 0) color = RED;
+        else color = WHITE;
+
+        radius = 20;
     }
 }
 

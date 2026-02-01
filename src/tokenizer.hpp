@@ -6,6 +6,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <set>
+#include "utils.hpp"
 
 enum class Operand{
     NoOperand,
@@ -44,7 +45,7 @@ enum class Operand{
 
 enum class TokenType{
     Variable,
-    SoftVariable,
+    VariableLock, // {var}
     Constant,
     Operand
 };
@@ -63,16 +64,19 @@ enum class TokenizeState{
     Not,
     Equal,
     And,
-    Or
+    Or,
+
+    CurlyBracket
 };
 
 class Token{
     private:
         TokenType type;
         std::variant<double, std::string, Operand> value;
+        VariableFlags variableFlags;
     public:
         Token(double val): type(TokenType::Constant), value(val) {};
-        Token(std::string name, bool soft): type(soft ? TokenType::SoftVariable : TokenType::Variable), value(name) {};
+        Token(std::string name, bool varLock): type(varLock ? TokenType::VariableLock : TokenType::Variable), value(name) {};
         Token(Operand oper): type(TokenType::Operand), value(oper) {};
         void print();
         bool isValue() {if (type == TokenType::Constant || type == TokenType::Variable) return true; return false;};
@@ -80,6 +84,14 @@ class Token{
         double getValueAsDouble() {return std::get<double>(value);};
         std::string getValueAsString() {return std::get<std::string>(value);};
         Operand getValueAsOperand() {return std::get<Operand>(value);};
+
+        bool isSoft() {return type==TokenType::Variable && variableFlags.soft;};
+        bool isFluid() {return type==TokenType::Variable && variableFlags.fluid;};
+        bool isConstant() {return type==TokenType::Variable && variableFlags.constant;};
+        bool isReal() {return type==TokenType::Variable && variableFlags.real;};
+
+        void setFlags(VariableFlags flags) {variableFlags = flags;};
+        VariableFlags getFlags() {return variableFlags;};
 };
 
 std::vector<Token> tokenize(std::string text);

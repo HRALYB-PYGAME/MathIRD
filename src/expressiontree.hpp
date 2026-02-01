@@ -27,7 +27,7 @@ struct Node : public Insightable{
     virtual ~Node() = default;
     virtual std::unique_ptr<Node> clone() const = 0;
     
-    virtual VariableValue evaluate(GameState& gameState) = 0;
+    virtual VariableValue evaluate(GameState& gameState) const = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
@@ -45,7 +45,7 @@ struct Node : public Insightable{
     virtual RangeObject getRangeObject() = 0;
     virtual std::unique_ptr<Node> getRandomDistribution() = 0;
 
-    virtual std::unique_ptr<Node> getPacketExpression(GameState& gameState) const = 0;
+    virtual std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const = 0;
 };
 
 struct ConstantNode : Node{
@@ -54,7 +54,7 @@ struct ConstantNode : Node{
     ConstantNode(VariableValue val): val(val) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate([[maybe_unused]] GameState& gameState) override;
+    VariableValue evaluate([[maybe_unused]] GameState& gameState) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
@@ -72,7 +72,10 @@ struct ConstantNode : Node{
     RangeObject getRangeObject() override { return RangeObject(val); };
     std::unique_ptr<Node> getRandomDistribution() override;
 
-    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override {return nullptr;};
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override {
+        if (base) return nullptr;
+        return std::make_unique<ConstantNode>(val);
+    };
 };
 
 struct GeneralConstantNode : ConstantNode{
@@ -86,12 +89,13 @@ struct GeneralConstantNode : ConstantNode{
 
 struct VariableNode : Node{
     std::string var;
-    bool soft;
     Operand oper = Operand::NoOperand;
-    VariableNode(std::string var, bool soft): var(var), soft(soft) {};
+    VariableFlags flags;
+
+    VariableNode(std::string var, VariableFlags flags): var(var), flags(flags) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate(GameState& gameState) override;
+    VariableValue evaluate(GameState& gameState) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
@@ -106,20 +110,26 @@ struct VariableNode : Node{
     virtual bool isRangeObject() override {if (var == "_R" or var == "_NR") return true; return false;};
     NodeType getType() override { return NodeType::Variable;};
 
-    RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", false); return RangeObject(var, soft); };
+    RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", false); return RangeObject(var, flags); };
     std::unique_ptr<Node> getRandomDistribution() override;
 
-    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override {return nullptr;};
+    bool isSoft() const {return flags.soft;};
+    bool isFluid() const {return flags.fluid;};
+    bool isConstant() const {return flags.constant;};
+    bool isReal() const {return flags.real;};
+
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
 };
 
 struct OperandNode : public Node{
     Operand oper;
     std::unique_ptr<Node> left;
     std::unique_ptr<Node> right;
+    std::set<std::string> variableLocks;
     OperandNode(Operand oper, std::unique_ptr<Node> left, std::unique_ptr<Node> right): oper(oper), left(std::move(left)), right(std::move(right)) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate(GameState& gameState) override;
+    VariableValue evaluate(GameState& gameState) const override;
     VariableChanges simulate(GameState& gameState) override;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
@@ -137,7 +147,9 @@ struct OperandNode : public Node{
     RangeObject getRangeObject() override;
     std::unique_ptr<Node> getRandomDistribution() override;
 
-    std::unique_ptr<Node> getPacketExpression(GameState& gameState) const override;
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
+
+    std::set<std::string>& getVariableLocks() {return variableLocks;};
 };
 
 std::unique_ptr<Node> construct(std::vector<Token> tokens);

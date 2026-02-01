@@ -6,7 +6,7 @@ using namespace std::string_literals;
 
 std::set<std::string> VariableNode::getDependencies(){
     std::set<std::string> deps;
-    if (this->soft) return deps;
+    if (this->isSoft()) return deps;
     deps.insert(this->var);
     return deps;
 }
@@ -87,11 +87,11 @@ bool OperandNode::isConstantValue(GameState& gameState, double val){
     return false;
 }
 
-VariableValue ConstantNode::evaluate([[maybe_unused]] GameState& gameState){
+VariableValue ConstantNode::evaluate([[maybe_unused]] GameState& gameState) const {
     return this->val;
 }
 
-VariableValue VariableNode::evaluate(GameState& gameState){
+VariableValue VariableNode::evaluate(GameState& gameState) const{
     return gameState.getVarValue(this->var);
 }
 
@@ -141,7 +141,7 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     }
 }
 
-VariableValue OperandNode::evaluate(GameState& gameState){
+VariableValue OperandNode::evaluate(GameState& gameState) const{
     VariableValue left(0);
     if (this->left == nullptr) left = VariableValue(0);
     else left = this->left->evaluate(gameState);
@@ -445,6 +445,7 @@ void printNodeStack(std::stack<std::unique_ptr<Node>>& nodeStack) {
 }
 
 std::unique_ptr<Node> construct(std::vector<Token> tokens){
+    std::set<std::string> variableLocks;
     std::stack<std::unique_ptr<Node>> nodeStack;
     std::stack<Operand> operandStack;
     for(size_t i=0; i<tokens.size(); i++){
@@ -455,12 +456,11 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
         case TokenType::Constant:
             nodeStack.push(std::make_unique<ConstantNode>(VariableValue(token.getValueAsDouble())));
             break;
-        case TokenType::SoftVariable:
-            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), true));
-            break;
         case TokenType::Variable:
-            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), false));
+            nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), token.getFlags()));
             break;
+        case TokenType::VariableLock:
+            variableLocks.insert(token.getValueAsString());
         case TokenType::Operand:
             Operand oper = token.getValueAsOperand();
             if (isFunction(oper)){
@@ -497,6 +497,12 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
         createSubtree(nodeStack, topOper);
     }
 
+    if (nodeStack.top()->getType() == NodeType::Operand){
+        for(auto& lock : variableLocks){
+            static_cast<OperandNode*>(nodeStack.top().get())->variableLocks.insert(lock);
+        }
+    }
+
     return std::move(nodeStack.top());
 }
 
@@ -511,8 +517,10 @@ std::unique_ptr<Node> ConstantNode::getRandomDistribution() {
 }
 
 std::unique_ptr<Node> VariableNode::getRandomDistribution() { 
-    if (this->var == "_R" or this->var == "_NR")
-        return std::make_unique<VariableNode>("_R", false);
+    if (this->var == "_R" or this->var == "_NR"){
+        VariableFlags flags;
+        return std::make_unique<VariableNode>("_R", flags);
+    }
     return std::make_unique<GeneralConstantNode>(); 
 }
 
@@ -528,8 +536,10 @@ std::unique_ptr<Node> OperandNode::getRandomDistribution() {
         return rightRD;
     if (rightRD->getType() == NodeType::GeneralConstant)
         return leftRD;
-    if (leftRD->getType() == NodeType::Variable && rightRD->getType() == NodeType::Variable && (oper == Operand::Add || oper == Operand::Subtract))
-        return std::make_unique<VariableNode>("_R", false);
+    if (leftRD->getType() == NodeType::Variable && rightRD->getType() == NodeType::Variable && (oper == Operand::Add || oper == Operand::Subtract)){
+        VariableFlags flags;
+        return std::make_unique<VariableNode>("_R", flags);
+    }
     return std::make_unique<OperandNode>(oper, std::move(leftRD), std::move(rightRD));
 }
 
@@ -538,25 +548,35 @@ std::unique_ptr<Node> ConstantNode::clone() const{
 }
 
 std::unique_ptr<Node> VariableNode::clone() const{
-    return std::make_unique<VariableNode>(this->var, this->soft);
+    return std::make_unique<VariableNode>(this->var, this->flags);
 }
 
 std::unique_ptr<Node> OperandNode::clone() const{
     return std::make_unique<OperandNode>(this->oper, this->left->clone(), this->right->clone());
 }
 
-std::unique_ptr<Node> OperandNode::getPacketExpression(GameState& gameState) const{
+std::unique_ptr<Node> VariableNode::getPacketExpression(GameState& gameState, bool base) const {
+    if (base) return nullptr;
+    if (isConstant()) return std::make_unique<ConstantNode>(this->evaluate(gameState));
+    return std::make_unique<VariableNode>(var, flags);
+};
+
+std::unique_ptr<Node> OperandNode::getPacketExpression(GameState& gameState, bool base) const{
     if (isAssignment(oper)){
         if (oper == Operand::Assign)
-            return this->right->clone();
+            return this->right->getPacketExpression(gameState, false);
+        Operand operand;
         if (oper == Operand::AddAssign)
-            return std::make_unique<OperandNode>(OperandNode(Operand::Add, this->left->clone(), this->right->clone()));
+            operand = Operand::Add;
         if (oper == Operand::SubAssign)
-            return std::make_unique<OperandNode>(OperandNode(Operand::Subtract, this->left->clone(), this->right->clone()));
+            operand = Operand::Subtract;
         if (oper == Operand::MulAssign)
-            return std::make_unique<OperandNode>(OperandNode(Operand::Multiply, this->left->clone(), this->right->clone()));
+            operand = Operand::Multiply;
         if (oper == Operand::DivAssign)
-            return std::make_unique<OperandNode>(OperandNode(Operand::Divide, this->left->clone(), this->right->clone()));
+            operand = Operand::Divide;
+
+        return std::make_unique<OperandNode>(operand, this->left->getPacketExpression(gameState, false), this->right->getPacketExpression(gameState, false));
     }
-    return nullptr;
+    if (base) return nullptr;
+    return std::make_unique<OperandNode>(oper, this->left->getPacketExpression(gameState, false), this->right->getPacketExpression(gameState, false));
 }

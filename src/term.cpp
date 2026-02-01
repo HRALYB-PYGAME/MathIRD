@@ -6,15 +6,12 @@ bool Term::isConditionMet(GameState& gameState){
 
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
-    GameState tmpState = gameState;
-    tmpState.addVariables();
     if (!this->condition->evaluate(gameState).getAsBool()){
         LOG("term.cpp\tsimulate() of TERM " << name << " IS NOT UNLOCKED");
         return changes;
     }
     for(size_t i=0; i<this->expressions.size(); i++){
-        changes.add(this->expressions[i]->simulate(tmpState));
-        tmpState.applyChanges(changes);
+        changes.add(this->expressions[i]->simulate(gameState));
     }
     return changes;
 }

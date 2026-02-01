@@ -6,9 +6,9 @@
 #include <vector>
 #include <string>
 #include "insightable.hpp"
-#include "packet.hpp"
 
 class Node;
+struct Packet;
 
 struct ConditionProbability{
     double currentProbability = 0;
@@ -35,9 +35,13 @@ struct Entry {
 struct VariableEntry : Entry {
     VariableValue value;
     int version=0;
+    int blockCounter=0;
     VariableEntry(VariableValue value);
 
-    void incrementVersion() {version++;};
+    void incrementVersion() {
+        LOG("game_state.hpp\tincrementVersion() newVersion=" << version+1);
+        version++;
+    };
 };
 
 struct ButtonEntry : Entry {
@@ -69,13 +73,17 @@ class GameState{
         VariableValue getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);
+        void blockVariable(std::string name);
+        void unblockVariable(std::string name);
+        bool isVariableBlocked(std::string name);
         void setVarValue(std::string name, VariableValue value);
         void addVarValue(std::string name, VariableValue value);
         void addVariables();
         void addVariable(Variable* variable);
         void updateVariables();
-        void applyChanges(VariableChanges changes);
-        void applyChange(std::string var, double delta);
+        void applyDeltas(VariableChanges changes);
+        void applyDelta(std::string var, double delta);
+        void applyNewValue(std::string var, double newValue);
 
         // Buttons
         bool isButtonUnlocked(std::string name);
@@ -99,8 +107,9 @@ class GameState{
 
         // Packets
         std::vector<Packet>& getPackets() {return packets;};
-        void addPacket(Packet& packet);
+        void addPacket(Packet packet);
         void addPackets(std::vector<Packet>& packets);
+        void updatePackets();
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};

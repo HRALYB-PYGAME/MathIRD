@@ -4,6 +4,7 @@
 #include "variable.hpp"
 #include "term.hpp"
 #include "button.hpp"
+#include "packet.hpp"
 
 GameState::GameState() : currentInsight() {
 }
@@ -18,20 +19,26 @@ double GameState::getTotalScore(){
     return score;
 }
 
-void GameState::applyChange(std::string var, double delta){
-    LOG("game_state.cpp\tapplyChange(var=" << var << ", delta=" << delta << ") FUNCTION BEG");
+void GameState::applyDelta(std::string var, double delta){
+    LOG("game_state.cpp\tapplyDelta(var=" << var << ", delta=" << delta << ") FUNCTION BEG");
     addVarValue(var, VariableValue(delta));
-    LOG("game_state.cpp\tapplyChange(var=" << var << ", delta=" << delta << ") ADDED");
+    LOG("game_state.cpp\tapplyDelta(var=" << var << ", delta=" << delta << ") ADDED");
 }
 
-void GameState::applyChanges(VariableChanges changes){
-    LOG("game_state.cpp\tapplyChanges(changes) FUNCTION BEG");
+void GameState::applyDeltas(VariableChanges changes){
+    LOG("game_state.cpp\tapplyDeltas(changes) FUNCTION BEG");
     for (auto& [var, val] : changes.changes){
         addVarValue(var, VariableValue(val.rand));
-        LOG("game_state.cpp\tapplyChanges(changes) ADDED (" << var << " value=" << getVarValueAsDouble(var) << ")");
+        LOG("game_state.cpp\tapplyDeltas(changes) ADDED (" << var << " value=" << getVarValueAsDouble(var) << ")");
     }
     this->updateVariables();
-    LOG("game_state.cpp\tapplyChanges(changes) VARIABLES UPDATED");
+    LOG("game_state.cpp\tapplyDeltas(changes) VARIABLES UPDATED");
+}
+
+void GameState::applyNewValue(std::string var, double newValue){
+    LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") FUNCTION BEG");
+    setVarValue(var, VariableValue(newValue));
+    LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") ADDED");
 }
 
 void GameState::setVarValue(std::string name, VariableValue value){
@@ -39,7 +46,7 @@ void GameState::setVarValue(std::string name, VariableValue value){
     if (variables.find(name) != variables.end()){
         variables.at(name).value.set(value);
         variables.at(name).incrementVersion();
-        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE SET");
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << " version=" << variables.at(name).version << ") VALUE SET");
     }
     else
         LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") " << name << " NOT FOUND");
@@ -77,7 +84,24 @@ bool GameState::isVariableUnlocked(std::string name){
     return variables.at(name).unlocked;
 }
 
+void GameState::blockVariable(std::string name){
+    if (variables.find(name) != variables.end())
+        variables.at(name).blockCounter++;
+}
+
+void GameState::unblockVariable(std::string name){
+    if (variables.find(name) != variables.end())
+        variables.at(name).blockCounter--;
+}
+
+bool GameState::isVariableBlocked(std::string name){
+    if (variables.find(name) == variables.end()) return false;
+    return variables.at(name).blockCounter==0;
+}
+
+
 void GameState::addVariable(Variable* variable){
+    if (variables.count(variable->getName())) return;
     VariableEntry entry(variable->getDefaultValue());
     std::string name = variable->getName();
     variables.insert({name, entry});
@@ -202,12 +226,12 @@ double GameState::getVarValueAsDouble(std::string name){
     return getVarValueAsDouble(name);
 }
 
-void GameState::addPacket(Packet& packet) {
+void GameState::addPacket(Packet packet) {
     // packets with lowest arrivalTime at the end
     auto it = packets.begin();
 
     while (it != packets.end()){
-        if (it->arrivalTime < packet.arrivalTime)
+        if (it->arrivalTime <= packet.arrivalTime)
             break;
         it++;
     }
@@ -224,7 +248,15 @@ void GameState::addPacket(Packet& packet) {
 
 void GameState::addPackets(std::vector<Packet>& packets) {
     for(auto& packet : packets){
-        addPacket(packet);
+        addPacket(std::move(packet));
+    }
+    packets.clear();
+}
+
+void GameState::updatePackets(){
+    for(auto& packet : packets){
+        LOG("game_state.cpp\tupdatePackets()");
+        packet.update(*this, false);
     }
 }
 

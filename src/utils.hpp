@@ -49,6 +49,22 @@ struct ButtonPosition{
     }
 };
 
+struct VariableFlags{
+    bool soft = false; //~var - can bypass variable not being unlocked
+    bool fluid = false; //var~ - can bypass lock counter
+    bool constant = false; //$var - take value of the variable before sending into packet
+    bool real = false; //var? - value of the variable after all packets arrive
+
+    // ~varName
+    void setSoft() {soft = true;};
+    // varName~
+    void setFluid() {fluid = true;};
+    // $varName
+    void setConstant() {constant = true;};
+    // varName?
+    void setReal() {real = true;};
+};
+
 double getDistance(ButtonPosition start, ButtonPosition end);
 
 inline std::chrono::steady_clock::duration secondsToDuration(double seconds) {

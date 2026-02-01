@@ -1,6 +1,7 @@
 #include "tokenizer.hpp"
 
 void Token::print(){
+    std::string flags = "";
     switch(this->type){
         case TokenType::Constant:
             std::cout << "Token Type: Constant (" << std::get<double>(this->value) << ")\n";
@@ -95,10 +96,15 @@ void Token::print(){
             }
             break;
         case TokenType::Variable:
+            flags.clear();
+            if (isSoft()) flags += "Soft ";
+            if (isFluid()) flags += "Fluid ";
+            if (isConstant()) flags += "Constant ";
+            if (isReal()) flags += "Real ";
             std::cout << "Token Type: Variable (" << std::get<std::string>(this->value) << ")\n";
             break;
-        case TokenType::SoftVariable:
-            std::cout << "Token Type: ~Variable (" << std::get<std::string>(this->value) << ")\n";
+        case TokenType::VariableLock:
+            std::cout << "Token Type: VariableLock (" << std::get<std::string>(this->value) << ")\n";
             break;
     }
 }
@@ -109,7 +115,13 @@ bool isNumber(char c){
 }
 
 bool isLetter(char c){
-    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '~')
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+        return true;
+    return false;
+}
+
+bool isVarFlagChar(char c){
+    if (c == '~' || c == '$' || c == '?')
         return true;
     return false;
 }
@@ -146,7 +158,10 @@ std::vector<Token> tokenize(std::string text){
                 tokens.push_back(Operand::RightPar);
                 tokens.push_back(Operand::LeftPar);
             }
-            else if (isLetter(c) || c == '_'){
+            else if (c == '{'){
+                state = TokenizeState::CurlyBracket;
+            }
+            else if (isLetter(c) || c == '_' || isVarFlagChar(c)){
                 acc += c;
                 state = TokenizeState::Variable;
             }
@@ -170,21 +185,48 @@ std::vector<Token> tokenize(std::string text){
             }
             break;
         case TokenizeState::Variable:
-            if (isLetter(c) || c == '_' || isNumber(c)){
+            if (isLetter(c) || c == '_' || isNumber(c) || isVarFlagChar(c)){
                 acc += c;
             }
             else{
                 if (tokenMap.count(acc))
                     tokens.push_back(tokenMap.at(acc));
-                else if (acc[0] == '~')
-                    tokens.push_back(Token(acc.substr(1), true));
-                else
+                else if (acc.size() == 1)
                     tokens.push_back(Token(acc, false));
+                else{
+                    VariableFlags flags;
+                    while (acc.size() > 0 && (acc[0] == '~' || acc[0] == '$')){
+                        if (acc[0] == '~') flags.setSoft();
+                        if (acc[0] == '$') flags.setConstant();
+                        acc.erase(0, 1);
+                    }
+                    while (acc.size() > 0 && (acc.back() == '~' || acc.back() == '?')){
+                        if (acc.back() == '~') flags.setFluid();
+                        if (acc.back() == '?') flags.setReal();
+                        acc.pop_back();
+                    }
+
+                    Token varToken(acc, false);
+                    varToken.setFlags(flags);
+                    tokens.push_back(varToken);
+                }
                 state = TokenizeState::Empty;
                 acc.clear();
                 i--;
             }
             break;
+        case TokenizeState::CurlyBracket:
+            if (c == '_' || isLetter(c) || (isNumber(c) && !acc.empty()))
+                acc += c;
+            if (c == ',' && !acc.empty()){
+                tokens.push_back(Token(acc, true));
+                acc.clear();
+            }
+            if (c == '}'){
+                if (!acc.empty()) tokens.push_back(Token(acc, true));
+                acc.clear();
+                state = TokenizeState::Empty;
+            }
         case TokenizeState::Plus:
             if (c == '='){
                 tokens.push_back(Operand::AddAssign);
