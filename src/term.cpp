@@ -1,17 +1,18 @@
 #include "term.hpp"
 
-bool Term::isConditionMet(GameState& gameState){
-    return this->condition->evaluate(gameState).getAsBool();
+bool Term::isActive(GameState& gameState){
+    if (!this->isUnlocked(gameState)) return false;
+    return this->condition->evaluate(gameState) != 0;
 }
 
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
-    if (!this->condition->evaluate(gameState).getAsBool()){
+    if (!this->condition->evaluate(gameState) != 0){
         LOG("term.cpp\tsimulate() of TERM " << name << " IS NOT UNLOCKED");
         return changes;
     }
     for(size_t i=0; i<this->expressions.size(); i++){
-        changes.add(this->expressions[i]->simulate(gameState));
+        changes.add(this->expressions[i].expr->simulate(gameState));
     }
     return changes;
 }
@@ -25,8 +26,10 @@ std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     std::vector<DisplayLine> lines;
 
     DisplayLine line;
-    if (isConditionMet(gameState)) line.appendTextChunk("TERM IS UNLOCKED");
-    else line.appendTextChunk("TERM IS LOCKED");
+    if (!isUnlocked(gameState)) line.appendTextChunk("TERM IS LOCKED");
+    else if (!isActive(gameState)) line.appendTextChunk("TERM IS INACTIVE");
+    else if (!isUnblocked(gameState)) line.appendTextChunk("TERM IS BLOCKED");
+    else line.appendTextChunk("TERM IS UNLOCKED");
     lines.push_back(line);
 
     auto simulationResultInsight = simulate(gameState).insight(gameState, 0);
@@ -61,7 +64,7 @@ void Term::setCondition(std::unique_ptr<Node> condition) {
 
 /// @brief Expands term's behavior by adding a new expression.
 /// @param expression unique_ptr to a Node
-void Term::addExpression(std::unique_ptr<Node> expression) {
+void Term::addExpression(Expression expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
 }
 
@@ -70,6 +73,7 @@ void Term::updateSets(){
     updateDependencies();
     updateInputs();
     updateOutputs();
+    updateBlockers();
 
     for(auto& name : getDependencies()){
         Variable* var = Defs::getVariable(name);
@@ -86,6 +90,32 @@ void Term::updateSets(){
         if (var != nullptr)
             var->addTermAsOutput(this);
     }
+    for(auto& name : getBlockers()){
+        Variable* var = Defs::getVariable(name);
+        if (var != nullptr)
+            var->addTermAsOutput(this);
+    }
+}
+
+void Term::printSets(){
+    std::cout << name << " Sets\n";
+    std::cout << "Dependencies: (";
+    for(auto& name : getDependencies()){
+        std::cout << name;
+    }
+    std::cout << ")\nInputs: (";
+    for(auto& name : getInputs()){
+        std::cout << name;
+    }
+    std::cout << ")\n Outputs: (";
+    for(auto& name : getOutputs()){
+        std::cout << name;
+    }
+    std::cout << ")\n Blockers: (";
+    for(auto& name : getBlockers()){
+        std::cout << name;
+    }
+    std::cout << ")\n";
 }
 
 /// @brief Updates term's dependencies set. Dependencies are variables that needs to be unlocked in order for term to be unlocked as well.
@@ -94,7 +124,7 @@ void Term::updateDependencies(){
     auto condDeps = condition->getDependencies();
     dependencies.insert(condDeps.begin(), condDeps.end());
     for (size_t i=0; i<expressions.size(); i++){
-        auto exprDeps = expressions[i]->getDependencies();
+        auto exprDeps = expressions[i].expr->getDependencies();
         dependencies.insert(exprDeps.begin(), exprDeps.end());
     }
 }
@@ -103,7 +133,7 @@ void Term::updateDependencies(){
 void Term::updateInputs(){
     inputs.clear();
     for (size_t i=0; i<expressions.size(); i++){
-        auto exprIns = expressions[i]->getInputs(true);
+        auto exprIns = expressions[i].expr->getInputs(true);
         inputs.insert(exprIns.begin(), exprIns.end());
     }
 }
@@ -112,8 +142,17 @@ void Term::updateInputs(){
 void Term::updateOutputs(){
     outputs.clear();
     for (size_t i=0; i<expressions.size(); i++){
-        auto exprOuts = expressions[i]->getOutputs(true);
+        auto exprOuts = expressions[i].expr->getOutputs(true);
         outputs.insert(exprOuts.begin(), exprOuts.end());
+    }
+}
+
+void Term::updateBlockers(){
+    LOG("term.cpp\tupdateBlockers name=" << name << "");
+    blockers.clear();
+    for (size_t i=0; i<expressions.size(); i++){
+        auto exprBlocks = expressions[i].expr->getBlockers(true);
+        blockers.insert(exprBlocks.begin(), exprBlocks.end());
     }
 }
 
@@ -127,5 +166,17 @@ bool Term::isUnlocked(GameState& gameState){
             return false;
         }
     }
+    return true;
+}
+
+bool Term::isUnblocked(GameState& gameState){
+    if (!isActive(gameState)) return false;
+    for (auto& blocker : blockers){
+        if (gameState.isVariableBlocked(blocker)){
+            std::cout << blocker << " blocked\n";
+            return false;
+        }
+    }
+
     return true;
 }

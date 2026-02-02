@@ -10,30 +10,35 @@ class Button;
 class Term : public Insightable{
 private:
     std::unique_ptr<Node> condition;
-    std::vector<std::unique_ptr<Node>> expressions;
+    std::vector<Expression> expressions;
     std::set<std::string> dependencies;
     std::set<std::string> inputs;
     std::set<std::string> outputs;
+    std::set<std::string> blockers;
     std::string name;
     Button* parent;
 public:
     Term(std::string name): name(name) {};
 
     void setCondition(std::unique_ptr<Node> condition);
-    void addExpression(std::unique_ptr<Node> expression);
-    bool isConditionMet(GameState& gameState);
+    void addExpression(Expression expression);
+    bool isActive(GameState& gameState);
     VariableChanges simulate(GameState& gameState);
     void updateDependencies();
     void updateInputs();
     void updateOutputs();
+    void updateBlockers();
     void updateSets();
+    void printSets();
     bool isUnlocked(GameState& gameState);
+    bool isUnblocked(GameState& gameState);
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
 
     std::set<std::string>& getDependencies() {return dependencies;};
     std::set<std::string>& getInputs()       {return inputs;};
     std::set<std::string>& getOutputs()      {return outputs;};
-    const std::vector<std::unique_ptr<Node>>& getExpressions() const {return expressions;};
+    std::set<std::string>& getBlockers()     {return blockers;};
+    const std::vector<Expression>& getExpressions() const {return expressions;};
     std::string getName() {return name;};
     Button& getParent() {return *parent;};
     void setParent(Button& ref) {parent = &ref;};

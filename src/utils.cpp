@@ -70,8 +70,8 @@ void Defs::loadButtons(std::string path){
             auto& displayStates = j["displayStates"];
             for(const auto& state : displayStates){
                 if (!state.contains("text")) continue;
-                std::unique_ptr<Node> condition = construct(tokenize(state.value("condition", "1")));
-                button.setDisplay(std::move(condition), state["text"]);
+                Expression condition = construct(tokenize(state.value("condition", "1")));
+                button.setDisplay(std::move(condition.expr), state["text"]);
                 if (!state.contains("condition")) break;
             }
         }
@@ -85,10 +85,10 @@ void Defs::loadButtons(std::string path){
                 if (!t.contains("name")) continue;
                 if (!t.contains("expressions")) continue;
                 Term term(t["name"]);
-                std::unique_ptr<Node> condition = construct(tokenize(t.value("condition", "1")));
-                term.setCondition(std::move(condition));
+                Expression condition = construct(tokenize(t.value("condition", "1")));
+                term.setCondition(std::move(condition.expr));
                 for(const auto& expr : t["expressions"]){
-                    std::unique_ptr<Node> expression = construct(tokenize(expr));
+                    Expression expression = construct(tokenize(expr));
                     term.addExpression(std::move(expression));
                 }
                 button.addTerm(std::make_unique<Term>(std::move(term)));
@@ -138,8 +138,8 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
         Variable var(
             name, 
             scoreParams, 
-            construct(tokenize(j.value("unlockCondition", "1"))), 
-            VariableValue(j.value("defaultValue", 0.0))
+            construct(tokenize(j.value("unlockCondition", "1"))).expr, 
+            j.value("defaultValue", 0.0)
         );
 
         if (j.contains("granularity")){

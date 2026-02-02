@@ -59,6 +59,7 @@ void drawButtons(GameState& gameState){
                 VariableChanges c = button.simulate(gameState);
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
                 auto packets = getPackets(gameState, &button, buttonPos, Clock::now(), seed);
+                for(auto& packet : packets) LOG("main.cpp\tdrawButtons() packetvar=" << packet.variable);
                 gameState.addPackets(packets);
             }
 
@@ -96,7 +97,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
                     if (chunk.link != nullptr && CheckCollisionPointRec(GetMousePosition(), wordRect)) {
                         textColor = BLUE;
                         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-                            gameState.setCurrentInsight(chunk.link->insight(gameState, 0));
+                            gameState.setCurrentInsightable(chunk.link);
                     }
                     DrawTextEx(GetFontDefault(), chunk.text.c_str(), cursor, fontSize, spacing, textColor);
                     cursor.x += wordSize.x + currWordGap;
@@ -142,7 +143,10 @@ void updatePackets(GameState& gameState){
     auto& packets = gameState.getPackets();
     while(!packets.empty() && packets.back().getProgress(now) >= 1){
         auto& packet = packets.back();
-        double newValue = packet.expression->evaluate(gameState).getAsDouble();
+        double newValue = packet.expression->evaluate(gameState);
+        for(auto lock : packet.variableLocks){
+            gameState.unblockVariable(lock);
+        }
         LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", newValue=" << newValue << ")");
         gameState.applyNewValue(packet.variable, newValue);
         gameState.updateVariables();

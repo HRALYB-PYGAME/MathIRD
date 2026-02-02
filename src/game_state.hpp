@@ -33,10 +33,11 @@ struct Entry {
 };
 
 struct VariableEntry : Entry {
-    VariableValue value;
+    double value;
+    double realValue;
     int version=0;
     int blockCounter=0;
-    VariableEntry(VariableValue value);
+    VariableEntry(double value);
 
     void incrementVersion() {
         LOG("game_state.hpp\tincrementVersion() newVersion=" << version+1);
@@ -70,20 +71,24 @@ class GameState{
 
         // Variables
         int getVarVersion(std::string name);
-        VariableValue getVarValue(std::string name);
+        double getVarValue(std::string name);
         double getVarValueAsDouble(std::string name);
         bool isVariableUnlocked(std::string name);
         void blockVariable(std::string name);
         void unblockVariable(std::string name);
         bool isVariableBlocked(std::string name);
-        void setVarValue(std::string name, VariableValue value);
-        void addVarValue(std::string name, VariableValue value);
+        int getVariableBlockCounter(std::string name);
+        void setVarValue(std::string name, double value);
+        void addVarValue(std::string name, double value);
         void addVariables();
         void addVariable(Variable* variable);
         void updateVariables();
         void applyDeltas(VariableChanges changes);
         void applyDelta(std::string var, double delta);
         void applyNewValue(std::string var, double newValue);
+        void updateRealValue(std::string name);
+        double getRealValue(std::string name);
+        void setRealValue(std::string name, double value);
 
         // Buttons
         bool isButtonUnlocked(std::string name);

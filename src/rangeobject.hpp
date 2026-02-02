@@ -13,10 +13,9 @@ struct RangeObject{
 
     void combine(RangeObject& ro, Operand oper);
 
-    RangeObject(VariableValue min, VariableValue max);
-    RangeObject(VariableValue val);
+    RangeObject(double min, double max);
+    RangeObject(double val);
     RangeObject(std::string str, VariableFlags flags);
-    RangeObject(int min, int max);
 };
 
 #endif

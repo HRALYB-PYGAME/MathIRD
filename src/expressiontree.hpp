@@ -27,15 +27,16 @@ struct Node : public Insightable{
     virtual ~Node() = default;
     virtual std::unique_ptr<Node> clone() const = 0;
     
-    virtual VariableValue evaluate(GameState& gameState) const = 0;
+    virtual double evaluate(GameState& gameState, bool realValues=false) const = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     virtual std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) = 0; 
 
-    virtual std::set<std::string> getDependencies() = 0;
-    virtual std::set<std::string> getInputs(bool root) = 0;
-    virtual std::set<std::string> getOutputs(bool root) = 0;
+    virtual std::set<std::string> getDependencies() const = 0;
+    virtual std::set<std::string> getInputs(bool root) const = 0;
+    virtual std::set<std::string> getOutputs(bool root) const = 0;
+    virtual std::set<std::string> getBlockers(bool root) const = 0;
 
     virtual bool isConstant(GameState& gameState) = 0;
     virtual bool isConstantValue(GameState& gameState, double val) = 0;
@@ -46,23 +47,26 @@ struct Node : public Insightable{
     virtual std::unique_ptr<Node> getRandomDistribution() = 0;
 
     virtual std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const = 0;
+
+    virtual std::string getVarString() const = 0;
 };
 
 struct ConstantNode : Node{
-    VariableValue val;
+    double val;
     Operand oper = Operand::NoOperand;
-    ConstantNode(VariableValue val): val(val) {};
+    ConstantNode(double val): val(val) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate([[maybe_unused]] GameState& gameState) const override;
+    double evaluate([[maybe_unused]] GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
-    std::set<std::string> getDependencies() override { std::set<std::string> deps; return deps; };
-    std::set<std::string> getInputs([[maybe_unused]] bool root) override { std::set<std::string> deps; return deps; };
-    std::set<std::string> getOutputs([[maybe_unused]] bool root) override { std::set<std::string> deps; return deps; };
+    std::set<std::string> getDependencies() const override { return {}; };
+    std::set<std::string> getInputs([[maybe_unused]] bool root) const override { return {}; };
+    std::set<std::string> getOutputs([[maybe_unused]] bool root) const override { return {}; };
+    std::set<std::string> getBlockers(bool root) const override { return {}; };
 
     bool isConstant([[maybe_unused]] GameState& gameState) override {return true;};
     bool isConstantValue([[maybe_unused]] GameState& gameState, double val) override;
@@ -76,10 +80,12 @@ struct ConstantNode : Node{
         if (base) return nullptr;
         return std::make_unique<ConstantNode>(val);
     };
+
+    std::string getVarString() const override { return ""; }
 };
 
 struct GeneralConstantNode : ConstantNode{
-    GeneralConstantNode() : ConstantNode(VariableValue(0.0)) {};
+    GeneralConstantNode() : ConstantNode(0) {};
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
@@ -95,22 +101,23 @@ struct VariableNode : Node{
     VariableNode(std::string var, VariableFlags flags): var(var), flags(flags) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate(GameState& gameState) const override;
+    double evaluate(GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
-    std::set<std::string> getDependencies() override;
-    std::set<std::string> getInputs(bool root) override;
-    std::set<std::string> getOutputs(bool root) override;
+    std::set<std::string> getDependencies() const override;
+    std::set<std::string> getInputs(bool root) const override;
+    std::set<std::string> getOutputs(bool root) const override;
+    std::set<std::string> getBlockers(bool root) const override;
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
     virtual bool isRangeObject() override {if (var == "_R" or var == "_NR") return true; return false;};
     NodeType getType() override { return NodeType::Variable;};
 
-    RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", false); return RangeObject(var, flags); };
+    RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", VariableFlags()); return RangeObject(var, flags); };
     std::unique_ptr<Node> getRandomDistribution() override;
 
     bool isSoft() const {return flags.soft;};
@@ -119,25 +126,27 @@ struct VariableNode : Node{
     bool isReal() const {return flags.real;};
 
     std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
+
+    std::string getVarString() const override { return var; };
 };
 
 struct OperandNode : public Node{
     Operand oper;
     std::unique_ptr<Node> left;
     std::unique_ptr<Node> right;
-    std::set<std::string> variableLocks;
     OperandNode(Operand oper, std::unique_ptr<Node> left, std::unique_ptr<Node> right): oper(oper), left(std::move(left)), right(std::move(right)) {};
     std::unique_ptr<Node> clone() const override;
 
-    VariableValue evaluate(GameState& gameState) const override;
+    double evaluate(GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate(GameState& gameState) override;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
-    std::set<std::string> getDependencies() override;
-    std::set<std::string> getInputs(bool root) override;
-    std::set<std::string> getOutputs([[maybe_unused]] bool root) override;
+    std::set<std::string> getDependencies() const override;
+    std::set<std::string> getInputs(bool root) const override;
+    std::set<std::string> getOutputs([[maybe_unused]] bool root) const override;
+    std::set<std::string> getBlockers(bool root) const override;
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
@@ -149,9 +158,19 @@ struct OperandNode : public Node{
 
     std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
 
+    std::string getVarString() const override { return ""; };
+};
+
+struct Expression{
+    std::unique_ptr<Node> expr;
+    std::set<std::string> variableLocks;
+    Expression clone() const;
+
+    Expression(std::unique_ptr<Node> expr, std::set<std::string> variableLocks): expr(std::move(expr)), variableLocks(variableLocks) {};
+
     std::set<std::string>& getVariableLocks() {return variableLocks;};
 };
 
-std::unique_ptr<Node> construct(std::vector<Token> tokens);
+Expression construct(std::vector<Token> tokens);
 
 #endif

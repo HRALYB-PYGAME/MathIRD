@@ -15,6 +15,7 @@ struct Packet{
     std::string variable;
     std::unique_ptr<Node> expression;
     std::map<std::string, int> lastInputsVersions;
+    std::set<std::string> variableLocks;
 
     // VISUALS
     double radius;

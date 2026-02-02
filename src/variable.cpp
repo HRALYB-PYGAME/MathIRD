@@ -28,7 +28,7 @@ ScoreParams getScoreParams(double knee, double offset, Polarity polarity) {
     return {knee, offset, polarity};
 }
 
-Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, VariableValue defaultValue)
+Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue)
     : name(std::move(name)), 
       scoreParams(scoreParams), 
       unlockCondition(std::move(unlockCondition)), 
@@ -52,6 +52,10 @@ void Variable::addTermAsInput(Term* term){
 
 void Variable::addTermAsOutput(Term* term){
     asOutputInTerms.insert(term);
+}
+
+void Variable::addTermAsBlocker(Term* term){
+    asBlockerInTerms.insert(term);
 }
 
 void Variable::addButtonAsDisplay(Button* button){

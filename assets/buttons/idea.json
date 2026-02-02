@@ -26,9 +26,9 @@
         },
         {
             "name": "y divider",
-            "condition": "x>=15",
+            "condition": "1",
             "expressions": [
-                "y/=3"
+                "y=0"
             ]
         }
     ]

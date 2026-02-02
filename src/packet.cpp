@@ -6,21 +6,23 @@ std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosit
     LOG("packet.cpp\tgetPackets() FUNCTION BEG");
     std::vector<Packet> packets;
     for(auto& expression : button->getExpressions(gameState)){
-        auto outputs = expression->getOutputs(true);
+        auto outputs = expression.expr->getOutputs(true);
         if (outputs.empty()) continue;
         std::string name = *outputs.begin();
 
-        std::unique_ptr<Node> expr = expression->getPacketExpression(gameState, true);
+        std::unique_ptr<Node> expr = expression.expr->getPacketExpression(gameState, true);
+        
 
         LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?");
         Variable* var = Defs::getVariable(name);
 
         Packet p;
         p.variable = name;
+        p.variableLocks = expression.variableLocks;
         p.expression = std::move(expr);
         p.startPos = startPos;
         if (var->getHomeButton() == nullptr){
-            LOG("packet.cpp\tgetPackets() NAME=" << name << " HAVE AN INVALID HOME BUTTON");
+            LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " HAVE AN INVALID HOME BUTTON");
         }
         p.endPos = var->getHomeButton()->getPosition();
         p.startTime = time;
@@ -38,10 +40,10 @@ std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosit
 
         p.update(gameState, true);
         
-        LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?" << " PACKET CREATED");
+        LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET CREATED");
 
         packets.push_back(std::move(p));
-        LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?" << " PACKET PUSHED");
+        LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET PUSHED");
     }
     LOG("packet.cpp\tgetPackets() FUNCTION END");
     return packets;
@@ -61,7 +63,7 @@ void Packet::update(GameState& gameState, bool forced){
     LOG("packet.cpp\tupdate() toBeUpdated=" << toUpdate << " forced=" << forced);
     if (toUpdate || forced){
         double currentValue = gameState.getVarValueAsDouble(variable);
-        double expressionEvaluation = expression->evaluate(gameState).getAsDouble();
+        double expressionEvaluation = expression->evaluate(gameState);
         //LOG("packet.cpp\tupdate() exprEvaluation=" << expressionEvaluation);
         double delta = expressionEvaluation - currentValue;
         // update color and radius

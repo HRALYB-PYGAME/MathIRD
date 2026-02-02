@@ -84,6 +84,7 @@ std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
 void Button::addTerm(std::unique_ptr<Term> term){
     term->setParent(*this);
     term->updateSets();
+    term->printSets();
     terms.push_back(std::move(term));
 }
 
@@ -95,27 +96,48 @@ bool Button::isUnlocked(GameState& gameState){
     return false;
 }
 
+bool Button::isActive(GameState& gameState){
+    for(auto& term : terms){
+        if (term->isActive(gameState))
+            return true;
+    }
+    return false;
+}
+
+bool Button::isUnblocked(GameState& gameState){
+    for(auto& term : terms){
+        if (term->isUnblocked(gameState))
+            return true;
+    }
+    return false;
+}
+
+
 VariableChanges Button::simulate(GameState& gameState){
     VariableChanges changes;
     for(auto& term : terms){
-        if (term->isUnlocked(gameState) && term->isConditionMet(gameState)){
+        if (term->isUnblocked(gameState)){
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION STARTED");
             VariableChanges c = term->simulate(gameState);
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION DONE");
             changes.add(c);
         }
-        else
+        else if (!term->isUnlocked(gameState))
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " LOCKED");
+        else if (!term->isActive(gameState))
+            LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " NOT ACTIVE");
+        else
+            LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " BLOCKED");
     }
     return changes;
 }
 
-const std::vector<std::unique_ptr<Node>> Button::getExpressions(GameState& gameState) const{
-    std::vector<std::unique_ptr<Node>> result;
+const std::vector<Expression> Button::getExpressions(GameState& gameState) const{
+    std::vector<Expression> result;
     for(const auto& term : terms){
-        if (term->isUnlocked(gameState) && term->isConditionMet(gameState)){
+        if (term->isUnblocked(gameState)){
             for(const auto& expr : term->getExpressions()) {
-                result.push_back(expr->clone()); 
+                result.push_back(expr.clone()); 
             }
         }
     }

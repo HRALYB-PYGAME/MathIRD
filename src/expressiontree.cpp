@@ -4,21 +4,29 @@
 
 using namespace std::string_literals;
 
-std::set<std::string> VariableNode::getDependencies(){
+std::set<std::string> VariableNode::getDependencies() const{
     std::set<std::string> deps;
     if (this->isSoft()) return deps;
     deps.insert(this->var);
     return deps;
 }
 
-std::set<std::string> OperandNode::getDependencies(){
+std::set<std::string> OperandNode::getDependencies() const{
     auto leftDeps = this->left->getDependencies();
     auto rightDeps = this->right->getDependencies();
     leftDeps.insert(rightDeps.begin(), rightDeps.end());
     return leftDeps;
 }
 
-std::set<std::string> VariableNode::getInputs(bool root){
+std::set<std::string> VariableNode::getInputs(bool root) const{
+    std::set<std::string> set;
+    if (!root){
+        set.insert(var);
+    }
+    return set;
+}
+
+std::set<std::string> VariableNode::getOutputs(bool root) const{
     std::set<std::string> set;
     if (!root){
         set.insert(this->var);
@@ -26,36 +34,48 @@ std::set<std::string> VariableNode::getInputs(bool root){
     return set;
 }
 
-std::set<std::string> VariableNode::getOutputs(bool root){
-    std::set<std::string> set;
-    if (!root){
-        set.insert(this->var);
-    }
-    return set;
-}
-
-std::set<std::string> OperandNode::getInputs(bool root){
+std::set<std::string> OperandNode::getInputs(bool root) const{
     std::set<std::string> set;
     if (root){
-        if (isAssignment(this->oper)){
-            auto rightIns = this->right->getInputs(false);
+        if (isAssignment(oper)){
+            auto rightIns = right->getInputs(false);
             set.insert(rightIns.begin(), rightIns.end());
         }
     }
     else {
-        auto leftIns = this->left->getInputs(false);
-        auto rightIns = this->right->getInputs(false);
+        auto leftIns = left->getInputs(false);
+        auto rightIns = right->getInputs(false);
         set.insert(leftIns.begin(), leftIns.end());
         set.insert(rightIns.begin(), rightIns.end());
     }
     return set;
 }
 
-std::set<std::string> OperandNode::getOutputs(bool root){
+std::set<std::string> OperandNode::getOutputs(bool root) const{
     std::set<std::string> set;
-    if (isAssignment(this->oper)){
-        auto leftOuts = this->left->getOutputs(false);
+    if (isAssignment(oper)){
+        auto leftOuts = left->getOutputs(false);
         set.insert(leftOuts.begin(), leftOuts.end());
+    }
+    return set;
+}
+
+std::set<std::string> VariableNode::getBlockers(bool root) const{
+    std::set<std::string> set;
+    if (!isFluid()) set.insert(var);
+    return set;
+}
+
+std::set<std::string> OperandNode::getBlockers(bool root) const{
+    std::set<std::string> set;
+    if (isAssignment(oper) || !root){
+        auto leftBlocks = left->getBlockers(false);
+        auto rightBlocks = right->getBlockers(false);
+        set.insert(leftBlocks.begin(), leftBlocks.end());
+        set.insert(rightBlocks.begin(), rightBlocks.end());
+    }
+    else {
+        std::cout << "BIG PGOE HMM\n";
     }
     return set;
 }
@@ -71,27 +91,29 @@ bool OperandNode::isConstant(GameState& gameState){
 }
 
 bool ConstantNode::isConstantValue([[maybe_unused]] GameState& gameState, double val){
-    if (this->val.getAsDouble() == val) return true;
+    if (this->val == val) return true;
     return false;
 }
 
 bool VariableNode::isConstantValue(GameState& gameState, double val){
-    if (this->isConstant(gameState) && this->evaluate(gameState).getAsDouble() == val)
+    if (this->isConstant(gameState) && this->evaluate(gameState) == val)
         return true;
     return false;
 }
 
 bool OperandNode::isConstantValue(GameState& gameState, double val){
-    if (this->isConstant(gameState) && this->evaluate(gameState).getAsDouble() == val)
+    if (this->isConstant(gameState) && this->evaluate(gameState) == val)
         return true;
     return false;
 }
 
-VariableValue ConstantNode::evaluate([[maybe_unused]] GameState& gameState) const {
+double ConstantNode::evaluate([[maybe_unused]] GameState& gameState, bool realValues) const {
     return this->val;
 }
 
-VariableValue VariableNode::evaluate(GameState& gameState) const{
+double VariableNode::evaluate(GameState& gameState, bool realValues) const{
+    if (isReal()) return gameState.getRealValue(this->var);
+    if (realValues) return gameState.getRealValue(this->var);
     return gameState.getVarValue(this->var);
 }
 
@@ -101,8 +123,9 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     if (this->left->getType() != NodeType::Variable) return VariableChanges();
     LOG("expressiontree.cpp\tsimulate() LEFT IS VAR");
     
-    VariableNode* vNode = static_cast<VariableNode*>(this->left.get());
-    std::string var = vNode->var;
+    //VariableNode* vNode = static_cast<VariableNode*>(this->left.get());
+    std::string var = left->getVarString();
+    if (var == "") return VariableChanges();
     VariableChanges changes;
 
     if (isAssignment(oper) && !gameState.isVariableUnlocked(var)){
@@ -113,11 +136,11 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     double varValue = gameState.getVarValueAsDouble(var);
 
     gameState.forceRandom(0);
-    double minValue = this->right->evaluate(gameState).getAsDouble();
+    double minValue = this->right->evaluate(gameState);
     gameState.forceRandom(1);
-    double maxValue = this->right->evaluate(gameState).getAsDouble();
+    double maxValue = this->right->evaluate(gameState);
     gameState.freeRandom();
-    double randValue = this->right->evaluate(gameState).getAsDouble();
+    double randValue = this->right->evaluate(gameState);
 
     LOG("expressiontree.cpp\tsimulate() VALUES CALCULATED minValue=" << minValue << " randValue=" << randValue << " maxValue=" << maxValue);
 
@@ -133,7 +156,7 @@ VariableChanges OperandNode::simulate(GameState& gameState){
         case Operand::DivAssign:
             return changes.add(var, varValue/minValue - varValue, varValue/maxValue - varValue, varValue/randValue - varValue);
         case Operand::If:
-            if (left->evaluate(gameState).getAsBool())
+            if (left->evaluate(gameState) != 0)
                 return this->right->simulate(gameState);
             return changes;
         default:
@@ -141,85 +164,77 @@ VariableChanges OperandNode::simulate(GameState& gameState){
     }
 }
 
-VariableValue OperandNode::evaluate(GameState& gameState) const{
-    VariableValue left(0);
-    if (this->left == nullptr) left = VariableValue(0);
-    else left = this->left->evaluate(gameState);
-    VariableValue right = this->right->evaluate(gameState);
-    VariableValue val(0);
+double OperandNode::evaluate(GameState& gameState, bool realValues) const{
+    double left = 0;
+    if (this->left != nullptr) left = this->left->evaluate(gameState);
+    double right = this->right->evaluate(gameState);
 
     switch(this->oper){
     case Operand::Add:
-        return left.add(right);
+        return left + right;
         break;
     case Operand::Subtract:
-        return left.subtract(right);
+        return left - right;
         break;
     case Operand::Multiply:
-        return left.multiply(right);
+        return left * right;
         break;
     case Operand::Divide:
-        return left.divide(right);
+        return left / right;
         break;
     case Operand::Neg:
-        return right.multiply(VariableValue(-1));
+        return -right;
     case Operand::Assign:
         return right;
     case Operand::AddAssign:
-        val = left.add(right);
-        return val;
+        return left + right;
     case Operand::SubAssign:
-        val = left.subtract(right);
-        return val;
+        return left - right;
     case Operand::MulAssign:
-        val = left.multiply(right);
-        return val;
+        return left * right;
     case Operand::DivAssign:
-        val = left.divide(right);
-        return val;
+        return left / right;
     case Operand::Equal:
-        if (left.isEqualTo(right)) return VariableValue(true);
-        return VariableValue(false);
+        if (left == right) return 1;
+        return 0;
     case Operand::NotEqual:
-        if (left.isEqualTo(right)) return VariableValue(false);
-        return VariableValue(true);
+        if (left != right) return 0;
+        return 1;
     case Operand::Less:
-        if (left.isLessThan(right)) return VariableValue(true);
-        return VariableValue(false);
+        if (left< right) return 1;
+        return 0;
     case Operand::Greater:
-        if (left.isGreaterThan(right)) return VariableValue(true);
-        return VariableValue(false);
+        if (left > right) return 1;
+        return 0;
     case Operand::LessOrEqual:
-        if (left.isLessThan(right) || left.isEqualTo(right)) return VariableValue(true);
-        return VariableValue(false);
+        if (left <= right) return 1;
+        return 0;
     case Operand::GreaterOrEqual:
-        if (left.isGreaterThan(right) || left.isEqualTo(right)) return VariableValue(true);
-        return VariableValue(false);
+        if (left >= right) return 1;
+        return 0;
     case Operand::Modulo:
-        return left.modulo(right);
+        return (int)left % (int)right;
     case Operand::Power:
-        return left.power(right);
+        return pow(left, right);
     case Operand::And:
-        return VariableValue(left.logAnd(right));
+        return left != 0 && right != 0;
     case Operand::Or:
-        return VariableValue(left.logOr(right));
+        return left != 0 || right != 0;
     case Operand::Not:
-        return VariableValue(right.logNot());
+        if (right != 0) return 0;
+        return 1;
     case Operand::Abs:
-        if (right.isGreaterThan(VariableValue(0))) return right;
-        return right.multiply(VariableValue(-1));
+        return right > 0 ? right : -right;
     case Operand::Min:
-        if (right.isGreaterThan(left)) return left;
-        return right;
+        return right > left ? left : right;
     case Operand::Max:
-        if (right.isGreaterThan(left)) return right;
-        return left;
+        return right < left ? left : right;
     case Operand::If:
-        if (left.getAsBool())
+        if (left != 0)
             return right;
-        return VariableValue(0);
+        return 0;
     default:
-        return VariableValue(0);
+        return 0;
     }
 }
 
@@ -228,7 +243,9 @@ std::vector<DisplayLine> Node::insight(GameState& gameState, int level){
 };
 
 std::vector<DisplayLine> ConstantNode::insight(GameState& gameState, [[maybe_unused]] int level){
-    double val = this->evaluate(gameState).getAsDouble();
+    return { };
+    std::cout << "CN insight\n";
+    double val = this->evaluate(gameState);
     DisplayChunk c(formatDouble(val), DisplayType::Text);
     return { DisplayLine({ c }) };
 };  
@@ -239,6 +256,8 @@ std::vector<DisplayLine> GeneralConstantNode::insight([[maybe_unused]] GameState
 }
 
 std::vector<DisplayLine> VariableNode::insight(GameState& gameState, [[maybe_unused]] int level){
+    return { };
+    std::cout << "VN insight\n";
     std::string name = this->var;
     DisplayChunk c(name, DisplayType::Text);
     DisplayChunk h(name, DisplayType::Var);
@@ -249,7 +268,9 @@ std::vector<DisplayLine> VariableNode::insight(GameState& gameState, [[maybe_unu
 }
 
 std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
+    std::cout << "ON insight\n";
     DisplayLine l;
+    return { };
     std::vector<DisplayLine> leftInsight;
     std::vector<DisplayLine> rightInsight;
     if (level == 0){
@@ -285,7 +306,7 @@ std::vector<DisplayLine> OperandNode::insight(GameState& gameState, int level){
 
 std::vector<DisplayLine> ConstantNode::arithmeticalInsight(GameState& gameState, int level){
     DisplayLine line;
-    line.appendTextChunk(formatDouble(this->val.getAsDouble()));
+    line.appendTextChunk(formatDouble(this->val));
     return { line };
 }
 
@@ -444,7 +465,7 @@ void printNodeStack(std::stack<std::unique_ptr<Node>>& nodeStack) {
     std::cout << nodeStack.size() << std::endl;
 }
 
-std::unique_ptr<Node> construct(std::vector<Token> tokens){
+Expression construct(std::vector<Token> tokens){
     std::set<std::string> variableLocks;
     std::stack<std::unique_ptr<Node>> nodeStack;
     std::stack<Operand> operandStack;
@@ -454,13 +475,14 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
         //token.print();
         switch(token.getType()){
         case TokenType::Constant:
-            nodeStack.push(std::make_unique<ConstantNode>(VariableValue(token.getValueAsDouble())));
+            nodeStack.push(std::make_unique<ConstantNode>(token.getValueAsDouble()));
             break;
         case TokenType::Variable:
             nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), token.getFlags()));
             break;
         case TokenType::VariableLock:
             variableLocks.insert(token.getValueAsString());
+            break;
         case TokenType::Operand:
             Operand oper = token.getValueAsOperand();
             if (isFunction(oper)){
@@ -497,13 +519,24 @@ std::unique_ptr<Node> construct(std::vector<Token> tokens){
         createSubtree(nodeStack, topOper);
     }
 
+    LOG("expressiontree.cpp\texpression business coming next\n");
+
+    Expression expr(nodeStack.top()->clone(), {});
+
+    LOG("expressiontree.cpp\texpression object created succesfully\n");
+
     if (nodeStack.top()->getType() == NodeType::Operand){
         for(auto& lock : variableLocks){
-            static_cast<OperandNode*>(nodeStack.top().get())->variableLocks.insert(lock);
+            std::cout << "found lock=" << lock << "\n";
+            expr.variableLocks.insert(lock);
         }
     }
 
-    return std::move(nodeStack.top());
+    for(auto& lock : expr.getVariableLocks()){
+        std::cout << "saved lock=" << lock << "\n";
+    }
+
+    return expr;
 }
 
 RangeObject OperandNode::getRangeObject(){
@@ -553,6 +586,10 @@ std::unique_ptr<Node> VariableNode::clone() const{
 
 std::unique_ptr<Node> OperandNode::clone() const{
     return std::make_unique<OperandNode>(this->oper, this->left->clone(), this->right->clone());
+}
+
+Expression Expression::clone() const{
+    return Expression(expr->clone(), variableLocks);
 }
 
 std::unique_ptr<Node> VariableNode::getPacketExpression(GameState& gameState, bool base) const {

@@ -19,7 +19,7 @@ std::vector<DisplayLine> addInsight (Node& left, Node& right, GameState& gameSta
     if (right.isConstantValue(gameState, 0))
         return leftInsight;
     if (left.isConstant(gameState) && right.isConstant(gameState)){
-        line.appendTextChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()));
+        line.appendTextChunk(formatDouble(left.evaluate(gameState) + right.evaluate(gameState)));
         return { line };
     }
     line.appendTextChunk("the sum of ");
@@ -50,7 +50,7 @@ std::vector<DisplayLine> subtractInsight (Node& left, Node& right, GameState& ga
     if (right.isConstantValue(gameState, 0))
         return leftInsight;
     if (left.isConstant(gameState) && right.isConstant(gameState)){
-        line.appendTextChunk(formatDouble(left.evaluate(gameState).getAsDouble() + right.evaluate(gameState).getAsDouble()));
+        line.appendTextChunk(formatDouble(left.evaluate(gameState) + right.evaluate(gameState)));
         return { line };
     }
     line.appendLines(leftInsight);

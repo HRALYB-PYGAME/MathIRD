@@ -4,7 +4,7 @@
 
 std::string DisplayChunk::getDisplay(GameState& gameState) {
     if (type == DisplayType::Text) return text;
-    return formatDouble(gameState.getVarValueAsDouble(text));
+    return formatDouble(gameState.getVarValueAsDouble(text)) + "(" + std::to_string(gameState.getVariableBlockCounter(text)) + ")";
 };
 
 void DisplayChunk::printChunk(){
@@ -83,5 +83,5 @@ ConditionalDisplayLine::ConditionalDisplayLine(DisplayLine displayLine, std::uni
     displayLine(displayLine), condition(std::move(condition)) {};
 
 bool ConditionalDisplayLine::isConditionTrue(GameState& gameState){
-    return condition->evaluate(gameState).getAsBool();
+    return condition->evaluate(gameState) != 0;
 }

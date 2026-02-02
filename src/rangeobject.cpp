@@ -11,13 +11,13 @@ void RangeObject::combine(RangeObject& ro, Operand oper){
     }
 }
 
-RangeObject::RangeObject(VariableValue min, VariableValue max){
+RangeObject::RangeObject(double min, double max){
     this->min = std::make_unique<ConstantNode>(ConstantNode(min));
     this->max = std::make_unique<ConstantNode>(ConstantNode(max));
     this->distribution = nullptr;
 }
 
-RangeObject::RangeObject(VariableValue val){
+RangeObject::RangeObject(double val){
     this->min = std::make_unique<ConstantNode>(ConstantNode(val));
     this->max = std::make_unique<ConstantNode>(ConstantNode(val));
     this->distribution = nullptr;
@@ -34,10 +34,4 @@ RangeObject::RangeObject(std::string str, VariableFlags flags){
         this->max = std::make_unique<VariableNode>(VariableNode(str, flags));
         this->distribution = nullptr;
     }
-}
-
-RangeObject::RangeObject(int min, int max){
-    this->min = std::make_unique<ConstantNode>(ConstantNode(min));
-    this->max = std::make_unique<ConstantNode>(ConstantNode(max));
-    this->distribution = nullptr;
 }

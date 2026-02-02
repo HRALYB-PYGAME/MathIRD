@@ -1,0 +1,18 @@
+{
+    "name": "testbtn3",
+    "displayStates": [  
+        {
+            "text": "-"
+        }
+    ],
+    "position": { "row": 0, "col": 3 },
+    "terms": [
+        {
+            "name": "y doubler",
+            "condition": "y?<10",
+            "expressions": [
+                "y+=y {y, y, y}"
+            ]
+        }
+    ]
+}

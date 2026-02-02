@@ -14,21 +14,21 @@ double GameState::getTotalScore(){
     for (auto& [name, varEntry] : variables){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr)
-            score += var->getScoreParams().getScore(varEntry.value.getAsDouble());
+            score += var->getScoreParams().getScore(varEntry.value);
     }
     return score;
 }
 
 void GameState::applyDelta(std::string var, double delta){
     LOG("game_state.cpp\tapplyDelta(var=" << var << ", delta=" << delta << ") FUNCTION BEG");
-    addVarValue(var, VariableValue(delta));
+    addVarValue(var, delta);
     LOG("game_state.cpp\tapplyDelta(var=" << var << ", delta=" << delta << ") ADDED");
 }
 
 void GameState::applyDeltas(VariableChanges changes){
     LOG("game_state.cpp\tapplyDeltas(changes) FUNCTION BEG");
     for (auto& [var, val] : changes.changes){
-        addVarValue(var, VariableValue(val.rand));
+        addVarValue(var, val.rand);
         LOG("game_state.cpp\tapplyDeltas(changes) ADDED (" << var << " value=" << getVarValueAsDouble(var) << ")");
     }
     this->updateVariables();
@@ -37,41 +37,44 @@ void GameState::applyDeltas(VariableChanges changes){
 
 void GameState::applyNewValue(std::string var, double newValue){
     LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") FUNCTION BEG");
-    setVarValue(var, VariableValue(newValue));
+    setVarValue(var, newValue);
     LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") ADDED");
 }
 
-void GameState::setVarValue(std::string name, VariableValue value){
-    LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") FUNCTION BEG");
-    if (variables.find(name) != variables.end()){
-        variables.at(name).value.set(value);
-        variables.at(name).incrementVersion();
-        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << " version=" << variables.at(name).version << ") VALUE SET");
+void GameState::setVarValue(std::string name, double value){
+    LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << ") FUNCTION BEG");
+    auto it = variables.find(name);
+    if (it != variables.end()){
+        it->second.value = value;
+        it->second.incrementVersion();
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << " version=" << variables.at(name).version << ") VALUE SET");
     }
     else
-        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value.getAsDouble() << ") " << name << " NOT FOUND");
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
 }  
 
-void GameState::addVarValue(std::string name, VariableValue value){
-    LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") FUNCTION BEG");
+void GameState::addVarValue(std::string name, double value){
+    LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") FUNCTION BEG");
     if (variables.empty()){
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VARIABLES MAP EMPTY");
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") VARIABLES MAP EMPTY");
         return;
     }
-    if (variables.find(name) != variables.end()){
-        variables.at(name) = variables.at(name).value.add(value);
+
+    auto it = variables.find(name);
+    if (it != variables.end()){
+        it->second.value += value;
         variables.at(name).incrementVersion();
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") VALUE ADDED");
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") VALUE ADDED");
     }
     else
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value.getAsDouble() << ") " << name << " NOT FOUND");
+        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
 }
 
 void GameState::updateVariables(){
     for (auto& [name, entry] : variables){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr){
-            if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this).getAsBool()){
+            if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this)){
                 LOG("game_state.cpp\tupdateVariables() " << name << " UNLOCKED");
                 entry.unlock();
             }
@@ -96,9 +99,14 @@ void GameState::unblockVariable(std::string name){
 
 bool GameState::isVariableBlocked(std::string name){
     if (variables.find(name) == variables.end()) return false;
-    return variables.at(name).blockCounter==0;
+    return variables.at(name).blockCounter!=0;
 }
 
+int GameState::getVariableBlockCounter(std::string name){
+    auto it = variables.find(name);
+    if (it != variables.end()) return it->second.blockCounter;
+    return 0;
+}
 
 void GameState::addVariable(Variable* variable){
     if (variables.count(variable->getName())) return;
@@ -108,14 +116,16 @@ void GameState::addVariable(Variable* variable){
 }
 
 void GameState::addVariables(){
+    LOG("why is ADDVARIABLES CALLED?? I SHOULD ONLY CALL IT AT THE START AND THEN ONLY UPDATE");
     for (auto& [name, var] : Defs::vars){
         addVariable(&var);
     }
     updateVariables();
 }
 
-VariableEntry::VariableEntry(VariableValue value){
+VariableEntry::VariableEntry(double value){
     this->value = value;
+    this->realValue = value;
     lock();
 }
 
@@ -184,25 +194,25 @@ int GameState::getVarVersion(std::string name){
     return 0;
 }
 
-VariableValue GameState::getVarValue(std::string name){
+double GameState::getVarValue(std::string name){
     if (name == "_R"){
-        if (forcedRandom != -1) return VariableValue(forcedRandom);
-        return VariableValue(currentSeed/RANDOM_MAX);
+        if (forcedRandom != -1) return forcedRandom;
+        return currentSeed/RANDOM_MAX;
     }
     if (name == "_NR"){
         step();
-        if (forcedRandom != -1) return VariableValue(forcedRandom);
-        return VariableValue(currentSeed/RANDOM_MAX);
+        if (forcedRandom != -1) return forcedRandom;
+        return currentSeed/RANDOM_MAX;
     }
     if (this->variables.find(name) != this->variables.end()){
         return variables.at(name).value;
     }
 
-    auto var = Defs::getVariable(name);
-    if (var == nullptr)
-        return VariableValue(0.f);
-    addVariable(var);
-    return getVarValue(name);
+    //auto var = Defs::getVariable(name);
+    //if (var == nullptr)
+        return 0;
+    //addVariable(var);
+    //return getVarValue(name);
 }
 
 double GameState::getVarValueAsDouble(std::string name){
@@ -215,15 +225,17 @@ double GameState::getVarValueAsDouble(std::string name){
         if (forcedRandom != -1) return forcedRandom;
         return currentSeed/RANDOM_MAX;
     }
-    if (this->variables.find(name) != this->variables.end()){
-        return variables.at(name).value.getAsDouble();
+
+    auto it = variables.find(name);
+    if (it != variables.end()){
+        return it->second.value;
     }
     
-    auto var = Defs::getVariable(name);
-    if (var == nullptr)
+    // auto var = Defs::getVariable(name);
+    // if (var == nullptr)
         return 0.0;
-    addVariable(var);
-    return getVarValueAsDouble(name);
+    // addVariable(var);
+    // return getVarValueAsDouble(name);
 }
 
 void GameState::addPacket(Packet packet) {
@@ -235,15 +247,23 @@ void GameState::addPacket(Packet packet) {
             break;
         it++;
     }
-    packets.insert(it, std::move(packet));
 
-    LOG("game_state.cpp\taddPacket() CURRENT PACKETS ARRIVAL TIMES");
+    LOG("game_state.cpp\taddPacket() variable=" << packet.variable);
+    std::string name = packet.variable;
+    for(auto lock : packet.variableLocks){
+        blockVariable(lock);
+
+    }
+
+    packets.insert(it, std::move(packet));
 
     it = packets.begin();
     while (it != packets.end()){
         std::cout << it->arrivalTime.time_since_epoch().count() << "\n";
         it++;
     }
+
+    updateRealValue(name);
 }
 
 void GameState::addPackets(std::vector<Packet>& packets) {
@@ -252,6 +272,32 @@ void GameState::addPackets(std::vector<Packet>& packets) {
     }
     packets.clear();
 }
+
+void GameState::updateRealValue(std::string name){
+    setRealValue(name, getVarValue(name));
+    LOG("game_state.cpp\tupdateRealValue(name=" << name << ")");
+    for(int i=(int)packets.size()-1; i>=0; i--){
+        if (packets[i].variable != name) continue;
+        auto newValue = packets[i].expression->evaluate(*this, true);
+        setRealValue(name, newValue);
+    }
+}
+
+double GameState::getRealValue(std::string name){
+    auto it = variables.find(name);
+    if (it != variables.end())
+        return it->second.realValue;
+    return 0;
+}
+
+void GameState::setRealValue(std::string name, double value){
+    auto it = variables.find(name);
+    if (it != variables.end()){
+        it->second.realValue = value;
+        updateCurrentInsight();
+    }
+}
+
 
 void GameState::updatePackets(){
     for(auto& packet : packets){
@@ -275,7 +321,8 @@ void GameState::setCurrentInsightable(Insightable* insightable){
     LOG("game_state.hpp\tsetCurrentInsightable() FUNCTION BEG");
     currentInsightable = insightable;
     LOG("game_state.hpp\tsetCurrentInsightable() CURRENT INSIGHTABLE UPDATED");
-    setCurrentInsight(currentInsightable->insight(*this, 0));
+    auto insight = currentInsightable->insight(*this, 0);
+    setCurrentInsight(insight);
     LOG("game_state.hpp\tsetCurrentInsightable() CURRENT INSIGHT UPDATED");
 };
 

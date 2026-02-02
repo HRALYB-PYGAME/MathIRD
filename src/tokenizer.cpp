@@ -101,7 +101,7 @@ void Token::print(){
             if (isFluid()) flags += "Fluid ";
             if (isConstant()) flags += "Constant ";
             if (isReal()) flags += "Real ";
-            std::cout << "Token Type: Variable (" << std::get<std::string>(this->value) << ")\n";
+            std::cout << "Token Type: " << flags << "Variable (" << std::get<std::string>(this->value) << ")\n";
             break;
         case TokenType::VariableLock:
             std::cout << "Token Type: VariableLock (" << std::get<std::string>(this->value) << ")\n";
@@ -132,6 +132,54 @@ int getPrecedence(Operand oper){
     return it->second;
 }
 
+std::string stateExplanation(TokenizeState state){
+    switch(state){
+    case TokenizeState::Empty:
+        return "Empty";
+
+    case TokenizeState::Constant:
+        return "Constant";
+
+    case TokenizeState::Variable:
+        return "Variable";
+
+    case TokenizeState::Plus:
+        return "Plus";
+
+    case TokenizeState::Minus:
+        return "Minus";
+
+    case TokenizeState::Times:
+        return "Times";
+
+    case TokenizeState::Divide:
+        return "Divide";
+
+
+    case TokenizeState::Less:
+        return "Less";
+
+    case TokenizeState::Greater:
+        return "Greater";
+
+    case TokenizeState::Not:
+        return "Not";
+
+    case TokenizeState::Equal:
+        return "Equal";
+
+    case TokenizeState::And:
+        return "And";
+
+    case TokenizeState::Or:
+        return "Or";
+
+
+    case TokenizeState::CurlyBracket:
+        return "CurlyBracket";
+    }
+}
+
 std::vector<Token> tokenize(std::string text){
     text = text.append(" ");
     TokenizeState state = TokenizeState::Empty;
@@ -140,6 +188,7 @@ std::vector<Token> tokenize(std::string text){
 
     for(size_t i=0; i<text.length(); i++){
         char c = text[i];
+        std::cout << "char='" << c << "' acc=\"" << acc << "\" state=" << stateExplanation(state) << "\n";
         switch(state){
         case TokenizeState::Empty:
             if (isNumber(c)){
@@ -227,6 +276,7 @@ std::vector<Token> tokenize(std::string text){
                 acc.clear();
                 state = TokenizeState::Empty;
             }
+            break;
         case TokenizeState::Plus:
             if (c == '='){
                 tokens.push_back(Operand::AddAssign);
@@ -360,6 +410,9 @@ std::vector<Token> tokenize(std::string text){
             break;
         }
         
+    }
+    for(auto token : tokens){
+        token.print();
     }
     return tokens;
 }
