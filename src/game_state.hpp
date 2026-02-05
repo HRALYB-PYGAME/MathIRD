@@ -5,7 +5,9 @@
 #include "variable.hpp"
 #include <vector>
 #include <string>
+#include <map>
 #include "insightable.hpp"
+#include "process.hpp"
 
 class Node;
 struct Packet;
@@ -49,10 +51,17 @@ struct ButtonEntry : Entry {
     ButtonEntry();
 };
 
+struct ProcessEntry : Entry {
+    bool active = false;
+
+    ProcessEntry();
+};
+
 class GameState{
     private:
         std::unordered_map<std::string, VariableEntry> variables;
         std::unordered_map<std::string, ButtonEntry> buttons;
+        std::unordered_map<std::string, ProcessEntry> processes;
 
         uint64_t currentSeed;
         double forcedRandom = -1;
@@ -63,6 +72,7 @@ class GameState{
         Insightable* currentInsightable = nullptr;
 
         std::vector<Packet> packets;
+        std::map<std::string, double> calendar;
     public:
 
         std::vector<DisplayLine> currentInsight;
@@ -115,6 +125,10 @@ class GameState{
         void addPacket(Packet packet);
         void addPackets(std::vector<Packet>& packets);
         void updatePackets();
+
+        // Calendar and processes
+        bool isProcessUnlocked(std::string name);
+        bool isProcessActive(std::string name);
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};

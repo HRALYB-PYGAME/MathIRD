@@ -1,11 +1,13 @@
 #ifndef term_hpp
 #define term_hpp
-#include "expressiontree.hpp"
+//#include "expressiontree.hpp"
 #include "insightable.hpp"
 #include <vector>
 #include <set>
+#include "variable_value.hpp"
 
 class Button;
+struct Expression;
 
 class Term : public Insightable{
 private:
@@ -38,7 +40,7 @@ public:
     std::set<std::string>& getInputs()       {return inputs;};
     std::set<std::string>& getOutputs()      {return outputs;};
     std::set<std::string>& getBlockers()     {return blockers;};
-    const std::vector<Expression>& getExpressions() const {return expressions;};
+    const std::vector<Expression>& getExpressions() const;
     std::string getName() {return name;};
     Button& getParent() {return *parent;};
     void setParent(Button& ref) {parent = &ref;};

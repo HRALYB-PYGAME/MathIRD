@@ -1,4 +1,5 @@
 #include "term.hpp"
+#include "expressiontree.hpp"
 
 bool Term::isActive(GameState& gameState){
     if (!this->isUnlocked(gameState)) return false;
@@ -145,6 +146,10 @@ void Term::updateOutputs(){
         auto exprOuts = expressions[i].expr->getOutputs(true);
         outputs.insert(exprOuts.begin(), exprOuts.end());
     }
+}
+
+const std::vector<Expression>& Term::getExpressions() const {
+    return expressions;
 }
 
 void Term::updateBlockers(){

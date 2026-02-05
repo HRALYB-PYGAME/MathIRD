@@ -18,7 +18,8 @@ SRCS = main.cpp \
        rangeobject.cpp \
        button.cpp \
 	   insightable.cpp \
-	   packet.cpp
+	   packet.cpp \
+	   process.cpp
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
 

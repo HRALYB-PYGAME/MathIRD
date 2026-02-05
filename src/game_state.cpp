@@ -338,3 +338,15 @@ void GameState::updateCurrentInsight(){
     setCurrentInsight(in);
     LOG("game_state.hpp\tupdateCurrentInsight() Current insight set");
 }
+
+bool GameState::isProcessUnlocked(std::string name){
+    auto it = processes.find(name);
+    if (it == processes.end()) return false;
+    return it->second.unlocked;
+}
+
+bool GameState::isProcessActive(std::string name){
+    auto it = processes.find(name);
+    if (it == processes.end()) return false;
+    return it->second.active;
+}

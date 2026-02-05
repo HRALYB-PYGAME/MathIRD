@@ -3,6 +3,7 @@
 #include <memory>
 #include "expressiontree.hpp"
 #include "button.hpp"
+#include "process.hpp"
 #include <filesystem>
 #include "../libs/json/json.hpp"
 #include <fstream>
@@ -41,6 +42,17 @@ Button* Defs::getButton(std::string name){
     if (it == btns.end()) return nullptr;
     return &(it->second);
 }
+
+void Defs::addProcess(Process proc){
+    //procs.insert_or_assign(proc.getName(), std::move(proc));
+}
+
+Process* Defs::getProcess(std::string name){
+    // auto it = procs.find(name);
+    // if (it == procs.end()) return nullptr;
+    // return &(it->second);
+}
+
 
 void Defs::loadButtons(std::string path){
     for (const auto& entry : std::filesystem::directory_iterator(path)){
@@ -148,6 +160,10 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
 
         Defs::addVariable(std::move(var));
     }
+}
+
+void Defs::loadProcesses(std::string path){
+    // TO DO
 }
 
 void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>& linkerMap){

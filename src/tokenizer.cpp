@@ -178,6 +178,8 @@ std::string stateExplanation(TokenizeState state){
     case TokenizeState::CurlyBracket:
         return "CurlyBracket";
     }
+
+    return "UnknownState";
 }
 
 std::vector<Token> tokenize(std::string text){

@@ -19,6 +19,7 @@
 class Variable;
 class GameState;
 class Button;
+class Process;
 
 std::string formatDouble(double val, bool includeSign=false);
 
@@ -26,6 +27,7 @@ class Defs {
 public:
     static std::unordered_map<std::string, Variable> vars;
     static std::unordered_map<std::string, Button>   btns;
+    static std::unordered_map<std::string, Process>  procs;
 
     static void addVariable(Variable var);
     static Variable* getVariable(std::string name);
@@ -33,8 +35,12 @@ public:
     static void addButton(Button btn);
     static Button* getButton(std::string name);
 
+    static void addProcess(Process proc);
+    static Process* getProcess(std::string name);
+
     static void loadVariables(std::string path, std::unordered_map<std::string, std::string>&);
     static void loadButtons(std::string path);
+    static void loadProcesses(std::string path);
 
     static void linkVariableHomeButtons(std::unordered_map<std::string, std::string>&);
     // Load()
