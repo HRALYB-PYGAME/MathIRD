@@ -1,5 +1,4 @@
 #include "variable_value.hpp"
-#include "utils.hpp"
 #include <iostream>
 #include "game_state.hpp"
 
@@ -58,6 +57,7 @@ std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& ga
         Variable* var = Defs::getVariable(name);
         if (var != nullptr) varChunk.setLink(var);
         line.appendChunk(varChunk);
+
         if (delta.min == delta.max){
             line.appendTextChunk(": " + formatDouble(delta.min));
         }

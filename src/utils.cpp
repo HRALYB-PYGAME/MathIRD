@@ -1,9 +1,8 @@
 #include "utils.hpp"
-#include "variable.hpp"
-#include <memory>
-#include "expressiontree.hpp"
 #include "button.hpp"
 #include "process.hpp"
+
+#include <memory>
 #include <filesystem>
 #include "../libs/json/json.hpp"
 #include <fstream>
@@ -22,11 +21,15 @@ std::string formatDouble(double val, bool includeSign){
 
 std::unordered_map<std::string, Variable> Defs::vars;
 std::unordered_map<std::string, Button>   Defs::btns;
+std::unordered_map<std::string, Process>  Defs::procs;
 
 void Defs::addVariable(Variable var){
     vars.insert_or_assign(var.getName(), std::move(var));
 }
 
+/// @brief Returns a pointer to a Variable with a given name.
+/// @param name name of a Variable to be found
+/// @return Pointer to a Variable, nullptr if not found. 
 Variable* Defs::getVariable(std::string name){
     if (vars.find(name) == vars.end()) return nullptr;
     return &(vars.at(name));
@@ -44,13 +47,14 @@ Button* Defs::getButton(std::string name){
 }
 
 void Defs::addProcess(Process proc){
-    //procs.insert_or_assign(proc.getName(), std::move(proc));
+    LOG("Defs::addProcess(Process=\"" << proc.getName() << "\")");
+    procs.insert_or_assign(proc.getName(), std::move(proc));
 }
 
 Process* Defs::getProcess(std::string name){
-    // auto it = procs.find(name);
-    // if (it == procs.end()) return nullptr;
-    // return &(it->second);
+    auto it = procs.find(name);
+    if (it == procs.end()) return nullptr;
+    return &(it->second);
 }
 
 
@@ -163,7 +167,62 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
 }
 
 void Defs::loadProcesses(std::string path){
-    // TO DO
+    for (const auto& entry : std::filesystem::directory_iterator(path)){
+        if (!entry.is_regular_file()) continue;
+
+        std::ifstream file(entry.path());
+
+        if (!file.is_open()) continue;
+
+        json j = json::parse(file);
+
+        if (!j.contains("name")){
+            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
+            continue;
+        }
+
+        std::string name = j["name"];
+
+        Process process(name);
+
+        if (j.contains("startCondition")){
+            auto& cond = j["startCondition"];
+            Expression condition = construct(tokenize(cond));
+            process.setStartCondition(std::move(condition.expr));
+        }
+
+        if (j.contains("endCondition")){
+            auto& cond = j["endCondition"];
+            Expression condition = construct(tokenize(cond));
+            process.setEndCondition(std::move(condition.expr));
+        }
+
+        if (j.contains("interval")){
+            auto& inter = j["interval"];
+            Expression interval = construct(tokenize(inter));
+            process.setInterval(std::move(interval.expr));
+        }
+
+        if (j.contains("terms")){
+            auto& terms = j["terms"];
+            for(const auto& t : terms){
+                if (!t.contains("name")) continue;
+                if (!t.contains("expressions")) continue;
+                Term term(t["name"]);
+                Expression condition = construct(tokenize(t.value("condition", "1")));
+                term.setCondition(std::move(condition.expr));
+                for(const auto& expr : t["expressions"]){
+                    Expression expression = construct(tokenize(expr));
+                    term.addExpression(std::move(expression));
+                }
+                process.addTerm(std::make_unique<Term>(std::move(term)));
+            }
+        }
+
+        std::cout << "name=?" << process.getName() << "\n";
+
+        Defs::addProcess(std::move(process));
+    }
 }
 
 void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>& linkerMap){

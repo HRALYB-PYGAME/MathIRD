@@ -1,53 +1,5 @@
 #include "packet.hpp"
-#include "variable.hpp"
-#include "button.hpp"
-
-std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed){
-    LOG("packet.cpp\tgetPackets() FUNCTION BEG");
-    std::vector<Packet> packets;
-    for(auto& expression : button->getExpressions(gameState)){
-        auto outputs = expression.expr->getOutputs(true);
-        if (outputs.empty()) continue;
-        std::string name = *outputs.begin();
-
-        std::unique_ptr<Node> expr = expression.expr->getPacketExpression(gameState, true);
-        
-
-        LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?");
-        Variable* var = Defs::getVariable(name);
-
-        Packet p;
-        p.variable = name;
-        p.variableLocks = expression.variableLocks;
-        p.expression = std::move(expr);
-        p.startPos = startPos;
-        if (var->getHomeButton() == nullptr){
-            LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " HAVE AN INVALID HOME BUTTON");
-        }
-        p.endPos = var->getHomeButton()->getPosition();
-        p.startTime = time;
-        if (p.endPos.isSameAs(p.startPos)) p.duration = 0;
-        else{
-            p.duration = (getDistance(startPos, p.endPos)/PACKET_SPEED)*(getRandom(seed)/RANDOM_MAX + 0.5);
-            LOG("packet.cpp\tgetPackets() DURATION=" << p.duration);
-        }
-        p.arrivalTime = p.startTime + secondsToDuration(p.duration);
-
-        auto inputs = p.expression->getInputs(false);
-        for(auto& input : inputs){
-            p.lastInputsVersions.insert_or_assign(input, -1);
-        }
-
-        p.update(gameState, true);
-        
-        LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET CREATED");
-
-        packets.push_back(std::move(p));
-        LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET PUSHED");
-    }
-    LOG("packet.cpp\tgetPackets() FUNCTION END");
-    return packets;
-}
+#include "game_state.hpp"
 
 void Packet::update(GameState& gameState, bool forced){
     bool toUpdate = false;

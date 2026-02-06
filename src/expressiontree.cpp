@@ -1,6 +1,7 @@
 #include "expressiontree.hpp"
-#include <stack>
+#include "game_state.hpp"
 #include "insight.hpp"
+#include <stack>
 
 using namespace std::string_literals;
 

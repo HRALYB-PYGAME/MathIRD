@@ -1,5 +1,4 @@
-#include "term.hpp"
-#include "expressiontree.hpp"
+#include "game_state.hpp"
 
 bool Term::isActive(GameState& gameState){
     if (!this->isUnlocked(gameState)) return false;

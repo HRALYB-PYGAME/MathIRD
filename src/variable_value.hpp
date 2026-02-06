@@ -25,6 +25,7 @@ public:
     VariableChanges add(const VariableChanges& varc);
     VariableChanges add(std::string var, double val);
     VariableChanges add(std::string var, double min, double max, double rand);
+    
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
 };
 

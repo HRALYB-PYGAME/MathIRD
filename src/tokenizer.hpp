@@ -54,6 +54,7 @@ enum class TokenizeState{
     Empty,
     Constant,
     Variable,
+    
     Plus,
     Minus,
     Times,

@@ -1,10 +1,5 @@
 #include "game_state.hpp"
-#include "expressiontree.hpp"
 #include <iostream>
-#include "variable.hpp"
-#include "term.hpp"
-#include "button.hpp"
-#include "packet.hpp"
 
 GameState::GameState() : currentInsight() {
 }
@@ -281,6 +276,85 @@ void GameState::updateRealValue(std::string name){
         auto newValue = packets[i].expression->evaluate(*this, true);
         setRealValue(name, newValue);
     }
+}
+
+void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, Clock::time_point time, uint64_t& seed){
+    auto outputs = expression.expr->getOutputs(true);
+    if (outputs.empty()) return;
+    std::string name = *outputs.begin();
+
+    std::unique_ptr<Node> expr = expression.expr->getPacketExpression(*this, true);
+    
+
+    LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?");
+    Variable* var = Defs::getVariable(name);
+
+    Packet p;
+    p.variable = name;
+    p.variableLocks = expression.variableLocks;
+    p.expression = std::move(expr);
+    p.startPos = startPos;
+    if (var->getHomeButton() == nullptr){
+        LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " HAVE AN INVALID HOME BUTTON");
+    }
+    p.endPos = var->getHomeButton()->getPosition();
+    p.startTime = time;
+    if (p.endPos.isSameAs(p.startPos)) p.duration = 0;
+    else{
+        p.duration = (getDistance(startPos, p.endPos)/PACKET_SPEED)*(getRandom(seed)/RANDOM_MAX + 0.5);
+        LOG("packet.cpp\tgetPackets() DURATION=" << p.duration);
+    }
+    p.arrivalTime = p.startTime + secondsToDuration(p.duration);
+
+    auto inputs = p.expression->getInputs(false);
+    for(auto& input : inputs){
+        p.lastInputsVersions.insert_or_assign(input, -1);
+    }
+
+    p.update(*this, true);
+    
+    LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET CREATED");
+
+    packets.push_back(std::move(p));
+    LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET PUSHED");
+}
+
+std::vector<Packet> GameState::generatePackets(Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed){
+    if (button == nullptr) return {};
+    LOG("packet.cpp\tgetPackets() FUNCTION BEG");
+    std::vector<Packet> packets;
+    for(auto& expression : button->getExpressions(*this)){
+        addPacketFromAnExpression(expression, packets, startPos, time, seed);
+    }
+    LOG("packet.cpp\tgetPackets() FUNCTION END");
+    return packets;
+}
+
+std::vector<Packet> GameState::generatePackets(Process* process, ButtonPosition startPos, Clock::time_point time, uint64_t& seed){
+    if (process == nullptr) return {};
+    LOG("packet.cpp\tgetPackets() FUNCTION BEG");
+    std::vector<Packet> packets;
+    for(auto& expression : process->getExpressions(*this)){
+        addPacketFromAnExpression(expression, packets, startPos, time, seed);
+    }
+    LOG("packet.cpp\tgetPackets() FUNCTION END");
+    return packets;
+}
+
+void GameState::addNewProcessEvent(Process* process, Clock::time_point time){
+    if (process == nullptr) return;
+    auto it = calendar.begin();
+
+    while (it != calendar.end()){
+        if (it->time <= time)
+            break;
+        it++;
+    }
+
+    LOG("game_state.cpp\taddNewProcessEvent() process=" << process->getName());
+    CalendarEntry entry = { process, time };
+
+    calendar.insert(it, entry);
 }
 
 double GameState::getRealValue(std::string name){

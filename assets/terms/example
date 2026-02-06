@@ -1,5 +1,0 @@
-name: exampleterm
-cond: x>0
-expr: 
-    x+=1
-    mq=y+4+x

@@ -1,7 +1,7 @@
 #ifndef rangeobject_hpp
 #define rangeobject_hpp
-#include <memory>
 #include <string>
+#include <memory>
 #include "variable_value.hpp"
 
 class Node;

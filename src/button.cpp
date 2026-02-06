@@ -1,6 +1,5 @@
 #include "button.hpp"
-#include "variable.hpp"
-#include "expressiontree.hpp"
+#include "game_state.hpp"
 
 std::string Button::getDisplay(GameState& gameState){
     std::string display = "";

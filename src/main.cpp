@@ -1,10 +1,5 @@
-#include <iostream>
 #include "game_state.hpp"
-#include "expressiontree.hpp"
-#include "term.hpp"
-#include "button.hpp"
-#include "insightable.hpp"
-#include "packet.hpp"
+#include <iostream>
 #include <set>
 #include <memory>
 #include <chrono>
@@ -58,7 +53,7 @@ void drawButtons(GameState& gameState){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
                 VariableChanges c = button.simulate(gameState);
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
-                auto packets = getPackets(gameState, &button, buttonPos, Clock::now(), seed);
+                auto packets = gameState.generatePackets(&button, buttonPos, Clock::now(), seed);
                 for(auto& packet : packets) LOG("main.cpp\tdrawButtons() packetvar=" << packet.variable);
                 gameState.addPackets(packets);
             }
@@ -191,6 +186,8 @@ int main(int argc, char** argv){
 
     Defs::loadButtons("assets/buttons");
     Defs::linkVariableHomeButtons(linkerMap);
+
+    Defs::loadProcesses("assets/processes");
 
     gameState.addVariables();
 

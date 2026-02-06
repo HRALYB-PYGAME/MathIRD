@@ -1,16 +1,14 @@
 #ifndef variable_hpp
 #define variable_hpp
 
+#include "expressiontree.hpp"
 #include <string>
 #include <variant>
 #include <vector>
 #include <memory>
-#include "variable_value.hpp"
-#include "insightable.hpp"
 #include <set>
 
 class GameState;
-class Node;
 class Term;
 class Button;
 

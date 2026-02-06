@@ -1,4 +1,6 @@
 #include "insight.hpp"
+#include "game_state.hpp"
+
 using namespace std::string_literals;
 
 std::vector<DisplayLine> addInsight (Node& left, Node& right, GameState& gameState, int level){

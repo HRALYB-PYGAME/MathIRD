@@ -136,44 +136,32 @@ std::string stateExplanation(TokenizeState state){
     switch(state){
     case TokenizeState::Empty:
         return "Empty";
-
     case TokenizeState::Constant:
         return "Constant";
-
     case TokenizeState::Variable:
         return "Variable";
-
+        
     case TokenizeState::Plus:
         return "Plus";
-
     case TokenizeState::Minus:
         return "Minus";
-
     case TokenizeState::Times:
         return "Times";
-
     case TokenizeState::Divide:
         return "Divide";
 
-
     case TokenizeState::Less:
         return "Less";
-
     case TokenizeState::Greater:
         return "Greater";
-
     case TokenizeState::Not:
         return "Not";
-
     case TokenizeState::Equal:
         return "Equal";
-
     case TokenizeState::And:
         return "And";
-
     case TokenizeState::Or:
         return "Or";
-
 
     case TokenizeState::CurlyBracket:
         return "CurlyBracket";

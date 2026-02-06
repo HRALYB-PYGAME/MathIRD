@@ -1,9 +1,7 @@
 #include "variable.hpp"
+#include "game_state.hpp"
 #include <cmath>
 #include <algorithm>
-#include "expressiontree.hpp"
-#include "term.hpp"
-#include "button.hpp"
 
 double ScoreParams::getScore(double val){
     if (polarity == Polarity::Neutral)

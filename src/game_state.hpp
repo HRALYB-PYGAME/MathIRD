@@ -1,13 +1,12 @@
 #ifndef game_state_hpp
 #define game_state_hpp
+
+#include "packet.hpp"
+#include "process.hpp"
 #include <unordered_map>
-#include "variable_value.hpp"
-#include "variable.hpp"
 #include <vector>
 #include <string>
 #include <map>
-#include "insightable.hpp"
-#include "process.hpp"
 
 class Node;
 struct Packet;
@@ -57,6 +56,11 @@ struct ProcessEntry : Entry {
     ProcessEntry();
 };
 
+struct CalendarEntry{
+    Process* process;
+    Clock::time_point time;
+};
+
 class GameState{
     private:
         std::unordered_map<std::string, VariableEntry> variables;
@@ -72,7 +76,7 @@ class GameState{
         Insightable* currentInsightable = nullptr;
 
         std::vector<Packet> packets;
-        std::map<std::string, double> calendar;
+        std::vector<CalendarEntry> calendar;
     public:
 
         std::vector<DisplayLine> currentInsight;
@@ -125,10 +129,15 @@ class GameState{
         void addPacket(Packet packet);
         void addPackets(std::vector<Packet>& packets);
         void updatePackets();
+        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
+        std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
+        std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
 
         // Calendar and processes
         bool isProcessUnlocked(std::string name);
         bool isProcessActive(std::string name);
+        void addNewProcessEvent(Process* process, Clock::time_point time);
+        std::vector<CalendarEntry>& getCalendar() {return calendar;};
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};
@@ -139,6 +148,8 @@ class GameState{
 
         void updateCurrentInsight();
 };
+
+
 
 // void updateVariableSets(Term* term);
 

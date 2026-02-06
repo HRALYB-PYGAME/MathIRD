@@ -1,6 +1,5 @@
 #include "insightable.hpp"
 #include "game_state.hpp"
-#include "expressiontree.hpp"
 
 std::string DisplayChunk::getDisplay(GameState& gameState) {
     if (type == DisplayType::Text) return text;
@@ -28,6 +27,10 @@ void DisplayChunk::printChunk(){
 }
 
 void DisplayLine::printLine(){
+    if (chunks.empty()){
+        std::cout << "Line is empty\n";
+        return;
+    }
     for(auto& chunk : chunks){
         chunk.printChunk();
     }

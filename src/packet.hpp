@@ -1,12 +1,10 @@
 #ifndef packet_hpp
 #define packet_hpp
 #include <string>
-#include "utils.hpp"
 #include <vector>
-#include "variable_value.hpp"
-#include "expressiontree.hpp"
 #include <chrono>
 #include <map>
+#include "button.hpp"
 
 using Clock = std::chrono::steady_clock;
 
@@ -33,7 +31,5 @@ struct Packet{
     double getProgress(Clock::time_point time) const;
     void update(GameState& gameState, bool forced);
 };
-
-std::vector<Packet> getPackets(GameState& gameState, Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
 
 #endif

@@ -1,6 +1,5 @@
 #include "rangeobject.hpp"
 #include "expressiontree.hpp"
-#include "tokenizer.hpp"
 
 void RangeObject::combine(RangeObject& ro, Operand oper){
     this->min = std::make_unique<OperandNode>(OperandNode(oper, std::move(this->min), std::move(ro.min)));

@@ -6,20 +6,20 @@ BUILD_DIR = build
 SRC_DIR = src
 TARGET = $(BUILD_DIR)/MathIRD
 
-SRCS = main.cpp \
-       game_state.cpp \
-       variable.cpp \
-       variable_value.cpp \
+SRCS = utils.cpp \
        tokenizer.cpp \
-       expressiontree.cpp \
-       insight.cpp \
-       term.cpp \
-       utils.cpp \
-       rangeobject.cpp \
-       button.cpp \
 	   insightable.cpp \
+       variable_value.cpp \
+       insight.cpp \
+       rangeobject.cpp \
+       expressiontree.cpp \
+       variable.cpp \
+       term.cpp \
+       button.cpp \
 	   packet.cpp \
-	   process.cpp
+	   process.cpp \
+       game_state.cpp \
+	   main.cpp
 
 OBJS = $(addprefix $(BUILD_DIR)/, $(SRCS:.cpp=.o))
 

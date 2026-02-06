@@ -17,7 +17,6 @@
 #define PACKET_SPEED 1
 
 class Variable;
-class GameState;
 class Button;
 class Process;
 

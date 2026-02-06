@@ -1,8 +1,8 @@
 #ifndef button_hpp
 #define button_hpp
 #include "term.hpp"
-#include "insightable.hpp"
-#include "variable_value.hpp"
+
+class GameState;
 
 class Button : public Insightable{
 private:

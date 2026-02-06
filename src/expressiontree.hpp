@@ -1,10 +1,7 @@
 #ifndef expressiontree_hpp
 #define expressiontree_hpp
-#include "game_state.hpp"
 #include "tokenizer.hpp"
-#include "utils.hpp"
 #include "rangeobject.hpp"
-#include "insightable.hpp"
 #include <memory>
 #include <set>
 
@@ -12,6 +9,8 @@
 #define RESET   "\033[0m"
 #define WHITEBG "\033[47m"
 #define REVERSE "\033[30;47m"
+
+class GameState;
 
 enum class NodeType{
     Constant,

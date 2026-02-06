@@ -1,0 +1,22 @@
+{
+    "name": "testproc",
+    "startCondition": "x>=5",
+    "endCondition": "x<5",
+    "interval": "4",
+    "terms": [
+        {
+            "name": "testproc term",
+            "condition": "x>=0",
+            "expressions": [
+                "x-=1"
+            ]
+        },
+        {
+            "name": "testproc term2",
+            "condition": "1",
+            "expressions": [
+                "y+=1"
+            ]
+        }
+    ]
+}
