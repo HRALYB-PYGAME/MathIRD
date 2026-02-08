@@ -167,6 +167,8 @@ struct Expression{
 
     Expression(std::unique_ptr<Node> expr, std::set<std::string> variableLocks): expr(std::move(expr)), variableLocks(variableLocks) {};
 
+    double evaluate(GameState& gameState, bool realValues = false){ return expr->evaluate(gameState, realValues); };
+
     std::set<std::string>& getVariableLocks() {return variableLocks;};
 };
 

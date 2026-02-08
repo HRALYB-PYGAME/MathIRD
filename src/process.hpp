@@ -19,10 +19,11 @@ public:
     Process(std::string name): name(name) {};
 
     std::string& getName() {return name;};
-    double getInterval(GameState& gameState);
+    double getInterval(GameState& gameState) const;
 
-    bool isStartConditionMet(GameState& gameState);
-    bool isEndConditionMet(GameState& gameState);
+    bool isStartConditionMet(GameState& gameState) const;
+    bool isEndConditionMet(GameState& gameState) const;
+    bool isUnlocked(GameState& gameState) const;
 
     void setStartCondition(std::unique_ptr<Node> startCondition);
     void setEndCondition(std::unique_ptr<Node> endCondition);

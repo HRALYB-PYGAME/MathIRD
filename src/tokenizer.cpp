@@ -404,6 +404,7 @@ std::vector<Token> tokenize(std::string text){
     for(auto token : tokens){
         token.print();
     }
+    std::cout << "tokens printed" << std::endl;
     return tokens;
 }
 

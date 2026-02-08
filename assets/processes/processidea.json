@@ -1,8 +1,8 @@
 {
     "name": "testproc",
-    "startCondition": "x>=5",
+    "startCondition": "x>=-4",
     "endCondition": "x<5",
-    "interval": "4",
+    "interval": "1",
     "terms": [
         {
             "name": "testproc term",

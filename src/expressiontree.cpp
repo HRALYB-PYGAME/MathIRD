@@ -134,7 +134,7 @@ VariableChanges OperandNode::simulate(GameState& gameState){
         return changes.add(var, 0);
     }
 
-    double varValue = gameState.getVarValueAsDouble(var);
+    double varValue = gameState.getVarValue(var);
 
     gameState.forceRandom(0);
     double minValue = this->right->evaluate(gameState);
@@ -167,8 +167,8 @@ VariableChanges OperandNode::simulate(GameState& gameState){
 
 double OperandNode::evaluate(GameState& gameState, bool realValues) const{
     double left = 0;
-    if (this->left != nullptr) left = this->left->evaluate(gameState);
-    double right = this->right->evaluate(gameState);
+    if (this->left != nullptr) left = this->left->evaluate(gameState, realValues);
+    double right = this->right->evaluate(gameState, realValues);
 
     switch(this->oper){
     case Operand::Add:
@@ -470,13 +470,15 @@ Expression construct(std::vector<Token> tokens){
     std::set<std::string> variableLocks;
     std::stack<std::unique_ptr<Node>> nodeStack;
     std::stack<Operand> operandStack;
+
+    bool neg = false;
     for(size_t i=0; i<tokens.size(); i++){
         Token token = tokens[i];
         //std::cout << "nodestack size " << nodeStack.size() << " operandStack size " << operandStack.size() << std::endl;
         //token.print();
         switch(token.getType()){
         case TokenType::Constant:
-            nodeStack.push(std::make_unique<ConstantNode>(token.getValueAsDouble()));
+            nodeStack.push(std::make_unique<ConstantNode>(token.getValueAsDouble() * (neg ? -1 : 1)));
             break;
         case TokenType::Variable:
             nodeStack.push(std::make_unique<VariableNode>(token.getValueAsString(), token.getFlags()));
@@ -486,7 +488,10 @@ Expression construct(std::vector<Token> tokens){
             break;
         case TokenType::Operand:
             Operand oper = token.getValueAsOperand();
-            if (isFunction(oper)){
+            if (oper == Operand::Neg){
+                neg = true;
+            }
+            else if (isFunction(oper)){
                 operandStack.push(oper);
             }
             else if (oper == Operand::LeftPar){
@@ -512,6 +517,7 @@ Expression construct(std::vector<Token> tokens){
                 }
                 operandStack.push(oper);
             }
+            break;
         }
     }
 

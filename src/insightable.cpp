@@ -3,7 +3,7 @@
 
 std::string DisplayChunk::getDisplay(GameState& gameState) {
     if (type == DisplayType::Text) return text;
-    return formatDouble(gameState.getVarValueAsDouble(text)) + "(" + std::to_string(gameState.getVariableBlockCounter(text)) + ")";
+    return formatDouble(gameState.getVarValue(text)) + "(" + std::to_string(gameState.getVariableBlockCounter(text)) + ")";
 };
 
 void DisplayChunk::printChunk(){

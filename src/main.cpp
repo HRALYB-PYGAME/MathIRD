@@ -51,11 +51,9 @@ void drawButtons(GameState& gameState){
         if (CheckCollisionPointRec(GetMousePosition(), rect)){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
-                VariableChanges c = button.simulate(gameState);
-                LOG("main.cpp\tdrawButtons()" << button.getName() << " SUCCESFULL SIMULATION");
                 auto packets = gameState.generatePackets(&button, buttonPos, Clock::now(), seed);
                 for(auto& packet : packets) LOG("main.cpp\tdrawButtons() packetvar=" << packet.variable);
-                gameState.addPackets(packets);
+                gameState.sendPackets(packets);
             }
 
             if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)){
@@ -99,7 +97,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
                     break;
                 }
                 case DisplayType::Var: {
-                    std::string text = formatDouble(gameState.getVarValueAsDouble(chunk.text));
+                    std::string text = formatDouble(gameState.getVarValue(chunk.text));
                     Vector2 wordSize = MeasureTextEx(GetFontDefault(), text.c_str(), fontSize, spacing);
                     if (cursor.x + wordSize.x >= GetScreenWidth() - 10){
                         cursor.x = startPos.x;
@@ -138,19 +136,36 @@ void updatePackets(GameState& gameState){
     auto& packets = gameState.getPackets();
     while(!packets.empty() && packets.back().getProgress(now) >= 1){
         auto& packet = packets.back();
-        double newValue = packet.expression->evaluate(gameState);
-        for(auto lock : packet.variableLocks){
+        double newValue = packet.expression.evaluate(gameState);
+        for(auto lock : packet.expression.variableLocks){
             gameState.unblockVariable(lock);
         }
         LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", newValue=" << newValue << ")");
-        gameState.applyNewValue(packet.variable, newValue);
-        gameState.updateVariables();
-        LOG("main.cpp\tupdatePackets() CHANGES APPLIED (var=" << packet.variable << ", newValue=" << newValue << ")");
-        gameState.updateCurrentInsight();
+        gameState.setVarValue(packet.variable, newValue);
         packets.pop_back();
         LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", newValue=" << newValue << ") GAMESTATE packet length=" << packets.size());
+    }
+}
 
-        gameState.updatePackets();
+void updateProcesses(GameState& gameState){
+    auto now = Clock::now();
+    auto& calendar = gameState.getCalendar();
+    while(!calendar.empty() && calendar.back().time < now){
+        auto& entry = calendar.back();
+        switch(entry.type){
+            case CalendarEntryType::ProcessTick:
+                std::string processName = entry.process->getName();
+                auto packets = gameState.generatePackets(entry.process, ButtonPosition(0, 5), now, seed);
+                gameState.sendPackets(packets);
+
+                if(gameState.isProcessActive(entry.process->getName())){
+                    double interval = entry.process->getInterval(gameState);
+                    gameState.addNewProcessEvent(entry.process, now+secondsToDuration(interval));
+                }
+                break;
+        }
+
+        calendar.pop_back();
     }
 }
 
@@ -193,6 +208,8 @@ int main(int argc, char** argv){
 
     gameState.addButtons();
 
+    gameState.addProcesss();
+
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -201,6 +218,7 @@ int main(int argc, char** argv){
         drawInsight(gameState.currentInsight, cursor, gameState);
         drawButtons(gameState);
         updatePackets(gameState);
+        updateProcesses(gameState);
         drawPackets(gameState);
         EndDrawing();
     }

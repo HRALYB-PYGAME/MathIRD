@@ -5,7 +5,7 @@
         "offset": 0,
         "polarity": "normal" 
     },
-    "defaultValue": 0,
+    "defaultValue": -4,
     "homeButton": "testbtn",
     "unlockCondition": "1"
 }

@@ -38,6 +38,9 @@ clean:
 	rm -rf $(BUILD_DIR)
 	clear
 
+cleanoutput:
+	rm output
+
 run: $(TARGET)
 	./$(TARGET)
 

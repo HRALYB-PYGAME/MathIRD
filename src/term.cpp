@@ -1,6 +1,6 @@
 #include "game_state.hpp"
 
-bool Term::isActive(GameState& gameState){
+bool Term::isActive(GameState& gameState) const{
     if (!this->isUnlocked(gameState)) return false;
     return this->condition->evaluate(gameState) != 0;
 }
@@ -163,7 +163,7 @@ void Term::updateBlockers(){
 /// @brief Checks if all dependent variables are unlocked.
 /// @param gameState reference to current GameState
 /// @return true when term is unlocked, false otherwise
-bool Term::isUnlocked(GameState& gameState){
+bool Term::isUnlocked(GameState& gameState) const{
     for (const std::string& var : dependencies) {
         if (!gameState.isVariableUnlocked(var)){
             LOG("term.cpp\tisUnlocked() TERM " << name << " is locked because " << var << " is.");
@@ -173,9 +173,9 @@ bool Term::isUnlocked(GameState& gameState){
     return true;
 }
 
-bool Term::isUnblocked(GameState& gameState){
+bool Term::isUnblocked(GameState& gameState) const{
     if (!isActive(gameState)) return false;
-    for (auto& blocker : blockers){
+    for (const auto& blocker : blockers){
         if (gameState.isVariableBlocked(blocker)){
             std::cout << blocker << " blocked\n";
             return false;

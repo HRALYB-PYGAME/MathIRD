@@ -17,18 +17,23 @@
     "terms": [
         {
             "name": "term",
-            "condition": "x>=0",
+            "condition": "x>=-4",
             "expressions": [
-                "x+=min[1, x]",
-                "x+=1-y",
-                "y+=min[x*10, 0]"
+                "y+=x"
             ]
         },
         {
             "name": "y divider",
             "condition": "1",
             "expressions": [
-                "y=0"
+                "y+=37"
+            ]
+        },
+        {
+            "name": "empty",
+            "condition": "y?<20",
+            "expressions": [
+                
             ]
         }
     ]

@@ -11,13 +11,13 @@ using Clock = std::chrono::steady_clock;
 struct Packet{
     // LOGIC
     std::string variable;
-    std::unique_ptr<Node> expression;
-    std::map<std::string, int> lastInputsVersions;
-    std::set<std::string> variableLocks;
+    Expression expression;
 
     // VISUALS
     double radius;
     Color color;
+
+    double currDelta = 0;
 
     // TIMING
     Clock::time_point startTime;
@@ -29,7 +29,9 @@ struct Packet{
     ButtonPosition endPos;
 
     double getProgress(Clock::time_point time) const;
-    void update(GameState& gameState, bool forced);
+    void update(double delta);
+
+    Packet(Expression expr): expression(std::move(expr)) {};
 };
 
 #endif

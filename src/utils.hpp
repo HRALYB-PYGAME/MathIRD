@@ -52,6 +52,9 @@ struct ButtonPosition{
     bool isSameAs(ButtonPosition other){
         return other.row == row && other.col == col;
     }
+
+    ButtonPosition(): row(0), col(0) {};
+    ButtonPosition(int row, int col): row(row), col(col) {};
 };
 
 struct VariableFlags{

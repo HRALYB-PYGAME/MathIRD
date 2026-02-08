@@ -5,17 +5,25 @@ std::vector<DisplayLine> Process::insight(GameState& gameState, int level){
     return {};
 }
 
-double Process::getInterval(GameState& gameState){
+double Process::getInterval(GameState& gameState) const{
     return interval->evaluate(gameState);
 }
 
 
-bool Process::isStartConditionMet(GameState& gameState){
+bool Process::isStartConditionMet(GameState& gameState) const{
     return startCondition->evaluate(gameState) != 0;
 }
 
-bool Process::isEndConditionMet(GameState& gameState){
+bool Process::isEndConditionMet(GameState& gameState) const{
     return endCondition->evaluate(gameState) != 0;
+}
+
+bool Process::isUnlocked(GameState& gameState) const{
+    for(const auto& term : terms){
+        if (!term->isUnlocked(gameState))
+            return false;
+    }
+    return true;
 }
 
 void Process::setStartCondition(std::unique_ptr<Node> startCondition){

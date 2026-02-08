@@ -4,7 +4,7 @@
 GameState::GameState() : currentInsight() {
 }
 
-double GameState::getTotalScore(){
+double GameState::getTotalScore() const{
     double score = 0;
     for (auto& [name, varEntry] : variables){
         Variable* var = Defs::getVariable(name);
@@ -24,16 +24,10 @@ void GameState::applyDeltas(VariableChanges changes){
     LOG("game_state.cpp\tapplyDeltas(changes) FUNCTION BEG");
     for (auto& [var, val] : changes.changes){
         addVarValue(var, val.rand);
-        LOG("game_state.cpp\tapplyDeltas(changes) ADDED (" << var << " value=" << getVarValueAsDouble(var) << ")");
+        LOG("game_state.cpp\tapplyDeltas(changes) ADDED (" << var << " value=" << getVarValue(var) << ")");
     }
     this->updateVariables();
     LOG("game_state.cpp\tapplyDeltas(changes) VARIABLES UPDATED");
-}
-
-void GameState::applyNewValue(std::string var, double newValue){
-    LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") FUNCTION BEG");
-    setVarValue(var, newValue);
-    LOG("game_state.cpp\tapplyChange(var=" << var << ", newValue=" << newValue << ") ADDED");
 }
 
 void GameState::setVarValue(std::string name, double value){
@@ -41,35 +35,37 @@ void GameState::setVarValue(std::string name, double value){
     auto it = variables.find(name);
     if (it != variables.end()){
         it->second.value = value;
-        it->second.incrementVersion();
-        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << " version=" << variables.at(name).version << ") VALUE SET");
+        LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << " VALUE SET");
     }
     else
         LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
+
+    updateEntries();
+    updateCurrentInsight();
 }  
 
 void GameState::addVarValue(std::string name, double value){
     LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") FUNCTION BEG");
-    if (variables.empty()){
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") VARIABLES MAP EMPTY");
-        return;
-    }
 
     auto it = variables.find(name);
     if (it != variables.end()){
-        it->second.value += value;
-        variables.at(name).incrementVersion();
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") VALUE ADDED");
+        setVarValue(name, it->second.value + value);
     }
     else
         LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
+}
+
+void GameState::updateEntries(){
+    updateVariables();
+    updateButtons();
+    updateProcesses();
 }
 
 void GameState::updateVariables(){
     for (auto& [name, entry] : variables){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr){
-            if (!isVariableUnlocked(name) && var->getUnlockCondition().evaluate(*this)){
+            if (!entry.isUnlocked() && var->getUnlockCondition().evaluate(*this)){
                 LOG("game_state.cpp\tupdateVariables() " << name << " UNLOCKED");
                 entry.unlock();
             }
@@ -77,29 +73,69 @@ void GameState::updateVariables(){
     }
 }
 
-bool GameState::isVariableUnlocked(std::string name){
+void GameState::updateButtons(){
+    for (auto& [name, entry] : buttons){
+        Button* btn = Defs::getButton(name);
+
+        if (btn == nullptr) continue;
+        
+        if (!entry.isUnlocked() && btn->isUnlocked(*this))
+            entry.unlock();
+    }
+}
+
+void GameState::updateProcesses(){
+    std::cout << "updateProcesses fun\n";
+    for (auto& [name, entry] : processes){
+        Process* proc = Defs::getProcess(name);
+
+        if (proc == nullptr) continue;
+
+        if (!entry.isUnlocked() && proc->isUnlocked(*this))
+            entry.unlock();
+
+        if (!entry.isUnlocked()) return;
+        
+        std::cout << "updateProcesses unlocked\n";
+
+        if (entry.isActive()){
+            if (proc->isEndConditionMet(*this)){
+                entry.deactivate();
+            }
+        }
+        else{
+            std::cout << "not active but cond?\n";
+            if (proc->isStartConditionMet(*this)){
+                entry.activate();
+                std::cout << "process activated??" << std::endl;
+            }
+        }
+    }
+}
+
+bool GameState::isVariableUnlocked(std::string name) const{
     if (variables.find(name) == variables.end()) return false;
-    return variables.at(name).unlocked;
+    return variables.at(name).isUnlocked();
 }
 
 void GameState::blockVariable(std::string name){
     if (variables.find(name) != variables.end())
-        variables.at(name).blockCounter++;
+        variables.at(name).incrementBlockCounter();
 }
 
 void GameState::unblockVariable(std::string name){
     if (variables.find(name) != variables.end())
-        variables.at(name).blockCounter--;
+        variables.at(name).decrementBlockCounter();
 }
 
-bool GameState::isVariableBlocked(std::string name){
+bool GameState::isVariableBlocked(std::string name) const{
     if (variables.find(name) == variables.end()) return false;
-    return variables.at(name).blockCounter!=0;
+    return variables.at(name).isBlocked();
 }
 
 int GameState::getVariableBlockCounter(std::string name){
     auto it = variables.find(name);
-    if (it != variables.end()) return it->second.blockCounter;
+    if (it != variables.end()) return it->second.getBlockedCounter();
     return 0;
 }
 
@@ -141,30 +177,33 @@ void GameState::addButtons(){
     updateButtons();
 }
 
-bool GameState::isButtonUnlocked(std::string name){
-    if (buttons.find(name) == buttons.end()) return false;
-    return buttons.at(name).unlocked;
+void GameState::addProcess(Process* process){
+    ProcessEntry entry;
+    std::string name = process->getName();
+    std::cout << "new process " << name << "added to gamestate\n";
+    processes.insert({name, entry});
 }
 
-void GameState::updateButtons(){
-    for (auto& [name, entry] : buttons){
-        Button* btn = Defs::getButton(name);
-
-        if (btn == nullptr) continue;
-        
-        if (!isButtonUnlocked(name) && btn->isUnlocked(*this))
-            entry.unlock();
+void GameState::addProcesss(){
+    for(auto& [name, proc] : Defs::procs){
+        addProcess(&proc);
     }
+    updateProcesses();
+}
+
+bool GameState::isButtonUnlocked(std::string name) const{
+    if (buttons.find(name) == buttons.end()) return false;
+    return buttons.at(name).isUnlocked();
 }
 
 void GameState::printUnlocked(){
     for (auto& [name, entry] : variables){
-        if (entry.unlocked)
+        if (entry.isUnlocked())
             std::cout << "unlocked: " << name << std::endl;
     }
 }
 
-double GameState::getCurrentrandom(){
+double GameState::getCurrentrandom() const{
     return currentSeed;
 }
 
@@ -180,13 +219,6 @@ double GameState::insertNewConditionResult(bool result){
         vec.resize(currentIndex+1);
     }
     return vec[currentIndex].update(result);
-}
-
-int GameState::getVarVersion(std::string name){
-    if (variables.find(name) != variables.end()){
-        return variables.at(name).version;
-    }
-    return 0;
 }
 
 double GameState::getVarValue(std::string name){
@@ -210,30 +242,7 @@ double GameState::getVarValue(std::string name){
     //return getVarValue(name);
 }
 
-double GameState::getVarValueAsDouble(std::string name){
-    if (name == "_R"){
-        if (forcedRandom != -1) return forcedRandom; 
-        return currentSeed/RANDOM_MAX;
-    }
-    if (name == "_NR"){
-        step();
-        if (forcedRandom != -1) return forcedRandom;
-        return currentSeed/RANDOM_MAX;
-    }
-
-    auto it = variables.find(name);
-    if (it != variables.end()){
-        return it->second.value;
-    }
-    
-    // auto var = Defs::getVariable(name);
-    // if (var == nullptr)
-        return 0.0;
-    // addVariable(var);
-    // return getVarValueAsDouble(name);
-}
-
-void GameState::addPacket(Packet packet) {
+void GameState::sendPacket(Packet packet, bool update = true) {
     // packets with lowest arrivalTime at the end
     auto it = packets.begin();
 
@@ -245,9 +254,8 @@ void GameState::addPacket(Packet packet) {
 
     LOG("game_state.cpp\taddPacket() variable=" << packet.variable);
     std::string name = packet.variable;
-    for(auto lock : packet.variableLocks){
+    for(auto lock : packet.expression.variableLocks){
         blockVariable(lock);
-
     }
 
     packets.insert(it, std::move(packet));
@@ -258,24 +266,19 @@ void GameState::addPacket(Packet packet) {
         it++;
     }
 
-    updateRealValue(name);
+    if (update){
+        updatePacketsAndRealValues();
+        //updateCurrentInsight();
+    }
 }
 
-void GameState::addPackets(std::vector<Packet>& packets) {
+void GameState::sendPackets(std::vector<Packet>& packets) {
     for(auto& packet : packets){
-        addPacket(std::move(packet));
+        sendPacket(std::move(packet), false);
     }
     packets.clear();
-}
-
-void GameState::updateRealValue(std::string name){
-    setRealValue(name, getVarValue(name));
-    LOG("game_state.cpp\tupdateRealValue(name=" << name << ")");
-    for(int i=(int)packets.size()-1; i>=0; i--){
-        if (packets[i].variable != name) continue;
-        auto newValue = packets[i].expression->evaluate(*this, true);
-        setRealValue(name, newValue);
-    }
+    updatePacketsAndRealValues();
+    //updateCurrentInsight();
 }
 
 void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, Clock::time_point time, uint64_t& seed){
@@ -283,16 +286,16 @@ void GameState::addPacketFromAnExpression(const Expression& expression, std::vec
     if (outputs.empty()) return;
     std::string name = *outputs.begin();
 
-    std::unique_ptr<Node> expr = expression.expr->getPacketExpression(*this, true);
+    std::unique_ptr<Node> exprNode = expression.expr->getPacketExpression(*this, true);
     
 
     LOG("packet.cpp\tgetPackets() NAME=" << name << " DELTA=" << "?");
     Variable* var = Defs::getVariable(name);
 
-    Packet p;
+    Expression expr(std::move(exprNode), expression.variableLocks);
+
+    Packet p(std::move(expr));
     p.variable = name;
-    p.variableLocks = expression.variableLocks;
-    p.expression = std::move(expr);
     p.startPos = startPos;
     if (var->getHomeButton() == nullptr){
         LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " HAVE AN INVALID HOME BUTTON");
@@ -305,13 +308,6 @@ void GameState::addPacketFromAnExpression(const Expression& expression, std::vec
         LOG("packet.cpp\tgetPackets() DURATION=" << p.duration);
     }
     p.arrivalTime = p.startTime + secondsToDuration(p.duration);
-
-    auto inputs = p.expression->getInputs(false);
-    for(auto& input : inputs){
-        p.lastInputsVersions.insert_or_assign(input, -1);
-    }
-
-    p.update(*this, true);
     
     LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET CREATED");
 
@@ -352,12 +348,12 @@ void GameState::addNewProcessEvent(Process* process, Clock::time_point time){
     }
 
     LOG("game_state.cpp\taddNewProcessEvent() process=" << process->getName());
-    CalendarEntry entry = { process, time };
+    CalendarEntry entry = { process, CalendarEntryType::ProcessTick, time };
 
     calendar.insert(it, entry);
 }
 
-double GameState::getRealValue(std::string name){
+double GameState::getRealValue(std::string name) const{
     auto it = variables.find(name);
     if (it != variables.end())
         return it->second.realValue;
@@ -368,15 +364,25 @@ void GameState::setRealValue(std::string name, double value){
     auto it = variables.find(name);
     if (it != variables.end()){
         it->second.realValue = value;
-        updateCurrentInsight();
     }
 }
 
+void GameState::clearRealValues(){
+    for(auto& [name, entry] : variables){
+        entry.realValue = entry.value;
+    }
+}
 
-void GameState::updatePackets(){
-    for(auto& packet : packets){
-        LOG("game_state.cpp\tupdatePackets()");
-        packet.update(*this, false);
+void GameState::updatePacketsAndRealValues(){
+    clearRealValues();
+    auto it = packets.end();
+    while(it != packets.begin()){
+        it--;
+        double newValue = it->expression.evaluate(*this, true);
+        double oldValue = getRealValue(it->variable);
+        setRealValue(it->variable, newValue);
+        LOG("game_state.cpp\tupdatePacketsAndRealValues() new Real Value for " << it->variable << ": " << newValue << " (" << oldValue << ")");
+        it->update(newValue-oldValue);
     }
 }
 
@@ -413,14 +419,14 @@ void GameState::updateCurrentInsight(){
     LOG("game_state.hpp\tupdateCurrentInsight() Current insight set");
 }
 
-bool GameState::isProcessUnlocked(std::string name){
+bool GameState::isProcessUnlocked(std::string name) const{
     auto it = processes.find(name);
     if (it == processes.end()) return false;
-    return it->second.unlocked;
+    return it->second.isUnlocked();
 }
 
-bool GameState::isProcessActive(std::string name){
+bool GameState::isProcessActive(std::string name) const{
     auto it = processes.find(name);
     if (it == processes.end()) return false;
-    return it->second.active;
+    return it->second.isActive();
 }

@@ -24,26 +24,42 @@ struct ConditionProbability{
 };
 
 struct Entry {
+private:
     bool unlocked = false;
+
+public:
     void unlock(){
         unlocked = true;
     };
     void lock(){
         unlocked = false;
     };
+    bool isUnlocked() const{
+        return unlocked;
+    };
 };
 
 struct VariableEntry : Entry {
+private:
+    int blockCounter=0;
+
+public:
     double value;
     double realValue;
-    int version=0;
-    int blockCounter=0;
     VariableEntry(double value);
 
-    void incrementVersion() {
-        LOG("game_state.hpp\tincrementVersion() newVersion=" << version+1);
-        version++;
+    int getBlockedCounter() const{
+        return blockCounter;
     };
+    bool isBlocked() const{
+        return blockCounter > 0;
+    };
+    void incrementBlockCounter(){
+        blockCounter++;
+    }
+    void decrementBlockCounter(){
+        blockCounter--;
+    }
 };
 
 struct ButtonEntry : Entry {
@@ -51,13 +67,28 @@ struct ButtonEntry : Entry {
 };
 
 struct ProcessEntry : Entry {
+private:
     bool active = false;
 
-    ProcessEntry();
+public:
+    bool isActive() const{
+        return active;
+    };
+    void activate(){
+        active = true;
+    };
+    void deactivate(){
+        active = false;
+    };
+};
+
+enum CalendarEntryType{
+    ProcessTick
 };
 
 struct CalendarEntry{
     Process* process;
+    CalendarEntryType type;
     Clock::time_point time;
 };
 
@@ -81,16 +112,14 @@ class GameState{
 
         std::vector<DisplayLine> currentInsight;
         GameState();
-        double getTotalScore();
+        double getTotalScore() const;
 
         // Variables
-        int getVarVersion(std::string name);
         double getVarValue(std::string name);
-        double getVarValueAsDouble(std::string name);
-        bool isVariableUnlocked(std::string name);
+        bool isVariableUnlocked(std::string name) const;
         void blockVariable(std::string name);
         void unblockVariable(std::string name);
-        bool isVariableBlocked(std::string name);
+        bool isVariableBlocked(std::string name) const;
         int getVariableBlockCounter(std::string name);
         void setVarValue(std::string name, double value);
         void addVarValue(std::string name, double value);
@@ -100,12 +129,12 @@ class GameState{
         void applyDeltas(VariableChanges changes);
         void applyDelta(std::string var, double delta);
         void applyNewValue(std::string var, double newValue);
-        void updateRealValue(std::string name);
-        double getRealValue(std::string name);
+        double getRealValue(std::string name) const;
         void setRealValue(std::string name, double value);
+        void clearRealValues();
 
         // Buttons
-        bool isButtonUnlocked(std::string name);
+        bool isButtonUnlocked(std::string name) const;
         void updateButtons();
         void addButtons();
         void addButton(Button* button);
@@ -114,7 +143,7 @@ class GameState{
         void printUnlocked();
 
         // Randomness
-        double getCurrentrandom();
+        double getCurrentrandom() const;
         void step();
         double insertNewConditionResult(bool result);
         void setCurrentTerm(std::string name) {currentTerm = name; currentIndex = 0;};
@@ -126,26 +155,28 @@ class GameState{
 
         // Packets
         std::vector<Packet>& getPackets() {return packets;};
-        void addPacket(Packet packet);
-        void addPackets(std::vector<Packet>& packets);
-        void updatePackets();
+        void sendPacket(Packet packet, bool update);
+        void sendPackets(std::vector<Packet>& packets);
+        void updatePacketsAndRealValues();
         void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
         std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
         std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
 
         // Calendar and processes
-        bool isProcessUnlocked(std::string name);
-        bool isProcessActive(std::string name);
+        bool isProcessUnlocked(std::string name) const;
+        bool isProcessActive(std::string name) const;
         void addNewProcessEvent(Process* process, Clock::time_point time);
         std::vector<CalendarEntry>& getCalendar() {return calendar;};
+        void updateProcesses();
+        void addProcesss();
+        void addProcess(Process* process);
+
+        void updateEntries();
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};
-
         void setCurrentInsight(std::vector<DisplayLine> insight);
-
         void setCurrentInsightable(Insightable* insightable);
-
         void updateCurrentInsight();
 };
 
