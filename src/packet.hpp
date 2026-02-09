@@ -20,15 +20,15 @@ struct Packet{
     double currDelta = 0;
 
     // TIMING
-    Clock::time_point startTime;
+    double startTime;
     double duration;
-    Clock::time_point arrivalTime;
+    double arrivalTime;
 
     // POSITION
     ButtonPosition startPos;
     ButtonPosition endPos;
 
-    double getProgress(Clock::time_point time) const;
+    double getProgress(double time) const;
     void update(double delta);
 
     Packet(Expression expr): expression(std::move(expr)) {};

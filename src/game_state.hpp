@@ -89,7 +89,7 @@ enum CalendarEntryType{
 struct CalendarEntry{
     Process* process;
     CalendarEntryType type;
-    Clock::time_point time;
+    double time;
 };
 
 class GameState{
@@ -99,6 +99,7 @@ class GameState{
         std::unordered_map<std::string, ProcessEntry> processes;
 
         uint64_t currentSeed;
+        double inGameTime = 0;
         double forcedRandom = -1;
 
         std::unordered_map<std::string, std::vector<ConditionProbability>> probabilities;
@@ -108,12 +109,13 @@ class GameState{
 
         std::vector<Packet> packets;
         std::vector<CalendarEntry> calendar;
+        uint64_t seed = 0;
     public:
-
+    
         std::vector<DisplayLine> currentInsight;
         GameState();
         double getTotalScore() const;
-
+        
         // Variables
         double getVarValue(std::string name);
         bool isVariableUnlocked(std::string name) const;
@@ -132,7 +134,7 @@ class GameState{
         double getRealValue(std::string name) const;
         void setRealValue(std::string name, double value);
         void clearRealValues();
-
+        
         // Buttons
         bool isButtonUnlocked(std::string name) const;
         void updateButtons();
@@ -141,6 +143,13 @@ class GameState{
 
         // Debug
         void printUnlocked();
+        
+        // Seed
+        uint64_t& getSeed() {return seed;};
+
+        // Time
+        double getInGameTime() {return inGameTime;};
+        void addSecondsToInGameTime(double seconds) {inGameTime += seconds;};
 
         // Randomness
         double getCurrentrandom() const;
@@ -158,20 +167,24 @@ class GameState{
         void sendPacket(Packet packet, bool update);
         void sendPackets(std::vector<Packet>& packets);
         void updatePacketsAndRealValues();
-        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
-        std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
-        std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos, Clock::time_point time, uint64_t& seed);
+        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos);
+        std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos);
+        std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos);
+        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, double time, uint64_t& seed);
+        std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos, double time, uint64_t& seed);
+        std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos, double time, uint64_t& seed);
 
         // Calendar and processes
         bool isProcessUnlocked(std::string name) const;
         bool isProcessActive(std::string name) const;
-        void addNewProcessEvent(Process* process, Clock::time_point time);
+        void addNewProcessEvent(Process* process, double seconds);
         std::vector<CalendarEntry>& getCalendar() {return calendar;};
         void updateProcesses();
         void addProcesss();
         void addProcess(Process* process);
 
         void updateEntries();
+        void init();
 
         // Insight
         std::vector<DisplayLine>& getCurrentInsight() {return currentInsight;};

@@ -139,6 +139,22 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
 
         std::string name = j["name"];
 
+        VariableType type = VariableType::Double;
+
+        if (j.contains("type")){
+            if (j["type"] == "B")
+                type = VariableType::Boolean;
+            if (j["type"] == "I")
+                type = VariableType::Int;
+            if (j["type"] == "E"){
+                type = VariableType::Enum;
+                if (!j.contains("states")) continue;
+                if (j["states"].empty()) continue;
+            }
+            if (j["type"] == "P")
+                type = VariableType::Percentage;
+        }
+
         ScoreParams scoreParams = {100, 0, Polarity::Neutral};;
         if (j.contains("scoreParams")){
             auto& js = j["scoreParams"];
@@ -155,11 +171,18 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
             name, 
             scoreParams, 
             construct(tokenize(j.value("unlockCondition", "1"))).expr, 
-            j.value("defaultValue", 0.0)
+            j.value("defaultValue", 0.0),
+            type
         );
 
         if (j.contains("granularity")){
             var.setGranularity(j["granularity"]);
+        }
+
+        if (var.getType() == VariableType::Enum){
+            for(auto state : j["states"]){
+                var.addState(state);
+            }
         }
 
         Defs::addVariable(std::move(var));

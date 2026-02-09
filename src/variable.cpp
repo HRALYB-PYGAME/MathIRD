@@ -26,14 +26,31 @@ ScoreParams getScoreParams(double knee, double offset, Polarity polarity) {
     return {knee, offset, polarity};
 }
 
-Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue)
+Variable::Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue, VariableType type)
     : name(std::move(name)), 
       scoreParams(scoreParams), 
       unlockCondition(std::move(unlockCondition)), 
       defaultValue(defaultValue),
-      homeButton(nullptr)
+      homeButton(nullptr),
+      type(type)
 {
     
+}
+
+double Variable::constrain(double value) const{
+    switch (type){
+        case VariableType::Boolean:
+            return value > 0.5 ? 1 : 0;
+        case VariableType::Double:
+            return value;
+        case VariableType::Enum:
+            return std::clamp((int)value, 0, (int)getStateCount()-1);
+        case VariableType::Int:
+            return (int)value;
+        case VariableType::Percentage:
+            return std::clamp(value, 0.0, 1.0);
+    }
+    return value;
 }
 
 std::vector<DisplayLine> Variable::insight(GameState& gameState, int level){

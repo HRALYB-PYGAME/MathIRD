@@ -36,10 +36,11 @@ $(BUILD_DIR):
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f output
 	clear
 
 cleanoutput:
-	rm output
+	rm -f output
 
 run: $(TARGET)
 	./$(TARGET)

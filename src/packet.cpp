@@ -10,8 +10,8 @@ void Packet::update(double delta){
     radius = 20;
 }
 
-double Packet::getProgress(Clock::time_point time) const{
-    double timePassed = durationToSeconds(time - startTime);
+double Packet::getProgress(double time) const{
+    double timePassed = time - startTime;
     if (timePassed > duration) return 1;
     return timePassed/duration;
 }

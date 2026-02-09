@@ -46,6 +46,7 @@ class Variable : public Insightable{
         double granularity = 1;
         Button* homeButton;
         VariableType type;
+        std::vector<std::string> stateNames;
 
         std::set<Term*> asDependencyInTerms;
         std::set<Term*> asInputInTerms;
@@ -54,7 +55,7 @@ class Variable : public Insightable{
     public:
         std::set<Button*> displayedAtButtons;
         
-        Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue);
+        Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue, VariableType type);
 
         std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
         void addTermAsDependency(Term* term);
@@ -64,6 +65,9 @@ class Variable : public Insightable{
         void addButtonAsDisplay(Button* button);
 
         std::string getName() const {return name;};
+        std::string getStateNameAt(size_t index) const {if (index < 0 || index >= stateNames.size()) return ""; return stateNames[index]; }; 
+        void addState(std::string name) {stateNames.push_back(name);};
+        size_t getStateCount() const {return stateNames.size();};
         VariableType getType() const {return type;};
         ScoreParams getScoreParams() const {return scoreParams;};
         double getDefaultValue() const {return defaultValue;};
@@ -73,6 +77,8 @@ class Variable : public Insightable{
 
         void setGranularity(double value) {granularity=value;};
         double getGranularity() const {return granularity;};
+
+        double constrain(double value) const;
 
         void printDependencies();
 };

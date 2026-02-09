@@ -1,12 +1,19 @@
 # TO DO
 
+## quick
+
+- Update Packet Struct: Add a SourceTrace member (Element ID, Term Index, Expression Index) and an effectiveDelta field.
+- Refactor Node::evaluate: Create an overload or update it to allow evaluation against a std::map<std::string, VariableEntry> instead of the full GameState.
+- Sorting Alignment: Ensure generatePackets returns a vector sorted with the earliest arrival at the back, matching your Calendar's pop_back efficiency.
+- Implement predictChanges
+
 ## priority 5
 
-- add time/clock to GameState
-- add seed to GameState
+- continue on enum variables
+- packet coloring and fixes for new types
+- special coloring for different var types
 - work on basic insights
 - predictive insights
-- look into variable unlocking/locking
 
 ## priority 4
 

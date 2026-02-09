@@ -7,5 +7,6 @@
     },
     "defaultValue": -4,
     "homeButton": "testbtn",
-    "unlockCondition": "1"
+    "unlockCondition": "1",
+    "type": "I"
 }

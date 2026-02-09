@@ -7,5 +7,11 @@
     },
     "defaultValue": 5,
     "homeButton": "testbtn",
-    "unlockCondition": "x>=0"
+    "unlockCondition": "x>=0",
+    "type": "E",
+    "states": [
+        "state1",
+        "state2",
+        "state3"
+    ]
 }

@@ -29,7 +29,7 @@ std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     if (!isUnlocked(gameState)) line.appendTextChunk("TERM IS LOCKED");
     else if (!isActive(gameState)) line.appendTextChunk("TERM IS INACTIVE");
     else if (!isUnblocked(gameState)) line.appendTextChunk("TERM IS BLOCKED");
-    else line.appendTextChunk("TERM IS UNLOCKED");
+    else line.appendTextChunk("TERM IS ACTIVE");
     lines.push_back(line);
 
     auto simulationResultInsight = simulate(gameState).insight(gameState, 0);

@@ -4,8 +4,6 @@
 #include <memory>
 #include <chrono>
 
-using Clock = std::chrono::steady_clock;
-
 constexpr float fontSize = 20.0f;
 constexpr float spacing = 2.0f;
 constexpr float wordGap = 10.0f; // 5.0f for arithmetic
@@ -13,7 +11,8 @@ float currWordGap = 10.0f;
 const short buttonsPerRow = 4;
 const float outerPadding = 0.05; // percentage of the screen height/width
 const float buttonPadding = 0.05; // percentage of button width to be used as a gap in between
-uint64_t seed = 0;
+
+Clock::time_point lastFrameTime;
 
 Vector2 getCoordsFromButtonPosition(const ButtonPosition& buttonPos, double& buttonSize, bool getCenter){
     double screenWidth = GetScreenWidth();
@@ -51,7 +50,7 @@ void drawButtons(GameState& gameState){
         if (CheckCollisionPointRec(GetMousePosition(), rect)){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
-                auto packets = gameState.generatePackets(&button, buttonPos, Clock::now(), seed);
+                auto packets = gameState.generatePackets(&button, buttonPos);
                 for(auto& packet : packets) LOG("main.cpp\tdrawButtons() packetvar=" << packet.variable);
                 gameState.sendPackets(packets);
             }
@@ -134,7 +133,7 @@ void drawInsight(const std::vector<DisplayLine>& lines, Vector2 startPos, GameSt
 void updatePackets(GameState& gameState){
     auto now = Clock::now();
     auto& packets = gameState.getPackets();
-    while(!packets.empty() && packets.back().getProgress(now) >= 1){
+    while(!packets.empty() && packets.back().getProgress(gameState.getInGameTime()) >= 1){
         auto& packet = packets.back();
         double newValue = packet.expression.evaluate(gameState);
         for(auto lock : packet.expression.variableLocks){
@@ -148,19 +147,19 @@ void updatePackets(GameState& gameState){
 }
 
 void updateProcesses(GameState& gameState){
-    auto now = Clock::now();
     auto& calendar = gameState.getCalendar();
-    while(!calendar.empty() && calendar.back().time < now){
+    while(!calendar.empty() && calendar.back().time < gameState.getInGameTime()){
         auto& entry = calendar.back();
         switch(entry.type){
             case CalendarEntryType::ProcessTick:
                 std::string processName = entry.process->getName();
-                auto packets = gameState.generatePackets(entry.process, ButtonPosition(0, 5), now, seed);
+                auto packets = gameState.generatePackets(entry.process, ButtonPosition(0, 5));
                 gameState.sendPackets(packets);
 
+                gameState.updateProcesses();
                 if(gameState.isProcessActive(entry.process->getName())){
                     double interval = entry.process->getInterval(gameState);
-                    gameState.addNewProcessEvent(entry.process, now+secondsToDuration(interval));
+                    gameState.addNewProcessEvent(entry.process, interval);
                 }
                 break;
         }
@@ -170,12 +169,11 @@ void updateProcesses(GameState& gameState){
 }
 
 void drawPackets(GameState& gameState){
-    auto now = Clock::now();
     for(auto& packet :gameState.getPackets()){
         double buttonWidth;
         Vector2 startCoords = getCoordsFromButtonPosition(packet.startPos, buttonWidth, true);
         Vector2 endCoords = getCoordsFromButtonPosition(packet.endPos, buttonWidth, true);
-        double progress = packet.getProgress(now);
+        double progress = packet.getProgress(gameState.getInGameTime());
 
         Vector2 currentCoords = { startCoords.x + (endCoords.x - startCoords.x)*progress,
                                   startCoords.y + (endCoords.y - startCoords.y)*progress };
@@ -193,9 +191,7 @@ int main(int argc, char** argv){
     Vector2 cursor = { 100, 100 };
     auto color = BLACK;
 
-    GameState gameState;
-
-    // VARIABLES
+    // LOAD ASSETS
     std::unordered_map<std::string, std::string> linkerMap;
     Defs::loadVariables("assets/variables", linkerMap);
 
@@ -204,22 +200,25 @@ int main(int argc, char** argv){
 
     Defs::loadProcesses("assets/processes");
 
-    gameState.addVariables();
+    GameState gameState;
+    gameState.init();
 
-    gameState.addButtons();
-
-    gameState.addProcesss();
+    lastFrameTime = Clock::now();
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
+        gameState.addSecondsToInGameTime(durationToSeconds(Clock::now()-lastFrameTime));
+        lastFrameTime = Clock::now();
         BeginDrawing();
         ClearBackground(color);
+
         cursor = { (float)GetScreenWidth()/2, 35 };
         drawInsight(gameState.currentInsight, cursor, gameState);
         drawButtons(gameState);
         updatePackets(gameState);
         updateProcesses(gameState);
         drawPackets(gameState);
+
         EndDrawing();
     }
 

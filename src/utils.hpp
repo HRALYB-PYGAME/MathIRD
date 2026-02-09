@@ -73,15 +73,17 @@ struct VariableFlags{
     void setReal() {real = true;};
 };
 
+using Clock = std::chrono::steady_clock;
+
 double getDistance(ButtonPosition start, ButtonPosition end);
 
-inline std::chrono::steady_clock::duration secondsToDuration(double seconds) {
+inline Clock::duration secondsToDuration(double seconds) {
     return std::chrono::duration_cast<std::chrono::steady_clock::duration>(
         std::chrono::duration<double>(seconds)
     );
 }
 
-inline double durationToSeconds(std::chrono::steady_clock::duration duration) {
+inline double durationToSeconds(Clock::duration duration) {
     return std::chrono::duration_cast<std::chrono::duration<double>>(duration).count();;
 }
 
