@@ -21,6 +21,13 @@
                 "y-=5",
                 "x+=1"
             ]
+        },
+        {
+            "name": "testterm",
+            "condition": "1",
+            "expressions": [
+                "x+=y"
+            ]
         }
     ]
 }

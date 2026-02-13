@@ -8,10 +8,28 @@
 
 using Clock = std::chrono::steady_clock;
 
+enum SourceType{
+    ButtonS,
+    ProcessS
+};
+
+struct SourceID{
+    SourceType sourceType;
+    std::string sourceName;
+    size_t termIndex;
+    size_t exprIndex;
+
+    bool operator<(const SourceID sid) const{
+        return std::tie(sourceType, sourceName, termIndex, exprIndex) <
+        std::tie(sid.sourceType, sid.sourceName, sid.termIndex, sid.exprIndex);
+    };
+};
+
 struct Packet{
     // LOGIC
     std::string variable;
     Expression expression;
+    SourceID source;
 
     // VISUALS
     double radius;
@@ -32,6 +50,8 @@ struct Packet{
     void update(double delta);
 
     Packet(Expression expr): expression(std::move(expr)) {};
+    Packet(const Packet& other) = default; 
+    Packet& operator=(const Packet& other) = default;
 };
 
 #endif

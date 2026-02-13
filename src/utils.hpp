@@ -1,5 +1,5 @@
 #ifndef NDEBUG
-    #define LOG(msg) std::cout << "[DEBUG] " << msg << "\n"
+    #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
 #else
     #define LOG(msg)  // Does nothing in Release
 #endif

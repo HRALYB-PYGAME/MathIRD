@@ -2,10 +2,9 @@
 
 ## quick
 
-- Update Packet Struct: Add a SourceTrace member (Element ID, Term Index, Expression Index) and an effectiveDelta field.
-- Refactor Node::evaluate: Create an overload or update it to allow evaluation against a std::map<std::string, VariableEntry> instead of the full GameState.
-- Sorting Alignment: Ensure generatePackets returns a vector sorted with the earliest arrival at the back, matching your Calendar's pop_back efficiency.
+- Improve sendPackets
 - Implement predictChanges
+- Enums/Boolean special case + progress method
 
 ## priority 5
 

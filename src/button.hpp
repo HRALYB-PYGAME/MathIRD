@@ -25,7 +25,7 @@ public:
     const std::vector<Expression> getExpressions(GameState& gameState) const;
 
     // Name
-    std::string& getName() {return name;};
+    std::string getName() {return name;};
     void setName(const std::string& name) {this->name = name;};
 
     // Position

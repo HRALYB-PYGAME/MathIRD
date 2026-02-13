@@ -50,7 +50,7 @@ void drawButtons(GameState& gameState){
         if (CheckCollisionPointRec(GetMousePosition(), rect)){
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 LOG("main.cpp\tdrawButtons()" << button.getName() << " LEFT CLICK");
-                auto packets = gameState.generatePackets(&button, buttonPos);
+                auto packets = gameState.generatePackets(&button);
                 for(auto& packet : packets) LOG("main.cpp\tdrawButtons() packetvar=" << packet.variable);
                 gameState.sendPackets(packets);
             }
@@ -204,6 +204,15 @@ int main(int argc, char** argv){
     gameState.init();
 
     lastFrameTime = Clock::now();
+
+    std::string test = "y+=2";
+    auto tokens = tokenize(test);
+    std::cout << "tokenized" << std::endl;
+    auto expr = construct(tokens);
+    std::cout << "constructed" << std::endl;
+    auto norm = expr.expr->normalize();
+
+    std::cout << "FINAL ELVAL: " << norm->evaluate(gameState) << std::endl;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

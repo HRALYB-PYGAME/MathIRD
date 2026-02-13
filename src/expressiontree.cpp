@@ -451,10 +451,21 @@ std::vector<DisplayLine> OperandNode::arithmeticalInsight(GameState& gameState, 
 }
 
 void createSubtree(std::stack<std::unique_ptr<Node>>& nodeStack, Operand oper){
+    if (nodeStack.empty()) {
+        LOG("CRITICAL ERROR: Stack empty before popping right child!");
+        return; 
+    }
+    
     LOG("expressiontree.cpp\tcreating subtree with nodestack of size: " << nodeStack.size());
     std::unique_ptr<Node> rightChild = std::move(nodeStack.top()); nodeStack.pop();
     std::unique_ptr<Node> leftChild = nullptr;
     if (!isUnary(oper)){
+        if (nodeStack.empty()) {
+            LOG("CRITICAL ERROR: Stack empty before popping left child for binary op!");
+            // Safety: Put the right child back or handle the error
+            nodeStack.push(std::move(rightChild));
+            return;
+        }
         leftChild = std::move(nodeStack.top()); nodeStack.pop();
     }
     auto parent = std::make_unique<OperandNode>(oper, std::move(leftChild), std::move(rightChild));
@@ -527,6 +538,7 @@ Expression construct(std::vector<Token> tokens){
     }
 
     LOG("expressiontree.cpp\texpression business coming next\n");
+    LOG("nodestack size: " << nodeStack.size());
 
     Expression expr(nodeStack.top()->clone(), {});
 
@@ -592,11 +604,11 @@ std::unique_ptr<Node> VariableNode::clone() const{
 }
 
 std::unique_ptr<Node> OperandNode::clone() const{
-    return std::make_unique<OperandNode>(this->oper, this->left->clone(), this->right->clone());
+    return std::make_unique<OperandNode>(this->oper, this->left ? this->left->clone() : nullptr, this->right ? this->right->clone() : nullptr);
 }
 
 Expression Expression::clone() const{
-    return Expression(expr->clone(), variableLocks);
+    return Expression(expr ? expr->clone() : nullptr, variableLocks);
 }
 
 std::unique_ptr<Node> VariableNode::getPacketExpression(GameState& gameState, bool base) const {
@@ -623,4 +635,71 @@ std::unique_ptr<Node> OperandNode::getPacketExpression(GameState& gameState, boo
     }
     if (base) return nullptr;
     return std::make_unique<OperandNode>(oper, this->left->getPacketExpression(gameState, false), this->right->getPacketExpression(gameState, false));
+}
+
+Node* ConstantNode::normalize(bool negate) {
+    if (negate){
+        val = val != 0 ? 0 : 1; 
+    }
+    return this;
+}
+
+Node* VariableNode::normalize(bool negate) {
+    if (!negate) return this;
+    
+    return new OperandNode(
+        Operand::Equal, 
+        std::unique_ptr<Node>(this), 
+        std::make_unique<ConstantNode>(0)
+    );
+}
+
+Node* OperandNode::normalize(bool negate) {
+    LOG("expressiontree.cpp normalize(negate=" << negate << ") fun beg");
+    if (oper == Operand::Not){
+        LOG("expressiontree.cpp normalize(negate=" << negate << ") oper is not");
+        if (right == nullptr) {
+            LOG("right err 1");
+            return nullptr;
+        }
+        Node* childPtr = this->right.release();
+        return childPtr->normalize(!negate);
+    }
+
+    if (negate && isComparision(oper)){
+        oper = getInverseOperand(oper);
+        LOG("expressiontree.cpp normalize(negate=" << negate << ") oper inverted");
+    }
+    else{
+        if (isLogicalGate(oper)){
+            oper = oper == Operand::And ? Operand::Or : Operand::And;
+        }
+        if (left) {
+            Node* newLeft = left->normalize(false);
+            if (newLeft != left.get()) {
+                left.release();
+                left.reset(newLeft);
+            }
+        }
+
+        if (right) {
+            Node* newRight = right->normalize(false);
+            if (newRight != right.get()) {
+                right.release();
+                right.reset(newRight);
+            }
+        }
+        LOG("expressiontree.cpp normalize(negate=" << negate << ") fun standart non negate");
+    }
+
+    LOG("expressiontree.cpp normalize(negate=" << negate << ") fun ret");
+    return this;
+}
+
+void Expression::normalize(){
+    Node* newExpr = expr->normalize(false);
+    if (newExpr != expr.get()) {
+        expr.release();
+        expr.reset(newExpr);
+    }
 }

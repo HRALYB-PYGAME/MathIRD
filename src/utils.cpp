@@ -87,6 +87,7 @@ void Defs::loadButtons(std::string path){
             for(const auto& state : displayStates){
                 if (!state.contains("text")) continue;
                 Expression condition = construct(tokenize(state.value("condition", "1")));
+                condition.normalize();
                 button.setDisplay(std::move(condition.expr), state["text"]);
                 if (!state.contains("condition")) break;
             }
@@ -102,6 +103,7 @@ void Defs::loadButtons(std::string path){
                 if (!t.contains("expressions")) continue;
                 Term term(t["name"]);
                 Expression condition = construct(tokenize(t.value("condition", "1")));
+                condition.normalize();
                 term.setCondition(std::move(condition.expr));
                 for(const auto& expr : t["expressions"]){
                     Expression expression = construct(tokenize(expr));
@@ -167,10 +169,12 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
             linkerMap[name] = j["homeButton"];
         }
 
+        Expression condition = construct(tokenize(j.value("unlockCondition", "1")));
+        condition.normalize();
         Variable var(
             name, 
             scoreParams, 
-            construct(tokenize(j.value("unlockCondition", "1"))).expr, 
+            std::move(condition.expr), 
             j.value("defaultValue", 0.0),
             type
         );
@@ -211,12 +215,14 @@ void Defs::loadProcesses(std::string path){
         if (j.contains("startCondition")){
             auto& cond = j["startCondition"];
             Expression condition = construct(tokenize(cond));
+            condition.normalize();
             process.setStartCondition(std::move(condition.expr));
         }
 
         if (j.contains("endCondition")){
             auto& cond = j["endCondition"];
             Expression condition = construct(tokenize(cond));
+            condition.normalize();
             process.setEndCondition(std::move(condition.expr));
         }
 
@@ -233,6 +239,7 @@ void Defs::loadProcesses(std::string path){
                 if (!t.contains("expressions")) continue;
                 Term term(t["name"]);
                 Expression condition = construct(tokenize(t.value("condition", "1")));
+                condition.normalize();
                 term.setCondition(std::move(condition.expr));
                 for(const auto& expr : t["expressions"]){
                     Expression expression = construct(tokenize(expr));

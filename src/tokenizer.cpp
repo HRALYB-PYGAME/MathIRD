@@ -200,6 +200,12 @@ std::vector<Token> tokenize(std::string text){
             else if (c == '{'){
                 state = TokenizeState::CurlyBracket;
             }
+            else if (c == '('){
+                tokens.push_back(Operand::LeftPar);
+            }
+            else if (c == ')'){
+                tokens.push_back(Operand::RightPar);
+            }
             else if (isLetter(c) || c == '_' || isVarFlagChar(c)){
                 acc += c;
                 state = TokenizeState::Variable;
@@ -209,6 +215,7 @@ std::vector<Token> tokenize(std::string text){
                 state = tokenizeStateMap.at(c);
             }
             else if (tokenMap.count(std::to_string(c))){
+                std::cout << "found" << std::endl;
                 tokens.push_back(tokenMap.at(std::to_string(c)));
             }
             break;
@@ -424,4 +431,22 @@ bool isUnary(Operand oper){
 
 bool isAssignment(Operand oper){
     return assignmentOperands.count(oper);
+}
+
+bool isComparision(Operand oper){
+    return comparisionOperands.count(oper);
+}
+
+bool isLogicalGate(Operand oper){
+    return logicalGates.count(oper);
+}
+
+Operand getInverseOperand(Operand oper){
+    if (oper == Operand::Equal) return Operand::NotEqual;
+    if (oper == Operand::NotEqual) return Operand::Equal;
+    if (oper == Operand::LessOrEqual) return Operand::Greater;
+    if (oper == Operand::Less) return Operand::GreaterOrEqual;
+    if (oper == Operand::GreaterOrEqual) return Operand::Less;
+    if (oper == Operand::Greater) return Operand::LessOrEqual;
+    return oper;
 }

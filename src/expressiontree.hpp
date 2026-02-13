@@ -28,6 +28,7 @@ struct Node : public Insightable{
     
     virtual double evaluate(GameState& gameState, bool realValues=false) const = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
+    virtual Node* normalize(bool negate = false) = 0;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     virtual std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) = 0; 
@@ -58,6 +59,7 @@ struct ConstantNode : Node{
 
     double evaluate([[maybe_unused]] GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
+    Node* normalize(bool negate = false) override;
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
@@ -102,6 +104,7 @@ struct VariableNode : Node{
 
     double evaluate(GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
+    Node* normalize(bool negate = false) override;
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
@@ -138,6 +141,7 @@ struct OperandNode : public Node{
 
     double evaluate(GameState& gameState, bool realValues=false) const override;
     VariableChanges simulate(GameState& gameState) override;
+    Node* normalize(bool negate = false) override;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
@@ -165,9 +169,26 @@ struct Expression{
     std::set<std::string> variableLocks;
     Expression clone() const;
 
+    Expression(const Expression& expression){
+        Expression cloned = expression.clone();
+        expr = std::move(cloned.expr);
+        variableLocks = cloned.variableLocks;
+    };
+
+    Expression& operator=(const Expression& other) {
+        if (this != &other) {
+            Expression cloned = other.clone();
+            expr = std::move(cloned.expr);
+            variableLocks = other.variableLocks;
+        }
+        return *this;
+    };
+
     Expression(std::unique_ptr<Node> expr, std::set<std::string> variableLocks): expr(std::move(expr)), variableLocks(variableLocks) {};
 
     double evaluate(GameState& gameState, bool realValues = false){ return expr->evaluate(gameState, realValues); };
+
+    void normalize();
 
     std::set<std::string>& getVariableLocks() {return variableLocks;};
 };

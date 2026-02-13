@@ -17,7 +17,7 @@
     "terms": [
         {
             "name": "term",
-            "condition": "x>=-4",
+            "condition": "1",
             "expressions": [
                 "y+=x"
             ]
@@ -34,6 +34,13 @@
             "condition": "y?<20",
             "expressions": [
                 
+            ]
+        },
+        {
+            "name": "testterm",
+            "condition": "1",
+            "expressions": [
+                "x+=y"
             ]
         }
     ]

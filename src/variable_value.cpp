@@ -69,3 +69,10 @@ std::vector<DisplayLine> VariableChanges::insight([[maybe_unused]] GameState& ga
 
     return lines;
 }
+
+std::string VariableChanges::print() const{
+    std::string out = "";
+    for (auto& [name, delta] : changes){
+        out += name + " " + formatDouble(delta.rand, true);
+    }
+}

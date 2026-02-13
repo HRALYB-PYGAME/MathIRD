@@ -55,9 +55,21 @@ void Button::setDisplay(std::unique_ptr<Node> condition, std::string t){
 }
 
 std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
-    LOG("button.cpp\tinsight() of " << name << " FUNCTION BEG");
+    auto res = gameState.predict(this);
+
     std::vector<DisplayLine> dl;
     DisplayLine line;
+
+    for(auto& [source, change] : res){
+        line.appendTextChunk(source.sourceName + " (" + std::to_string(source.termIndex) + ", " + std::to_string(source.exprIndex) + ")");
+        dl.push_back(line);
+        line.clear();
+        line.appendLines(change.insight(gameState, 0));
+        dl.push_back(line);
+        line.clear();
+    }
+
+    LOG("button.cpp\tinsight() of " << name << " FUNCTION BEG");
     line.appendTextChunk("insight of " + name + " button");
     line.appendNewLineChunk();
     line.appendTextChunk("IMMEDIATE CHANGES");

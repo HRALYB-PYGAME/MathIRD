@@ -114,6 +114,8 @@ class GameState{
     
         std::vector<DisplayLine> currentInsight;
         GameState();
+        GameState(const GameState& gs) = default;
+
         double getTotalScore() const;
         
         // Variables
@@ -145,7 +147,7 @@ class GameState{
         void printUnlocked();
         
         // Seed
-        uint64_t& getSeed() {return seed;};
+        uint64_t getSeed() {return seed;};
 
         // Time
         double getInGameTime() {return inGameTime;};
@@ -167,10 +169,10 @@ class GameState{
         void sendPacket(Packet packet, bool update);
         void sendPackets(std::vector<Packet>& packets);
         void updatePacketsAndRealValues();
-        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos);
-        std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos);
+        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, SourceID source);
+        std::vector<Packet> generatePackets(Button* button);
         std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos);
-        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, double time, uint64_t& seed);
+        void addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, double time, uint64_t& seed, SourceID source);
         std::vector<Packet> generatePackets(Button* button, ButtonPosition startPos, double time, uint64_t& seed);
         std::vector<Packet> generatePackets(Process* process, ButtonPosition startPos, double time, uint64_t& seed);
 
@@ -191,6 +193,7 @@ class GameState{
         void setCurrentInsight(std::vector<DisplayLine> insight);
         void setCurrentInsightable(Insightable* insightable);
         void updateCurrentInsight();
+        std::map<SourceID, VariableChanges> predict(Button* button) const;
 };
 
 

@@ -283,18 +283,18 @@ void GameState::sendPacket(Packet packet, bool update = true) {
 
 void GameState::sendPackets(std::vector<Packet>& packets) {
     for(auto& packet : packets){
-        sendPacket(std::move(packet), false);
+        sendPacket(packet, false);
     }
     packets.clear();
     updatePacketsAndRealValues();
     //updateCurrentInsight();
 }
 
-void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos){
-    addPacketFromAnExpression(expression, packets, startPos, inGameTime, seed);
+void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, SourceID source){
+    addPacketFromAnExpression(expression, packets, startPos, inGameTime, seed, source);
 }
 
-void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, double time, uint64_t& seed){
+void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, double time, uint64_t& seed, SourceID source){
     auto outputs = expression.expr->getOutputs(true);
     if (outputs.empty()) return;
     std::string name = *outputs.begin();
@@ -321,15 +321,25 @@ void GameState::addPacketFromAnExpression(const Expression& expression, std::vec
         LOG("packet.cpp\tgetPackets() DURATION=" << p.duration);
     }
     p.arrivalTime = p.startTime + p.duration;
+    p.source = source;
     
     LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET CREATED");
 
-    packets.push_back(std::move(p));
+    auto it = packets.begin();
+
+    while (it != packets.end()){
+        if (it->arrivalTime <= p.arrivalTime)
+            break;
+        it++;
+    }
+
+    packets.insert(it, std::move(p));
+
     LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET PUSHED");
 }
 
-std::vector<Packet> GameState::generatePackets(Button* button, ButtonPosition startPos){
-    return generatePackets(button, startPos, inGameTime, seed);
+std::vector<Packet> GameState::generatePackets(Button* button){
+    return generatePackets(button, button->getPosition(), inGameTime, seed);
 }
 
 std::vector<Packet> GameState::generatePackets(Process* process, ButtonPosition startPos){
@@ -340,8 +350,17 @@ std::vector<Packet> GameState::generatePackets(Button* button, ButtonPosition st
     if (button == nullptr) return {};
     LOG("packet.cpp\tgetPackets() FUNCTION BEG");
     std::vector<Packet> packets;
-    for(auto& expression : button->getExpressions(*this)){
-        addPacketFromAnExpression(expression, packets, startPos, time, seed);
+    int termID = 0; int exprID = 0;
+    for(auto& term : button->getTerms()){
+        if (!term->isActive(*this)) {
+            termID++; continue;
+        }
+        for(auto& expression : term->getExpressions()){
+            SourceID source = { SourceType::ProcessS, button->getName(), termID, exprID };
+            addPacketFromAnExpression(expression, packets, startPos, time, seed, source);
+            exprID++;
+        }
+        termID++; exprID = 0;
     }
     LOG("packet.cpp\tgetPackets() FUNCTION END");
     return packets;
@@ -351,8 +370,17 @@ std::vector<Packet> GameState::generatePackets(Process* process, ButtonPosition 
     if (process == nullptr) return {};
     LOG("packet.cpp\tgetPackets() FUNCTION BEG");
     std::vector<Packet> packets;
-    for(auto& expression : process->getExpressions(*this)){
-        addPacketFromAnExpression(expression, packets, startPos, time, seed);
+    int termID = 0; int exprID = 0;
+    for(auto& term : process->getTerms()){
+        if (!term->isActive(*this)) {
+            termID++; continue;
+        }
+        for(auto& expression : term->getExpressions()){
+            SourceID source = { SourceType::ProcessS, process->getName(), termID, exprID };
+            addPacketFromAnExpression(expression, packets, startPos, time, seed, source);
+            exprID++;
+        }
+        termID++; exprID = 0;
     }
     LOG("packet.cpp\tgetPackets() FUNCTION END");
     return packets;
@@ -452,4 +480,78 @@ bool GameState::isProcessActive(std::string name) const{
     auto it = processes.find(name);
     if (it == processes.end()) return false;
     return it->second.isActive();
+}
+
+// GameState::GameState(const GameState& gs){
+//     variables = gs.variables;
+//     processes = gs.processes;
+//     buttons = gs.buttons;
+//     currentSeed = gs.currentSeed;
+//     inGameTime = gs.inGameTime;
+//     forcedRandom = -1;
+
+//     probabilities = gs.probabilities;
+//     currentTerm = gs.currentTerm;
+//     currentIndex = gs.currentIndex;
+//     currentInsightable = nullptr;
+
+//     packets = gs.packets;
+//     calendar = gs.calendar;
+//     seed = gs.seed;
+// };
+
+std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
+    GameState copy(*this);
+    copy.currentInsightable = nullptr;
+    auto packets = copy.generatePackets(button);
+
+    std::map<SourceID, VariableChanges> effects;
+    
+    while(!packets.empty()){
+        double calTime = copy.calendar.empty() ? INFINITY : copy.calendar.back().time;
+        double oldPTime = copy.packets.empty() ? INFINITY : copy.packets.back().arrivalTime;
+        double newPTime = packets.back().arrivalTime;
+
+        if (calTime < oldPTime && calTime < newPTime){
+            auto& entry = copy.calendar.back();
+
+            std::cout << "caltime\n";
+
+            auto packets = copy.generatePackets(entry.process, ButtonPosition(0, 5));
+            copy.sendPackets(packets);
+            copy.updateProcesses();
+            if (copy.isProcessActive(entry.process->getName())){
+                double interval = entry.process->getInterval(copy);
+                copy.addNewProcessEvent(entry.process, interval);
+            }
+            copy.calendar.pop_back();
+        }
+        else if (oldPTime <= newPTime){
+            auto& entry = copy.packets.back();
+
+            std::cout << "oldptime\n";
+
+            double newValue = entry.expression.evaluate(copy);
+            for(auto lock : entry.expression.variableLocks){
+                copy.unblockVariable(lock);
+            }
+            copy.setVarValue(entry.variable, newValue);
+            copy.packets.pop_back();
+        }
+        else{
+            auto& entry = packets.back();
+            
+            std::cout << "new packet var: " << entry.variable << std::endl; 
+            double newValue = entry.expression.evaluate(copy);
+            double delta = newValue - copy.getVarValue(entry.variable);
+            effects.insert_or_assign(entry.source, VariableChanges(entry.variable, delta));
+            for(auto lock : entry.expression.variableLocks){
+                copy.unblockVariable(lock);
+            }
+            copy.setVarValue(entry.variable, newValue);
+            packets.pop_back();
+        }
+    }
+
+    return effects;
 }

@@ -18,7 +18,7 @@ private:
 public:
     Process(std::string name): name(name) {};
 
-    std::string& getName() {return name;};
+    std::string getName() {return name;};
     double getInterval(GameState& gameState) const;
 
     bool isStartConditionMet(GameState& gameState) const;

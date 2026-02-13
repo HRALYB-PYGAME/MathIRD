@@ -104,6 +104,10 @@ bool isFunction(Operand oper);
 bool isLeftAssociative(Operand oper);
 bool isUnary(Operand oper);
 bool isAssignment(Operand oper);
+bool isComparision(Operand oper);
+bool isLogicalGate(Operand oper);
+
+Operand getInverseOperand(Operand oper);
 
 static const std::set<Operand> functionOperands {
     Operand::Abs, Operand::Min, Operand::Max, Operand::If
@@ -115,6 +119,14 @@ static const std::set<Operand> unaryOperands {
 
 static const std::set<Operand> assignmentOperands {
     Operand::Assign, Operand::AddAssign, Operand::SubAssign, Operand::MulAssign, Operand::DivAssign
+};
+
+static const std::set<Operand> comparisionOperands {
+    Operand::Equal, Operand::NotEqual, Operand::Less, Operand::LessOrEqual, Operand::Greater, Operand::GreaterOrEqual
+};
+
+static const std::set<Operand> logicalGates {
+    Operand::And, Operand::Or
 };
 
 static const std::unordered_map<Operand, int> precedenceMap {
