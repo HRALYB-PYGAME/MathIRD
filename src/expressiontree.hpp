@@ -20,17 +20,24 @@ enum class NodeType{
     Unknown
 };
 
+enum class ValueType{
+    Current,
+    Real,
+    Default
+};
+
 struct GeneralConstantNode;
 
 struct Node : public Insightable{
     virtual ~Node() = default;
     virtual std::unique_ptr<Node> clone() const = 0;
     
-    virtual double evaluate(GameState& gameState, bool realValues=false) const = 0;
+    virtual double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const = 0;
+    virtual double getProgress(GameState& gameState, int& weight) const = 0;
     virtual VariableChanges simulate(GameState& gameState) = 0;
     virtual Node* normalize(bool negate = false) = 0;
 
-    std::vector<DisplayLine> insight(GameState& gameState, int level) override;
+    std::vector<DisplayLine> insight(GameState& gameState, int level) override = 0;
     virtual std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) = 0; 
 
     virtual std::set<std::string> getDependencies() const = 0;
@@ -41,6 +48,7 @@ struct Node : public Insightable{
     virtual bool isConstant(GameState& gameState) = 0;
     virtual bool isConstantValue(GameState& gameState, double val) = 0;
     virtual bool isRangeObject() = 0;
+    virtual bool containEnumLikeVariable() const = 0;
     virtual NodeType getType() = 0;
 
     virtual RangeObject getRangeObject() = 0;
@@ -57,7 +65,8 @@ struct ConstantNode : Node{
     ConstantNode(double val): val(val) {};
     std::unique_ptr<Node> clone() const override;
 
-    double evaluate([[maybe_unused]] GameState& gameState, bool realValues=false) const override;
+    double evaluate([[maybe_unused]] GameState& gameState, ValueType valType = ValueType::Current) const override;
+    double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
     Node* normalize(bool negate = false) override;
 
@@ -71,7 +80,8 @@ struct ConstantNode : Node{
 
     bool isConstant([[maybe_unused]] GameState& gameState) override {return true;};
     bool isConstantValue([[maybe_unused]] GameState& gameState, double val) override;
-    virtual bool isRangeObject() override {return false;};
+    bool isRangeObject() override {return false;};
+    bool containEnumLikeVariable() const override {return false;};
     NodeType getType() override { return NodeType::Constant;};
 
     RangeObject getRangeObject() override { return RangeObject(val); };
@@ -102,7 +112,8 @@ struct VariableNode : Node{
     VariableNode(std::string var, VariableFlags flags): var(var), flags(flags) {};
     std::unique_ptr<Node> clone() const override;
 
-    double evaluate(GameState& gameState, bool realValues=false) const override;
+    double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const override;
+    double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
     Node* normalize(bool negate = false) override;
 
@@ -116,7 +127,8 @@ struct VariableNode : Node{
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
-    virtual bool isRangeObject() override {if (var == "_R" or var == "_NR") return true; return false;};
+    bool isRangeObject() override {if (var == "_R" or var == "_NR") return true; return false;};
+    bool containEnumLikeVariable() const override;
     NodeType getType() override { return NodeType::Variable;};
 
     RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", VariableFlags()); return RangeObject(var, flags); };
@@ -139,7 +151,8 @@ struct OperandNode : public Node{
     OperandNode(Operand oper, std::unique_ptr<Node> left, std::unique_ptr<Node> right): oper(oper), left(std::move(left)), right(std::move(right)) {};
     std::unique_ptr<Node> clone() const override;
 
-    double evaluate(GameState& gameState, bool realValues=false) const override;
+    double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const override;
+    double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate(GameState& gameState) override;
     Node* normalize(bool negate = false) override;
 
@@ -153,7 +166,8 @@ struct OperandNode : public Node{
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
-    virtual bool isRangeObject() override {if (left->isRangeObject() || right->isRangeObject()) return true; return false;};
+    bool isRangeObject() override {if (left->isRangeObject() || right->isRangeObject()) return true; return false;};
+    bool containEnumLikeVariable() const override;
     NodeType getType() override { return NodeType::Operand;};
 
     RangeObject getRangeObject() override;
@@ -186,7 +200,7 @@ struct Expression{
 
     Expression(std::unique_ptr<Node> expr, std::set<std::string> variableLocks): expr(std::move(expr)), variableLocks(variableLocks) {};
 
-    double evaluate(GameState& gameState, bool realValues = false){ return expr->evaluate(gameState, realValues); };
+    double evaluate(GameState& gameState, ValueType valType = ValueType::Current){ return expr->evaluate(gameState, valType); };
 
     void normalize();
 

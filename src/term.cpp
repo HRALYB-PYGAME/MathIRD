@@ -177,7 +177,6 @@ bool Term::isUnblocked(GameState& gameState) const{
     if (!isActive(gameState)) return false;
     for (const auto& blocker : blockers){
         if (gameState.isVariableBlocked(blocker)){
-            std::cout << blocker << " blocked\n";
             return false;
         }
     }

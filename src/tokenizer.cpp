@@ -178,7 +178,6 @@ std::vector<Token> tokenize(std::string text){
 
     for(size_t i=0; i<text.length(); i++){
         char c = text[i];
-        std::cout << "char='" << c << "' acc=\"" << acc << "\" state=" << stateExplanation(state) << "\n";
         switch(state){
         case TokenizeState::Empty:
             if (isNumber(c)){
@@ -411,7 +410,6 @@ std::vector<Token> tokenize(std::string text){
     for(auto token : tokens){
         token.print();
     }
-    std::cout << "tokens printed" << std::endl;
     return tokens;
 }
 
@@ -449,4 +447,93 @@ Operand getInverseOperand(Operand oper){
     if (oper == Operand::GreaterOrEqual) return Operand::Less;
     if (oper == Operand::Greater) return Operand::LessOrEqual;
     return oper;
+}
+
+void printOperand(Operand oper){
+    switch(oper){
+        case Operand::Add:
+            std::cout << "(+)" << std::endl;
+            break;
+        case Operand::Subtract:
+            std::cout << "(-)" << std::endl;
+            break;
+        case Operand::Multiply:
+            std::cout << "(*)" << std::endl;
+            break;
+        case Operand::Divide:
+            std::cout << "(/)" << std::endl;
+            break;
+        case Operand::AddAssign:
+            std::cout << "(+=)" << std::endl;
+            break;
+        case Operand::SubAssign:
+            std::cout << "(-=)" << std::endl;
+            break;
+        case Operand::MulAssign:
+            std::cout << "(*=)" << std::endl;
+            break;
+        case Operand::DivAssign:
+            std::cout << "(/=)" << std::endl;
+            break;
+        case Operand::Modulo:
+            std::cout << "(%)" << std::endl;
+            break;
+        case Operand::Equal:
+            std::cout << "(==)" << std::endl;
+            break;
+        case Operand::NotEqual:
+            std::cout << "(!=)" << std::endl;
+            break;
+        case Operand::Less:
+            std::cout << "(<)" << std::endl;
+            break;
+        case Operand::Greater:
+            std::cout << "(>)" << std::endl;
+            break;
+        case Operand::LessOrEqual:
+            std::cout << "(<=)" << std::endl;
+            break;
+        case Operand::GreaterOrEqual:
+            std::cout << "(>=)" << std::endl;
+            break;
+        case Operand::And:
+            std::cout << "(&&)" << std::endl;
+            break;
+        case Operand::Or:
+            std::cout << "(||)" << std::endl;
+            break;
+        case Operand::Not:
+            std::cout << "(!)" << std::endl;
+            break;
+        case Operand::Neg:
+            std::cout << "(neg)" << std::endl;
+            break;
+        case Operand::Abs:
+            std::cout << "(abs)" << std::endl;
+            break;
+        case Operand::Max:
+            std::cout << "(max)" << std::endl;
+            break;
+        case Operand::Min:
+            std::cout << "(min)" << std::endl;
+            break;
+        case Operand::Assign:
+            std::cout << "(=)" << std::endl;
+            break;
+        case Operand::LeftPar:
+            std::cout << "('(')" << std::endl;
+            break;
+        case Operand::RightPar:
+            std::cout << "(')')" << std::endl;
+            break;
+        case Operand::Power:
+            std::cout << "(^)" << std::endl;
+            break;
+        case Operand::If:
+            std::cout << "(if)" << std::endl;
+            break;
+        case Operand::NoOperand:
+            std::cout << "(?)" << std::endl;
+            break;
+    }
 }

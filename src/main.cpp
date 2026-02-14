@@ -183,8 +183,6 @@ void drawPackets(GameState& gameState){
 }
 
 int main(int argc, char** argv){
-    std::cout << argv[0] << std::endl;
-
     // var to btn
 
     InitWindow(800, 450, "MathIRD");
@@ -204,15 +202,6 @@ int main(int argc, char** argv){
     gameState.init();
 
     lastFrameTime = Clock::now();
-
-    std::string test = "y+=2";
-    auto tokens = tokenize(test);
-    std::cout << "tokenized" << std::endl;
-    auto expr = construct(tokens);
-    std::cout << "constructed" << std::endl;
-    auto norm = expr.expr->normalize();
-
-    std::cout << "FINAL ELVAL: " << norm->evaluate(gameState) << std::endl;
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {

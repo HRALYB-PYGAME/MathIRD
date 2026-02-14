@@ -249,8 +249,6 @@ void Defs::loadProcesses(std::string path){
             }
         }
 
-        std::cout << "name=?" << process.getName() << "\n";
-
         Defs::addProcess(std::move(process));
     }
 }

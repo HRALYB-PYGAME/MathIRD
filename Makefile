@@ -13,6 +13,10 @@ SRCS = utils.cpp \
        insight.cpp \
        rangeobject.cpp \
        expressiontree.cpp \
+	   constantnode.cpp \
+	   variablenode.cpp \
+	   expression.cpp \
+	   operandnode.cpp \
        variable.cpp \
        term.cpp \
        button.cpp \

@@ -1,7 +1,6 @@
 #include "packet.hpp"
 
 void Packet::update(double delta){
-    std::cout << "NEW PACKET DELTA: " << delta << " previous: " << currDelta << "--------------------------------------------------------------------------------\n";
     currDelta = delta;
     if (delta > 0) color = GREEN;
     else if (delta < 0) color = RED;

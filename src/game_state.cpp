@@ -87,7 +87,6 @@ void GameState::updateButtons(){
 }
 
 void GameState::updateProcesses(){
-    std::cout << "updateProcesses fun\n";
     for (auto& [name, entry] : processes){
         Process* proc = Defs::getProcess(name);
 
@@ -97,8 +96,6 @@ void GameState::updateProcesses(){
             entry.unlock();
 
         if (!entry.isUnlocked()) return;
-        
-        std::cout << "updateProcesses unlocked\n";
 
         if (entry.isActive()){
             if (proc->isEndConditionMet(*this)){
@@ -106,10 +103,8 @@ void GameState::updateProcesses(){
             }
         }
         else{
-            std::cout << "not active but cond?\n";
             if (proc->isStartConditionMet(*this) && !proc->isEndConditionMet(*this)){
                 entry.activate();
-                std::cout << "process activated??" << std::endl;
                 addNewProcessEvent(proc, proc->getInterval(*this));
             }
         }
@@ -183,7 +178,6 @@ void GameState::addButtons(){
 void GameState::addProcess(Process* process){
     ProcessEntry entry;
     std::string name = process->getName();
-    std::cout << "new process " << name << "added to gamestate\n";
     processes.insert({name, entry});
 }
 
@@ -244,11 +238,7 @@ double GameState::getVarValue(std::string name){
         return variables.at(name).value;
     }
 
-    //auto var = Defs::getVariable(name);
-    //if (var == nullptr)
-        return 0;
-    //addVariable(var);
-    //return getVarValue(name);
+    return 0;
 }
 
 void GameState::sendPacket(Packet packet, bool update = true) {
@@ -269,15 +259,8 @@ void GameState::sendPacket(Packet packet, bool update = true) {
 
     packets.insert(it, std::move(packet));
 
-    it = packets.begin();
-    while (it != packets.end()){
-        std::cout << it->arrivalTime << "\n";
-        it++;
-    }
-
     if (update){
         updatePacketsAndRealValues();
-        //updateCurrentInsight();
     }
 }
 
@@ -287,7 +270,6 @@ void GameState::sendPackets(std::vector<Packet>& packets) {
     }
     packets.clear();
     updatePacketsAndRealValues();
-    //updateCurrentInsight();
 }
 
 void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, SourceID source){
@@ -429,7 +411,7 @@ void GameState::updatePacketsAndRealValues(){
     auto it = packets.end();
     while(it != packets.begin()){
         it--;
-        double newValue = it->expression.evaluate(*this, true);
+        double newValue = it->expression.evaluate(*this, ValueType::Real);
         double oldValue = getRealValue(it->variable);
         setRealValue(it->variable, newValue);
         LOG("game_state.cpp\tupdatePacketsAndRealValues() new Real Value for " << it->variable << ": " << newValue << " (" << oldValue << ")");
@@ -482,24 +464,6 @@ bool GameState::isProcessActive(std::string name) const{
     return it->second.isActive();
 }
 
-// GameState::GameState(const GameState& gs){
-//     variables = gs.variables;
-//     processes = gs.processes;
-//     buttons = gs.buttons;
-//     currentSeed = gs.currentSeed;
-//     inGameTime = gs.inGameTime;
-//     forcedRandom = -1;
-
-//     probabilities = gs.probabilities;
-//     currentTerm = gs.currentTerm;
-//     currentIndex = gs.currentIndex;
-//     currentInsightable = nullptr;
-
-//     packets = gs.packets;
-//     calendar = gs.calendar;
-//     seed = gs.seed;
-// };
-
 std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
     GameState copy(*this);
     copy.currentInsightable = nullptr;
@@ -515,8 +479,6 @@ std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
         if (calTime < oldPTime && calTime < newPTime){
             auto& entry = copy.calendar.back();
 
-            std::cout << "caltime\n";
-
             auto packets = copy.generatePackets(entry.process, ButtonPosition(0, 5));
             copy.sendPackets(packets);
             copy.updateProcesses();
@@ -529,8 +491,6 @@ std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
         else if (oldPTime <= newPTime){
             auto& entry = copy.packets.back();
 
-            std::cout << "oldptime\n";
-
             double newValue = entry.expression.evaluate(copy);
             for(auto lock : entry.expression.variableLocks){
                 copy.unblockVariable(lock);
@@ -541,7 +501,6 @@ std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
         else{
             auto& entry = packets.back();
             
-            std::cout << "new packet var: " << entry.variable << std::endl; 
             double newValue = entry.expression.evaluate(copy);
             double delta = newValue - copy.getVarValue(entry.variable);
             effects.insert_or_assign(entry.source, VariableChanges(entry.variable, delta));

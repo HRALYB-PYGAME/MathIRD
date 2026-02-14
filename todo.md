@@ -4,7 +4,6 @@
 
 - Improve sendPackets
 - Implement predictChanges
-- Enums/Boolean special case + progress method
 
 ## priority 5
 

@@ -203,4 +203,6 @@ static const std::unordered_map<std::string, Token> tokenMap {
     {"false", Token(0)}
 };
 
+void printOperand(Operand oper);
+
 #endif
