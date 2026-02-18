@@ -101,7 +101,7 @@ void Button::addTerm(std::unique_ptr<Term> term){
     terms.push_back(std::move(term));
 }
 
-bool Button::isUnlocked(GameState& gameState){
+bool Button::isUnlocked(GameState& gameState) const{
     for(auto& term : terms){
         if (term->isUnlocked(gameState))
             return true;
@@ -155,4 +155,13 @@ const std::vector<Expression> Button::getExpressions(GameState& gameState) const
         }
     }
     return result;
+}
+
+std::set<std::string> Button::getInputs(bool root, std::string function) const{
+    std::set<std::string> inputs = {};
+    for (const auto& term : terms){
+        auto termInputs = term->getInputs(true, function);
+        inputs.insert(termInputs.begin(), termInputs.end());
+    }
+    return inputs;
 }

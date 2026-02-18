@@ -5,10 +5,12 @@
 #include "utils.hpp"
 #include <vector>
 #include <iostream>
+#include <set>
 
 class GameState;
 class Insightable;
 class Node;
+class Term;
 
 enum class Alignment{
     Left,
@@ -65,6 +67,7 @@ struct DisplayLine{
     void appendIndentChunk(double mul);
     void appendWordGapChunk(double mul);
     void appendNewLineChunk();
+    void appendNewLineTextChunk(std::string name) {appendNewLineChunk(); appendTextChunk(name);};
 
     void appendLines(std::vector<DisplayLine> lines);
 
@@ -87,6 +90,12 @@ void printLines(std::vector<DisplayLine>& lines);
 class Insightable{
 public:
     virtual std::vector<DisplayLine> insight(GameState& gameState, int level) = 0;
+
+    virtual std::set<std::string> getInputs(bool root, std::string function = "") const { return {}; };
+
+    virtual bool isUnlocked(GameState& gameState) const { return false; };
+
+    virtual Term* getTerm(std::string name) const {return nullptr;};
 };
 
 #endif

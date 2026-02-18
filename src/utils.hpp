@@ -19,6 +19,7 @@
 class Variable;
 class Button;
 class Process;
+class Insightable;
 
 std::string formatDouble(double val, bool includeSign=false);
 
@@ -40,6 +41,8 @@ public:
     static void loadVariables(std::string path, std::unordered_map<std::string, std::string>&);
     static void loadButtons(std::string path);
     static void loadProcesses(std::string path);
+
+    static Insightable* getTarget(std::string targetPath);
 
     static void linkVariableHomeButtons(std::unordered_map<std::string, std::string>&);
     // Load()

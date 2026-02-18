@@ -54,6 +54,21 @@ double Variable::constrain(double value) const{
 }
 
 std::vector<DisplayLine> Variable::insight(GameState& gameState, int level){
+    DisplayLine line;
+    line.appendTextChunk("current value: ");
+    line.appendVarChunk(name);
+    line.appendNewLineChunk();
+    line.appendTextChunk("real value: " + formatDouble(gameState.getRealValue(name)));
+
+    for(auto t : asDependencyInTerms){
+        line.appendNewLineTextChunk(t->getName());
+    }
+    return {line};
+}
+
+std::set<std::string> Variable::getInputs(bool root, std::string function) const{
+    if (function == "isUnlocked")
+        return unlockCondition->getInputs(true);
     return {};
 }
 

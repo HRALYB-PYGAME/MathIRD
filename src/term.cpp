@@ -68,6 +68,14 @@ void Term::addExpression(Expression expression) {
     this->expressions.insert(this->expressions.end(), std::move(expression));
 }
 
+std::set<std::string> Term::getInputs(bool root, std::string function) const{
+    if (function == "")
+        return inputs;
+    if (function == "isUnlocked")
+        return dependencies;
+    return {};
+}
+
 /// @brief Updates set of dependencies, inputs and outputs. These updates will reflect into variables.
 void Term::updateSets(){
     updateDependencies();
@@ -80,7 +88,7 @@ void Term::updateSets(){
         if (var != nullptr)
             var->addTermAsDependency(this);
     }
-    for(auto& name : getInputs()){
+    for(auto& name : getInputs(true)){
         Variable* var = Defs::getVariable(name);
         if (var != nullptr)
             var->addTermAsInput(this);
@@ -104,7 +112,7 @@ void Term::printSets(){
         std::cout << name;
     }
     std::cout << ")\nInputs: (";
-    for(auto& name : getInputs()){
+    for(auto& name : getInputs(true)){
         std::cout << name;
     }
     std::cout << ")\n Outputs: (";

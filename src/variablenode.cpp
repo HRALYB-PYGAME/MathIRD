@@ -9,7 +9,7 @@ std::set<std::string> VariableNode::getDependencies() const{
     return deps;
 }
 
-std::set<std::string> VariableNode::getInputs(bool root) const{
+std::set<std::string> VariableNode::getInputs(bool root, std::string function) const{
     std::set<std::string> set;
     if (!root){
         set.insert(var);

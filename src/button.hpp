@@ -18,9 +18,17 @@ public:
     void setDisplay(std::unique_ptr<Node> condition, std::string t);
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
+    std::set<std::string> getInputs(bool root, std::string function="") const override;
 
     // Term
     void addTerm(std::unique_ptr<Term>);
+    Term* getTerm(std::string name) const override {
+        for(auto& term : terms){
+            if (term->getName() == name)
+                return term.get();
+        }
+        return nullptr;
+    };
     const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
     const std::vector<Expression> getExpressions(GameState& gameState) const;
 
@@ -34,7 +42,7 @@ public:
     void setPosition(int row, int col) {position = {row, col};};
 
     // State
-    bool isUnlocked(GameState& gameState);
+    bool isUnlocked(GameState& gameState) const override;
     bool isActive(GameState& gameState);
     bool isUnblocked(GameState& gameState);
 

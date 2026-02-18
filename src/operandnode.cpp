@@ -9,7 +9,7 @@ std::set<std::string> OperandNode::getDependencies() const{
     return leftDeps;
 }
 
-std::set<std::string> OperandNode::getInputs(bool root) const{
+std::set<std::string> OperandNode::getInputs(bool root, std::string function) const{
     std::set<std::string> set;
     if (root){
         if (isAssignment(oper)){

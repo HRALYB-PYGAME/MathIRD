@@ -39,21 +39,19 @@ Variable values are categorized into three distinct states. While **Current** an
 
 ### Variable Data Types
 
-While the internal engine stores all variable values as a `double`, each variable is assigned a specific **Type** that governs how it is formatted in the UI, how it handles assignments, and how the progress engine interprets its state.
+While the internal engine stores all variable values as a `double`, each variable is assigned a specific **Type** that governs how it is formatted in the UI, how it handles assignments, and how the progress engine interprets its state. When no data type is provided in a variable config `double` is used as a default.
 
-| Type | Description | Behavioral Logic |
-| :--- | :--- | :--- |
-| **int** | Integer | Values are floored during assignment. Insights will display values as whole numbers. |
-| **double** | Floating Point | The standard type for continuous values. Assignments and insights retain full precision. |
-| **perc** | Percentage | Represents a value typically between `0.0` and `1.0`. Insights will format `0.5` as `50%`. When assigning a value is a clamped to the `0-1` range. |
-| **enum** | Enumeration | Represents a selection from a predefined list of states. Arithmetic operations are discouraged. Progress is binary (0% or 100%) based on whether the specific state is matched. |
-| **bool** | Boolean | Stored as `1.0` (True) or `0.0` (False). Values assigned to a bool are normalized (nonzero becomes `1.0`). |
-
-#### Functional Impacts
+| Type | Config Representation | Description |
+| :--- | :---: | :--- |
+| **int** | I | Represents a whole numbers. Values are floored during assignment. Insights will display values as whole numbers. |
+| **double** | D | The default type for continuous values. Represents a floating point number. |
+| **perc** | P | Represents a value between `0.0` and `1.0`. Insights will format `0.5` as `50%`. When assigning a value is a clamped to the `0-1` range. |
+| **enum** | E | Represents a selection from a predefined list of states. Arithmetic operations are discouraged. Progress is binary (0% or 100%) based on whether the specific state is matched. |
+| **bool** | B | Stored as `1.0` (True) or `0.0` (False). Values assigned to a bool are normalized (nonzero becomes `1.0`). Similarly to `enum` progress is binary. |
 
 * **Assignments**: When a value is assigned a constraint method is called. This will return a new value that is valid for the given type.
-* **Progress Engine**: For `double` and `perc`, progress is a linear distance calculation. For `enum` and `bool`, the engine skips distance math and treats the goal as a discrete state—you have either reached it or you haven't.
-* **Insight Generation**: Depending on the type, values can not only be displayed differently but also change the way an insight is generated.
+* **Progress**: For `double` and `perc`, progress is a linear distance calculation. For `enum` and `bool`, the engine skips distance math and treats the goal as a discrete state—you have either reached it or you haven't.
+* **Insight**: Depending on the type, values can not only be displayed differently but also change the way an insight is generated.
 
 ### Home Button
 
@@ -83,7 +81,7 @@ Scores are calculated based on Polarity. In the formulas below, $V$ represents t
 
 > **Note on Constraints:**
 >
-> * If any value inside a $\log()$ function is not positive ($> 0$), the final result is **0**.
+> * If any value inside a $\log()$ function is zero or negative ($> 0$), the final result is **0**.
 > * If the entire expression inside the square brackets is negative, the final result is **0**.
 
 ### Variable Flags
@@ -109,40 +107,111 @@ Game State is a class. It contains current state of the game.
 
 ## Node
 
-A `Node` represents a pointer to binary expression tree. Depending on the node's type, it can represent a variable name, a constant `double`, or an expression.
+A `Node` represents a pointer to binary expression tree. Depending on the node's type, it can represent a variable name, a constant, or an expression.
 
 In the context of [Term](#term) or [Packet](#packet) expressions, Nodes are managed via an `Expression` wrapper. This wrapper includes a vector of `variableLocks`. A list of specific variables that are temporarily blocked while a packet containing that expression is in transit. This locking mechanism is essential to maintain game integrity and prevent unexpected value fluctuations or "cheating."
 
-### Core Functionalities
+### Methods
 
-* **Evaluation**: Calculates the current numerical or boolean result of the expression based on the active `GameState`.
-* **Simulation**: Returns [Variable Changes](#variable-changes), describing the potential impact the expression would have upon execution without actually modifying the state.
-* **Progress Tracking**: Determines how close the player is to satisfying the expression (the "goal") by comparing current values against defaults.
-* **Insight**: Generates a detailed breakdown in both arithmetical and logical form.
+* **Evaluation**: Given a [`GameState`](#game-state), calculates the current value of the expression tree.
+* **Simulation**: Returns [Variable Changes](#variable-changes) instead of a double (this function may become unnecessary later).
+* **Progress**: Determines how close the player is to satisfying an expression (the "goal").
+  * **0.0** represents a state where the player is no closer to the goal than they were at the start of the game.
+  * **1.0** represents that the expression has been evaluated as **True**.
+* **Insight**: Generates an explanation of the expression in arithmetical or "human readable" format. More at [Insight](#insight).
 
 ### Operands
 
-Expressions can contain a wide array of operations including arithmetic (`-`, `*`), comparisons (`==`, `>`), logical gates (`!`, `||`), and specialized functions such as `max`, `abs`, and `if`.
+Expressions can contain different types of operations including arithmetic (`-`, `*`), comparisons (`==`, `>`), logical gates (`!`, `||`), and functions such as `max`, `abs`, and `if`.
 
 #### Formatting Rules
 
 When defining expressions within a configuration file, adhere to the following syntax and logic rules:
 
-* **Whitespace:** Spaces are ignored by the parser; use them freely for readability.
+* **Whitespace:** Spaces are ignored by the tokenizer.
 * **Normalization:** Be aware that the logical NOT (`!`) is removed during the [normalization](#node) process.
 * **Function Syntax:** It is highly recommended to use square brackets for function calls: `max[1,2]`. Internally, the parser translates `[` to `((` and `,` to `)(`.
 * **Precedence:** Standard mathematical order of operations applies. Use parentheses `()` to explicitly define evaluation priority.
 * **Validation:** * **Syntactic Errors:** Any expression with invalid syntax will cause the entire [Term](#term) to be ignored.
-  * **Missing References:** Using a variable name that has not been defined will result in the entire term being ignored.
+  * **Non defined variable:** Using a variable name that has not been defined will result in the entire term being ignored.
 * **Enum arithmetics:** It is strongly advised **not** to perform arithmetic operations on Enum or Boolean variables, as the resulting "progress" and "insight" calculations may become nonsensical.
 * **Reserved Keywords:** The use of `_R` and `_NR` is restricted (see [Specific Restrictions](#restrictions)). While these restrictions can be bypassed, doing so will likely result in broken or uninformative Insights.
+
+### From Text to Object
+
+The transition from a raw string in an object consists of these four steps.
+
+1. **Tokenization**: The raw string is broken down into a vector of **Tokens**. Such process is done by the Tokenizer which also checks for potentional invalid characters. If some are found steps 2-4 are ignored.
+2. **Construcion**: The constructor transforms the vector of **Tokens** into a valid `Node` tree. If tokens contains some syntactic issues no tree is generated and steps 3-4 are ignored.
+3. **Normalization**: Normalization is a process of removing logical NOTs and replacing expressions with an equivalent ones not containing them.
+4. **Validation**: In the final step it is checked whether all variables contained within the expressions are defined.
+
+If a any expression contained within term or any other element fails (syntacticly wrong, contains invalid characters or non-defined variables) the entire object is ignored.
 
 ---
 
 ## Packet
 
+---
+
 ## Button
+
+---
+
+## Process
+
+---
 
 ## Term
 
+A **Term** is consists of a logic condition and a set of [Expressions](#node). Each term have a unique parent [Button](#button) or [Process](#process).
+
+### Variable Associations
+
+Each term contains these sets of [variable](#variable) names:
+
+* **Dependencies**: Variables that **must** be unlocked for the term to become available.
+* **Inputs**: Variables that can affect its behavior.
+* **Outputs**: Variables whose values can be modified when the term is processed.
+* **Blockers**: If any variable in this set is currently [Blocked](#node), the term itself becomes blocked also.
+
+### Term States
+
+| State | Condition |
+| :---: | :--- |
+| **Locked** | At least one variable in the **Dependencies** set is currently locked. |
+| **Inactive** | All dependencies are unlocked, but the term's specific **Condition** (Node expression) evaluates to `false`. |
+| **Blocked** | The term is active, but one or more variables in the **Blockers** set are currently blocked by an in-flight [Packet](#packet). |
+| **Unblocked** | All criteria are met: Unlocked, Condition met, and no Blockers being blocked. The term is ready for use. |
+
+#### Other non-primary states
+
+* **Unlocked**: The term is either **Inactive**, **Blocked**, or **Unblocked** (i.e., it is *not* Locked).
+* **Active**: The term is either **Blocked** or **Unblocked** (i.e., it is *not* Locked and the Condition is met).
+
+---
+
 ## Variable Changes
+
+## Insight
+
+## Randomness
+
+You can introduce random behavior to your definitions using the `_R` and `_NR` constants.
+
+* **`_NR` (New Random):** Generates and returns a fresh random value between $0.0$ and $1.0$.
+* **`_R` (Random):** Returns the most recently generated random value. Calling `_R` multiple times will always result in the same result until a new `_NR` is used.
+
+### Restrictions
+
+To ensure that the [Insight](#insight) and Progress systems can accurately interpret and visualize your logic, you must follow these rules when using `_R` or `_NR` in expressions:
+
+* **Random modifications:** When used in comparisons, `_R` and `_NR` should only be modified by:
+  * Addition or Subtraction.
+  * Multiplication or Division by a **positive constant**.
+* **Division:** A divisor must **never** contain `_R` or `_NR`.
+* **Monotonicity:** Expressions containing these constants should be **non-decreasing**. As the random value increases, the output of the expression should either increase or stay the same.
+
+> **Warning:** While the engine will not prevent you from breaking these rules, doing so will cause **Insights** to become uninformative or misleading, as the system will struggle to explain the "logic" behind a chaotic or non-linear random variable.
+
+---

@@ -266,6 +266,36 @@ void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>&
     }
 }
 
+Insightable* Defs::getTarget(std::string targetPath){
+    size_t colonPos = targetPath.find(':');
+    if (colonPos == std::string::npos) return nullptr;
+    std::cout << "colon found\n";
+
+    char prefix = targetPath[0];
+    std::cout << "prefix: " << prefix << "\n";
+    targetPath = targetPath.substr(colonPos + 1);
+    std::cout << "new targetpath: " << targetPath << "\n";
+
+    size_t dotPos = targetPath.find('.');
+    std::string parentName = targetPath.substr(0, dotPos);
+    std::cout << "parentName: " << parentName << "\n";
+    std::string childName = (dotPos != std::string::npos) ? targetPath.substr(dotPos + 1) : "";
+    std::cout << "childName: " << childName << "\n";
+
+    Insightable* parent = nullptr;
+    if (prefix == 'P') parent = getProcess (parentName);
+    if (prefix == 'B') parent = getButton  (parentName);
+    if (prefix == 'V') parent = getVariable(parentName);
+    if (!parent) return nullptr;
+
+    std::cout << "parent found\n";
+
+    if (!childName.empty()){
+        return parent->getTerm(childName);
+    }
+    return parent;
+}
+
 double getDistance(ButtonPosition start, ButtonPosition end){
     return sqrt(pow(start.row - end.row, 2) + pow(start.col - end.col, 2));
 }

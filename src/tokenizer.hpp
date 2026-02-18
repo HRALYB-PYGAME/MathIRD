@@ -43,11 +43,22 @@ enum class Operand{
     Power // ^
 };
 
+// if [isActive(*)]
+// 1)   isActive["button", "myButton"]
+//      isActive["process", "myProcess"]
+//      isActive["term", "myButton.myTerm"] -- not sure if myButton is a button or a process
+// 2)   isActive["button", "myButton"]
+//      isActive["process", "myProcess"]
+//      isActive["term", "myButton.myTerm"]
+// 3)   isActive[B:myButton]
+//      isActive[P:myProcess.myTerm]
 enum class TokenType{
     Variable,
     VariableLock, // {var}
     Constant,
-    Operand
+    Operand,
+    Function,
+    Argument
 };
 
 enum class TokenizeState{
@@ -67,7 +78,8 @@ enum class TokenizeState{
     And,
     Or,
 
-    CurlyBracket
+    CurlyBracket,
+    Function
 };
 
 class Token{
@@ -77,7 +89,7 @@ class Token{
         VariableFlags variableFlags;
     public:
         Token(double val): type(TokenType::Constant), value(val) {};
-        Token(std::string name, bool varLock): type(varLock ? TokenType::VariableLock : TokenType::Variable), value(name) {};
+        Token(std::string name, TokenType type): type(type), value(name) {};
         Token(Operand oper): type(TokenType::Operand), value(oper) {};
         void print();
         bool isValue() {if (type == TokenType::Constant || type == TokenType::Variable) return true; return false;};

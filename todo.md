@@ -4,6 +4,8 @@
 
 - Improve sendPackets
 - Implement predictChanges
+- Work on functionNode evaluation
+- Global variables
 
 ## priority 5
 

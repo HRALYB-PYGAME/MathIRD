@@ -15,6 +15,7 @@ SRCS = utils.cpp \
        expressiontree.cpp \
 	   constantnode.cpp \
 	   variablenode.cpp \
+	   functionnode.cpp \
 	   expression.cpp \
 	   operandnode.cpp \
        variable.cpp \

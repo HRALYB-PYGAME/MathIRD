@@ -17,6 +17,7 @@ enum class NodeType{
     GeneralConstant,
     Variable,
     Operand,
+    Function,
     Unknown
 };
 
@@ -32,16 +33,17 @@ struct Node : public Insightable{
     virtual ~Node() = default;
     virtual std::unique_ptr<Node> clone() const = 0;
     
-    virtual double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const = 0;
-    virtual double getProgress(GameState& gameState, int& weight) const = 0;
-    virtual VariableChanges simulate(GameState& gameState) = 0;
+    virtual double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const= 0;
+    virtual double getProgress(GameState& gameState, int& weight) const= 0;
+    virtual VariableChanges simulate(GameState& gameState) = 0 ;
     virtual Node* normalize(bool negate = false) = 0;
+    virtual void bind() = 0;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override = 0;
     virtual std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) = 0; 
 
     virtual std::set<std::string> getDependencies() const = 0;
-    virtual std::set<std::string> getInputs(bool root) const = 0;
+    // std::set<std::string> getInputs(bool root) const override { };
     virtual std::set<std::string> getOutputs(bool root) const = 0;
     virtual std::set<std::string> getBlockers(bool root) const = 0;
 
@@ -52,7 +54,7 @@ struct Node : public Insightable{
     virtual NodeType getType() = 0;
 
     virtual RangeObject getRangeObject() = 0;
-    virtual std::unique_ptr<Node> getRandomDistribution() = 0;
+    virtual std::unique_ptr<Node> getRandomDistribution() = 0 ;
 
     virtual std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const = 0;
 
@@ -69,12 +71,13 @@ struct ConstantNode : Node{
     double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
     Node* normalize(bool negate = false) override;
+    void bind() override {};
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() const override { return {}; };
-    std::set<std::string> getInputs([[maybe_unused]] bool root) const override { return {}; };
+    std::set<std::string> getInputs([[maybe_unused]] bool root, [[maybe_unused]] std::string function = "") const override { return {}; };
     std::set<std::string> getOutputs([[maybe_unused]] bool root) const override { return {}; };
     std::set<std::string> getBlockers(bool root) const override { return {}; };
 
@@ -116,12 +119,13 @@ struct VariableNode : Node{
     double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
     Node* normalize(bool negate = false) override;
+    void bind() override {};
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() const override;
-    std::set<std::string> getInputs(bool root) const override;
+    std::set<std::string> getInputs(bool root, [[maybe_unused]] std::string function = "") const override;
     std::set<std::string> getOutputs(bool root) const override;
     std::set<std::string> getBlockers(bool root) const override;
 
@@ -155,12 +159,13 @@ struct OperandNode : public Node{
     double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate(GameState& gameState) override;
     Node* normalize(bool negate = false) override;
+    void bind() override {if (left) left->bind(); if (right) right->bind(); };
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
 
     std::set<std::string> getDependencies() const override;
-    std::set<std::string> getInputs(bool root) const override;
+    std::set<std::string> getInputs(bool root, [[maybe_unused]] std::string function = "") const override;
     std::set<std::string> getOutputs([[maybe_unused]] bool root) const override;
     std::set<std::string> getBlockers(bool root) const override;
 
@@ -169,6 +174,43 @@ struct OperandNode : public Node{
     bool isRangeObject() override {if (left->isRangeObject() || right->isRangeObject()) return true; return false;};
     bool containEnumLikeVariable() const override;
     NodeType getType() override { return NodeType::Operand;};
+
+    RangeObject getRangeObject() override;
+    std::unique_ptr<Node> getRandomDistribution() override;
+
+    std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
+
+    std::string getVarString() const override { return ""; };
+};
+
+struct FunctionNode : public Node{
+    Insightable* target;
+    std::vector<std::string> args;
+    std::string name;
+    std::unique_ptr<Node> clone() const override;
+
+    FunctionNode() {};
+    FunctionNode(std::string name, std::vector<std::string> args): name(name), args(args) {};
+
+    double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const override;
+    double getProgress(GameState& gameState, int& weight) const override;
+    VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
+    Node* normalize(bool negate = false) override;
+    void bind() override;
+
+    std::vector<DisplayLine> insight(GameState& gameState, int level) override;
+    std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
+
+    std::set<std::string> getDependencies() const override;
+    std::set<std::string> getInputs(bool root, [[maybe_unused]] std::string function = "") const override;
+    std::set<std::string> getOutputs([[maybe_unused]] bool root) const override;
+    std::set<std::string> getBlockers(bool root) const override;
+
+    bool isConstant(GameState& GameState) override { return false; };
+    bool isConstantValue(GameState& gameState, double val) override { return false; };
+    bool isRangeObject() override { return false; };
+    bool containEnumLikeVariable() const override { return false; };
+    NodeType getType() override { return NodeType::Function; };
 
     RangeObject getRangeObject() override;
     std::unique_ptr<Node> getRandomDistribution() override;

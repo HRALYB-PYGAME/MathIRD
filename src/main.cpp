@@ -184,6 +184,8 @@ void drawPackets(GameState& gameState){
 
 int main(int argc, char** argv){
     // var to btn
+    
+    //return 0;
 
     InitWindow(800, 450, "MathIRD");
     Vector2 cursor = { 100, 100 };
@@ -222,5 +224,8 @@ int main(int argc, char** argv){
 
     CloseWindow();
 
+    auto tree = construct(tokenize("isUnlocked[B:testbtn.term]"));
+    tree.expr->bind();
+    std::cout << tree.expr->evaluate(gameState) << "\n";
     return 0;
 }

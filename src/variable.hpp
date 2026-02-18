@@ -58,6 +58,7 @@ class Variable : public Insightable{
         Variable(std::string name, ScoreParams scoreParams, std::unique_ptr<Node> unlockCondition, double defaultValue, VariableType type);
 
         std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, [[maybe_unused]] int level) override;
+        std::set<std::string> getInputs(bool root, std::string function="") const override;
         void addTermAsDependency(Term* term);
         void addTermAsInput(Term* term);
         void addTermAsOutput(Term* term);

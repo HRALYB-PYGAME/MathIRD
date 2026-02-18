@@ -57,3 +57,12 @@ const std::vector<Expression> Process::getExpressions(GameState& gameState) cons
     }
     return result;
 }
+
+std::set<std::string> Process::getInputs(bool root, std::string function) const{
+    std::set<std::string> inputs = {};
+    for (const auto& term : terms){
+        auto termInputs = term->getInputs(true, function);
+        inputs.insert(termInputs.begin(), termInputs.end());
+    }
+    return inputs;
+}

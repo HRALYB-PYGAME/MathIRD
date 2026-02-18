@@ -33,12 +33,12 @@ public:
     void updateBlockers();
     void updateSets();
     void printSets();
-    bool isUnlocked(GameState& gameState) const;
+    bool isUnlocked(GameState& gameState) const override;
     bool isUnblocked(GameState& gameState) const;
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
 
     std::set<std::string>& getDependencies() {return dependencies;};
-    std::set<std::string>& getInputs()       {return inputs;};
+    std::set<std::string> getInputs(bool root, std::string function="") const override;
     std::set<std::string>& getOutputs()      {return outputs;};
     std::set<std::string>& getBlockers()     {return blockers;};
     const std::vector<Expression>& getExpressions() const;

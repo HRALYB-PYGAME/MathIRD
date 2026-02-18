@@ -36,6 +36,8 @@ Expression construct(std::vector<Token> tokens){
     std::stack<Operand> operandStack;
 
     bool neg = false;
+    bool inFunction = false;
+    FunctionNode functionNode("", {});
     for(size_t i=0; i<tokens.size(); i++){
         Token token = tokens[i];
         //std::cout << "nodestack size " << nodeStack.size() << " operandStack size " << operandStack.size() << std::endl;
@@ -50,6 +52,13 @@ Expression construct(std::vector<Token> tokens){
         case TokenType::VariableLock:
             variableLocks.insert(token.getValueAsString());
             break;
+        case TokenType::Function:
+            functionNode.name = token.getValueAsString();
+            inFunction = true;
+            break;
+        case TokenType::Argument:
+            functionNode.args.push_back(token.getValueAsString());
+            break;
         case TokenType::Operand:
             Operand oper = token.getValueAsOperand();
             if (oper == Operand::Neg){
@@ -59,9 +68,16 @@ Expression construct(std::vector<Token> tokens){
                 operandStack.push(oper);
             }
             else if (oper == Operand::LeftPar){
-                operandStack.push(oper);
+                if (!inFunction)
+                    operandStack.push(oper);
             }
             else if (oper == Operand::RightPar){
+                if (inFunction){
+                    nodeStack.push(std::make_unique<FunctionNode>(functionNode));
+                    functionNode.args.clear();
+                    inFunction = false;
+                    break;
+                }
                 while(operandStack.top() != Operand::LeftPar){
                     Operand topOper = operandStack.top(); operandStack.pop();
                     createSubtree(nodeStack, topOper);
