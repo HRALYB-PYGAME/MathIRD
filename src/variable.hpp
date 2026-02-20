@@ -32,7 +32,8 @@ enum VariableType{
     Double, // 0.5, -4,8, 2.3 f.e.
     Int, // ..., -2, -1, 0, 1, 2, ...
     Percentage, // 0-1
-    Enum // 0, 1, 2, ...
+    Enum, // 0, 1, 2, ...
+    Unkown
 };
 
 ScoreParams getScoreParams(double knee, double offset, Polarity polarity);
@@ -69,6 +70,12 @@ class Variable : public Insightable{
         std::string getStateNameAt(size_t index) const {if (index < 0 || index >= stateNames.size()) return ""; return stateNames[index]; }; 
         void addState(std::string name) {stateNames.push_back(name);};
         size_t getStateCount() const {return stateNames.size();};
+        bool doesStateExist(std::string name) const {
+            for(auto& state : stateNames){
+                if (state == name) return true;
+            }
+            return false;
+        };
         VariableType getType() const {return type;};
         ScoreParams getScoreParams() const {return scoreParams;};
         double getDefaultValue() const {return defaultValue;};
@@ -80,8 +87,13 @@ class Variable : public Insightable{
         double getGranularity() const {return granularity;};
 
         double constrain(double value) const;
+        void bind();
 
         void printDependencies();
+
+        bool isLocked(GameState& gameState) const override;
+        bool isActive(GameState& gameState) const override;
+        bool isBlocked(GameState& gameState) const override;
 };
 
 #endif

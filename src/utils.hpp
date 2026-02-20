@@ -1,5 +1,7 @@
+#define NDEBUG
+
 #ifndef NDEBUG
-    #define LOG(msg) std::cout << "[DEBUG] " << msg << std::endl
+    #define LOG(msg) std::cout << "[DEBUG] " << msg << "\n" << std::flush
 #else
     #define LOG(msg)  // Does nothing in Release
 #endif
@@ -10,6 +12,8 @@
 #include <unordered_map>
 #include <math.h>
 #include <chrono>
+#include <cstdlib>
+#include <iostream>
 #include "raylib.h"
 
 #define RANDOM_MAX (double)0xFFFFFFFFFFFFFFFFULL
@@ -20,6 +24,22 @@ class Variable;
 class Button;
 class Process;
 class Insightable;
+
+inline namespace Log {
+    static std::string currentFile = "Unknown";
+    const int typeWidth = 10;
+    const int pathWidth = 40;
+
+    void setContext(const std::string& path) {
+        currentFile = path;
+    };
+    
+    void error(const std::string& message);
+
+    void warn(const std::string& message);
+
+    void info(const std::string& message);
+}
 
 std::string formatDouble(double val, bool includeSign=false);
 
@@ -45,6 +65,7 @@ public:
     static Insightable* getTarget(std::string targetPath);
 
     static void linkVariableHomeButtons(std::unordered_map<std::string, std::string>&);
+    static void bind();
     // Load()
 };
 

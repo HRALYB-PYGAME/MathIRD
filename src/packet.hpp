@@ -27,6 +27,7 @@ struct SourceID{
 
 struct Packet{
     // LOGIC
+    bool flag;
     std::string variable;
     Expression expression;
     SourceID source;

@@ -108,18 +108,20 @@ struct GeneralConstantNode : ConstantNode{
 };
 
 struct VariableNode : Node{
-    std::string var;
+    std::string varName;
+    Variable* var;
     Operand oper = Operand::NoOperand;
     VariableFlags flags;
 
-    VariableNode(std::string var, VariableFlags flags): var(var), flags(flags) {};
+    VariableNode(std::string var, VariableFlags flags): varName(var), flags(flags) {};
+    VariableNode(std::string varName, VariableFlags flags, Variable* var): varName(varName), flags(flags), var(var) {};
     std::unique_ptr<Node> clone() const override;
 
     double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const override;
     double getProgress(GameState& gameState, int& weight) const override;
     VariableChanges simulate([[maybe_unused]] GameState& gameState) override { return VariableChanges(); };
     Node* normalize(bool negate = false) override;
-    void bind() override {};
+    void bind() override;
 
     std::vector<DisplayLine> insight([[maybe_unused]] GameState& gameState, int level) override;
     std::vector<DisplayLine> arithmeticalInsight(GameState& gameState, int level) override;
@@ -131,11 +133,11 @@ struct VariableNode : Node{
 
     bool isConstant(GameState& gameState) override;
     bool isConstantValue(GameState& gameState, double val) override;
-    bool isRangeObject() override {if (var == "_R" or var == "_NR") return true; return false;};
+    bool isRangeObject() override {if (varName == "_R" or varName == "_NR") return true; return false;};
     bool containEnumLikeVariable() const override;
     NodeType getType() override { return NodeType::Variable;};
 
-    RangeObject getRangeObject() override { if (var == "_R" or var == "_NR") return RangeObject("_R", VariableFlags()); return RangeObject(var, flags); };
+    RangeObject getRangeObject() override { if (varName == "_R" or varName == "_NR") return RangeObject("_R", VariableFlags()); return RangeObject(varName, flags); };
     std::unique_ptr<Node> getRandomDistribution() override;
 
     bool isSoft() const {return flags.soft;};
@@ -145,7 +147,7 @@ struct VariableNode : Node{
 
     std::unique_ptr<Node> getPacketExpression(GameState& gameState, bool base) const override;
 
-    std::string getVarString() const override { return var; };
+    std::string getVarString() const override { return varName; };
 };
 
 struct OperandNode : public Node{
@@ -183,6 +185,18 @@ struct OperandNode : public Node{
     std::string getVarString() const override { return ""; };
 };
 
+struct FunctionInfo{
+    bool bindable;
+    size_t minArgC;
+    size_t maxArgC;
+    bool evaluatedBefore;
+};
+
+inline std::unordered_map<std::string, FunctionInfo> functions{
+    {"isUnlocked", {true, 1, 1, false}},
+    {"packetsInTransit", {false, 0, 1, true}}
+};
+
 struct FunctionNode : public Node{
     Insightable* target;
     std::vector<std::string> args;
@@ -191,6 +205,7 @@ struct FunctionNode : public Node{
 
     FunctionNode() {};
     FunctionNode(std::string name, std::vector<std::string> args): name(name), args(args) {};
+    FunctionNode(std::string name, std::vector<std::string> args, Insightable* target): name(name), args(args), target(target) {};
 
     double evaluate(GameState& gameState, ValueType valType = ValueType::Current) const override;
     double getProgress(GameState& gameState, int& weight) const override;

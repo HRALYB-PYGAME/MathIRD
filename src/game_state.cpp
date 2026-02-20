@@ -32,6 +32,8 @@ void GameState::applyDeltas(VariableChanges changes){
 }
 
 void GameState::setVarValue(std::string name, double value){
+    if (name == "_R" || name == "_NR") currentSeed = value;
+    if (builtin.find(name) != builtin.end()) builtin.at(name) = value;
     LOG("game_state.cpp\tsetVarValue(name=" << name << ", value=" << value << ") FUNCTION BEG");
     auto it = variables.find(name);
     if (it != variables.end()){
@@ -52,9 +54,16 @@ void GameState::addVarValue(std::string name, double value){
     auto it = variables.find(name);
     if (it != variables.end()){
         setVarValue(name, it->second.value + value);
+        return;
     }
-    else
-        LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
+
+    auto itB = builtin.find(name);
+    if (itB != builtin.end()){
+        setVarValue(name, itB->second + value);
+        return;
+    }
+
+    LOG("game_state.cpp\taddVarValue(name=" << name << ", value=" << value << ") " << name << " NOT FOUND");
 }
 
 void GameState::updateEntries(){
@@ -81,7 +90,7 @@ void GameState::updateButtons(){
 
         if (btn == nullptr) continue;
         
-        if (!entry.isUnlocked() && btn->isUnlocked(*this))
+        if (!entry.isUnlocked() && !btn->isLocked(*this))
             entry.unlock();
     }
 }
@@ -92,19 +101,19 @@ void GameState::updateProcesses(){
 
         if (proc == nullptr) continue;
 
-        if (!entry.isUnlocked() && proc->isUnlocked(*this))
+        if (!entry.isUnlocked() && !proc->isLocked(*this))
             entry.unlock();
 
         if (!entry.isUnlocked()) return;
 
-        if (entry.isActive()){
+        if (entry.isRunning()){
             if (proc->isEndConditionMet(*this)){
-                entry.deactivate();
+                entry.stop();
             }
         }
         else{
             if (proc->isStartConditionMet(*this) && !proc->isEndConditionMet(*this)){
-                entry.activate();
+                entry.start();
                 addNewProcessEvent(proc, proc->getInterval(*this));
             }
         }
@@ -112,6 +121,8 @@ void GameState::updateProcesses(){
 }
 
 bool GameState::isVariableUnlocked(std::string name) const{
+    if (name == "_R" || name == "_NR" || builtin.find(name) != builtin.end())
+        return true;
     if (variables.find(name) == variables.end()) return false;
     return variables.at(name).isUnlocked();
 }
@@ -188,10 +199,15 @@ void GameState::addProcesss(){
     updateProcesses();
 }
 
+void GameState::addBuiltin(){
+
+}
+
 void GameState::init(){
     addVariables();
     addButtons();
     addProcesss();
+    addBuiltin();
 }
 
 bool GameState::isButtonUnlocked(std::string name) const{
@@ -234,6 +250,9 @@ double GameState::getVarValue(std::string name){
         if (forcedRandom != -1) return forcedRandom;
         return currentSeed/RANDOM_MAX;
     }
+    if (this->builtin.find(name) != this->builtin.end()){
+        return builtin.at(name);
+    }
     if (this->variables.find(name) != this->variables.end()){
         return variables.at(name).value;
     }
@@ -270,6 +289,14 @@ void GameState::sendPackets(std::vector<Packet>& packets) {
     }
     packets.clear();
     updatePacketsAndRealValues();
+}
+
+double GameState::getPacketsCount(std::string var){
+    double cnt=0;
+    for(auto& packet : packets){
+        if (packet.variable == var) cnt++;
+    }
+    return cnt;
 }
 
 void GameState::addPacketFromAnExpression(const Expression& expression, std::vector<Packet>& packets, ButtonPosition startPos, SourceID source){
@@ -317,7 +344,7 @@ void GameState::addPacketFromAnExpression(const Expression& expression, std::vec
 
     packets.insert(it, std::move(p));
 
-    LOG("packet.cpp\tgetPackets() NAME=" << p.variable << " DELTA=" << "?" << " PACKET PUSHED");
+    LOG("packet.cpp\tgetPackets() NAME= DELTA=" << "?" << " PACKET PUSHED");
 }
 
 std::vector<Packet> GameState::generatePackets(Button* button){
@@ -334,7 +361,7 @@ std::vector<Packet> GameState::generatePackets(Button* button, ButtonPosition st
     std::vector<Packet> packets;
     int termID = 0; int exprID = 0;
     for(auto& term : button->getTerms()){
-        if (!term->isActive(*this)) {
+        if (term->getState(*this) != InsightableState::Unblocked) {
             termID++; continue;
         }
         for(auto& expression : term->getExpressions()){
@@ -354,7 +381,7 @@ std::vector<Packet> GameState::generatePackets(Process* process, ButtonPosition 
     std::vector<Packet> packets;
     int termID = 0; int exprID = 0;
     for(auto& term : process->getTerms()){
-        if (!term->isActive(*this)) {
+        if (term->getState(*this) != InsightableState::Unblocked) {
             termID++; continue;
         }
         for(auto& expression : term->getExpressions()){
@@ -417,6 +444,7 @@ void GameState::updatePacketsAndRealValues(){
         LOG("game_state.cpp\tupdatePacketsAndRealValues() new Real Value for " << it->variable << ": " << newValue << " (" << oldValue << ")");
         it->update(newValue-oldValue);
     }
+    updateCurrentInsight();
 }
 
 void GameState::setCurrentInsight(std::vector<DisplayLine> insight) {
@@ -461,22 +489,28 @@ bool GameState::isProcessUnlocked(std::string name) const{
 bool GameState::isProcessActive(std::string name) const{
     auto it = processes.find(name);
     if (it == processes.end()) return false;
-    return it->second.isActive();
+    return it->second.isRunning();
 }
 
 std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
+    LOG("prediction start");
     GameState copy(*this);
     copy.currentInsightable = nullptr;
     auto packets = copy.generatePackets(button);
+    double generatedPackets = packets.size();
+    LOG("generated total of " << packets.size() << " predict packets");
+    for(auto& packet : packets){
+        packet.flag = true;
+    }
+    copy.sendPackets(packets);
 
     std::map<SourceID, VariableChanges> effects;
     
-    while(!packets.empty()){
+    while(generatedPackets > 0){
         double calTime = copy.calendar.empty() ? INFINITY : copy.calendar.back().time;
-        double oldPTime = copy.packets.empty() ? INFINITY : copy.packets.back().arrivalTime;
-        double newPTime = packets.back().arrivalTime;
+        double packTime = copy.packets.empty() ? INFINITY : copy.packets.back().arrivalTime;
 
-        if (calTime < oldPTime && calTime < newPTime){
+        if (calTime < packTime){
             auto& entry = copy.calendar.back();
 
             auto packets = copy.generatePackets(entry.process, ButtonPosition(0, 5));
@@ -488,29 +522,25 @@ std::map<SourceID, VariableChanges> GameState::predict(Button* button) const{
             }
             copy.calendar.pop_back();
         }
-        else if (oldPTime <= newPTime){
+        else {
             auto& entry = copy.packets.back();
 
             double newValue = entry.expression.evaluate(copy);
+            if (entry.flag){
+                double delta = newValue - copy.getVarValue(entry.variable);
+                LOG("predict new delta of var " << entry.variable << " is " << delta);
+                effects.insert_or_assign(entry.source, VariableChanges(entry.variable, delta));
+                generatedPackets--;
+            }
             for(auto lock : entry.expression.variableLocks){
                 copy.unblockVariable(lock);
             }
             copy.setVarValue(entry.variable, newValue);
+            LOG("predict " << entry.variable << " is now " << newValue);
             copy.packets.pop_back();
-        }
-        else{
-            auto& entry = packets.back();
-            
-            double newValue = entry.expression.evaluate(copy);
-            double delta = newValue - copy.getVarValue(entry.variable);
-            effects.insert_or_assign(entry.source, VariableChanges(entry.variable, delta));
-            for(auto lock : entry.expression.variableLocks){
-                copy.unblockVariable(lock);
-            }
-            copy.setVarValue(entry.variable, newValue);
-            packets.pop_back();
         }
     }
 
+    LOG("predicting end");
     return effects;
 }

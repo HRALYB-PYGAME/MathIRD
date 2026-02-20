@@ -1,0 +1,18 @@
+{
+    "name": "testbtn",
+    "displayStates": [  
+        {
+            "text": "X: {x}"
+        }
+    ],
+    "position": { "row": 0, "col": 0 },
+    "terms": [
+        {
+            "name": "term",
+            "condition": "1",
+            "expressions": [
+                "y+=x"
+            ]
+        }
+    ]
+}

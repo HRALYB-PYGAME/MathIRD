@@ -134,14 +134,15 @@ void updatePackets(GameState& gameState){
     auto now = Clock::now();
     auto& packets = gameState.getPackets();
     while(!packets.empty() && packets.back().getProgress(gameState.getInGameTime()) >= 1){
+        LOG("main.cpp\tupdatePackets() PACKET ARRIVED");
         auto& packet = packets.back();
         double newValue = packet.expression.evaluate(gameState);
         for(auto lock : packet.expression.variableLocks){
             gameState.unblockVariable(lock);
         }
         LOG("main.cpp\tupdatePackets() PACKET TO BE EATEN (var=" << packet.variable << ", newValue=" << newValue << ")");
-        gameState.setVarValue(packet.variable, newValue);
         packets.pop_back();
+        gameState.setVarValue(packet.variable, newValue);
         LOG("main.cpp\tupdatePackets() PACKET EATEN (var=" << packet.variable << ", newValue=" << newValue << ") GAMESTATE packet length=" << packets.size());
     }
 }
@@ -169,7 +170,7 @@ void updateProcesses(GameState& gameState){
 }
 
 void drawPackets(GameState& gameState){
-    for(auto& packet :gameState.getPackets()){
+    for(auto& packet : gameState.getPackets()){
         double buttonWidth;
         Vector2 startCoords = getCoordsFromButtonPosition(packet.startPos, buttonWidth, true);
         Vector2 endCoords = getCoordsFromButtonPosition(packet.endPos, buttonWidth, true);
@@ -194,20 +195,26 @@ int main(int argc, char** argv){
     // LOAD ASSETS
     std::unordered_map<std::string, std::string> linkerMap;
     Defs::loadVariables("assets/variables", linkerMap);
-
-    Defs::loadButtons("assets/buttons");
+    
+    Defs::loadButtons("assets/simplebuttons");
+    
     Defs::linkVariableHomeButtons(linkerMap);
 
-    Defs::loadProcesses("assets/processes");
+    Defs::loadProcesses("assets/simpleprocesses");
+
+    LOG("loaded binding is next");
+    Defs::bind();
 
     GameState gameState;
     gameState.init();
+
+    //return 0;
 
     lastFrameTime = Clock::now();
 
     SetTargetFPS(60);
     while (!WindowShouldClose()) {
-        gameState.addSecondsToInGameTime(durationToSeconds(Clock::now()-lastFrameTime));
+        gameState.addSecondsToInGameTime(durationToSeconds(Clock::now()-lastFrameTime)/5);
         lastFrameTime = Clock::now();
         BeginDrawing();
         ClearBackground(color);
@@ -223,9 +230,5 @@ int main(int argc, char** argv){
     }
 
     CloseWindow();
-
-    auto tree = construct(tokenize("isUnlocked[B:testbtn.term]"));
-    tree.expr->bind();
-    std::cout << tree.expr->evaluate(gameState) << "\n";
     return 0;
 }

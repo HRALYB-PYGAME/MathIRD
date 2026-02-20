@@ -1,10 +1,5 @@
 #include "game_state.hpp"
 
-bool Term::isActive(GameState& gameState) const{
-    if (!this->isUnlocked(gameState)) return false;
-    return this->condition->evaluate(gameState) != 0;
-}
-
 VariableChanges Term::simulate(GameState& gameState){
     VariableChanges changes;
     if (!this->condition->evaluate(gameState) != 0){
@@ -26,10 +21,11 @@ std::vector<DisplayLine> Term::insight(GameState& gameState, int level){
     std::vector<DisplayLine> lines;
 
     DisplayLine line;
-    if (!isUnlocked(gameState)) line.appendTextChunk("TERM IS LOCKED");
-    else if (!isActive(gameState)) line.appendTextChunk("TERM IS INACTIVE");
-    else if (!isUnblocked(gameState)) line.appendTextChunk("TERM IS BLOCKED");
-    else line.appendTextChunk("TERM IS ACTIVE");
+    auto state = getState(gameState);
+    if (state == InsightableState::Locked) line.appendTextChunk("TERM IS LOCKED");
+    if (state == InsightableState::Inactive) line.appendTextChunk("TERM IS INACTIVE");
+    if (state == InsightableState::Blocked) line.appendTextChunk("TERM IS BLOCKED");
+    if (state == InsightableState::Unblocked) line.appendTextChunk("TERM IS UNBLOCKED");
     lines.push_back(line);
 
     auto simulationResultInsight = simulate(gameState).insight(gameState, 0);
@@ -78,8 +74,11 @@ std::set<std::string> Term::getInputs(bool root, std::string function) const{
 
 /// @brief Updates set of dependencies, inputs and outputs. These updates will reflect into variables.
 void Term::updateSets(){
+    LOG("updating sets in term");
     updateDependencies();
+    LOG("updating sets in term deps done");
     updateInputs();
+    LOG("updating sets in term inputs done");
     updateOutputs();
     updateBlockers();
 
@@ -103,6 +102,7 @@ void Term::updateSets(){
         if (var != nullptr)
             var->addTermAsOutput(this);
     }
+    LOG("updated sets");
 }
 
 void Term::printSets(){
@@ -168,26 +168,28 @@ void Term::updateBlockers(){
     }
 }
 
-/// @brief Checks if all dependent variables are unlocked.
-/// @param gameState reference to current GameState
-/// @return true when term is unlocked, false otherwise
-bool Term::isUnlocked(GameState& gameState) const{
-    for (const std::string& var : dependencies) {
-        if (!gameState.isVariableUnlocked(var)){
-            LOG("term.cpp\tisUnlocked() TERM " << name << " is locked because " << var << " is.");
-            return false;
-        }
+bool Term::isLocked(GameState& gameState) const{
+    for (const std::string& var : dependencies){
+        if (!gameState.isVariableUnlocked(var))
+            return true;
     }
-    return true;
+    return false;
 }
 
-bool Term::isUnblocked(GameState& gameState) const{
-    if (!isActive(gameState)) return false;
-    for (const auto& blocker : blockers){
-        if (gameState.isVariableBlocked(blocker)){
-            return false;
-        }
-    }
+bool Term::isActive(GameState& gameState) const{
+    return condition->evaluate(gameState) != 0;
+}
 
-    return true;
+bool Term::isBlocked(GameState& gameState) const{
+    for (const std::string& var : blockers){
+        if (gameState.isVariableBlocked(var))
+            return true;
+    }
+    return false;
+}
+
+void Term::bind(){
+    for (auto& expr : expressions){
+        expr.expr->bind();
+    }
 }

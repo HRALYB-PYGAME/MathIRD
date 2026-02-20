@@ -118,6 +118,8 @@ Expression construct(std::vector<Token> tokens){
             expr.variableLocks.insert(lock);
         }
     }
+
+    LOG("expressiontree.cpp\treturning expression object\n");
     
     return expr;
 }

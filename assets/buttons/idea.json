@@ -19,7 +19,7 @@
             "name": "term",
             "condition": "1",
             "expressions": [
-                "y+=x"
+                "y+=isUnlocked[B:testbtn.term]"
             ]
         },
         {

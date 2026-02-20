@@ -36,6 +36,8 @@ Variable* Defs::getVariable(std::string name){
 }
 
 void Defs::addButton(Button btn){
+    if (btns.find(btn.getName()) != btns.end())
+        Log::warn("Multiple definitions of button \"" + btn.getName() + "\"");
     btns.insert_or_assign(btn.getName(), std::move(btn));
 }
 
@@ -47,7 +49,8 @@ Button* Defs::getButton(std::string name){
 }
 
 void Defs::addProcess(Process proc){
-    LOG("Defs::addProcess(Process=\"" << proc.getName() << "\")");
+    if (procs.find(proc.getName()) != procs.end())
+        Log::warn("Multiple definitions of process \"" + proc.getName() + "\"");
     procs.insert_or_assign(proc.getName(), std::move(proc));
 }
 
@@ -60,60 +63,93 @@ Process* Defs::getProcess(std::string name){
 
 void Defs::loadButtons(std::string path){
     for (const auto& entry : std::filesystem::directory_iterator(path)){
+        Log::setContext(entry.path().string());
+        LOG("button loading, new entry");
         if (!entry.is_regular_file()) continue;
+
+        LOG("button loading, regular file");
 
         std::ifstream file(entry.path());
 
-        if (!file.is_open()) continue;
+        if (!file.is_open()){
+            Log::warn("Failed to open");
+            continue;
+        }
 
         json j = json::parse(file);
 
+        LOG("button loading, parsed");
+
         if (!j.contains("name")){
-            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
-            continue;
+            Log::error("Missing required field \"name\"");
         }
 
         if (!j.contains("position")){
-            std::cerr << entry.path().filename() << " missing 'position'. Skipping." << std::endl;
-            continue;
+            Log::error("Missing required field \"position\"");
         }
+
+        LOG("button loading, name & positions");
 
         std::string name = j["name"];
 
         Button button(name);
 
+        LOG("button loading, empty button object");
+
         if (j.contains("displayStates")){
             auto& displayStates = j["displayStates"];
             for(const auto& state : displayStates){
-                if (!state.contains("text")) continue;
+                if (!state.contains("text"))
+                    Log::error("Missing required field \"displayStates.text\"");
+                if (!state.contains("condition"))
+                    Log::warn("Missing field \"displayStates.condition\", defaulting to \"1\"");
                 Expression condition = construct(tokenize(state.value("condition", "1")));
                 condition.normalize();
                 button.setDisplay(std::move(condition.expr), state["text"]);
-                if (!state.contains("condition")) break;
             }
         }
+        else{
+            Log::warn("Missing field \"displayStates\"");
+        }
+
+        LOG("button loading, displayStates");
 
         auto& jp = j["position"];
         button.setPosition(jp.value("row", 0), jp.value("col", 0));
 
+        LOG("button loading, positios");
+
         if (j.contains("terms")){
             auto& terms = j["terms"];
             for(const auto& t : terms){
-                if (!t.contains("name")) continue;
-                if (!t.contains("expressions")) continue;
+                if (!t.contains("name")) 
+                    Log::error("Missing required field \"terms.name\"");
+                if (!t.contains("expressions"))
+                    Log::error("Missing required field \"terms.expressions\"");
                 Term term(t["name"]);
+                if (!t.contains("condition"))
+                    Log::warn("Missing field \"terms.condition\", defaulting to \"1\"");
                 Expression condition = construct(tokenize(t.value("condition", "1")));
                 condition.normalize();
                 term.setCondition(std::move(condition.expr));
                 for(const auto& expr : t["expressions"]){
                     Expression expression = construct(tokenize(expr));
-                    term.addExpression(std::move(expression));
+                    term.addExpression(std::move(expression)); // problem
                 }
+                if (t["expressions"].size() == 0)
+                    Log::warn("Unspecified field \"terms.name\"");
+                LOG("before adding new term\n");
                 button.addTerm(std::make_unique<Term>(std::move(term)));
             }
         }
+        else
+            Log::warn("Missing field \"terms\"");
+
+        LOG("button loading, terms");
 
         Defs::addButton(std::move(button));
+
+        Log::info("Succesfully loaded");
     }
 }
 
@@ -121,22 +157,27 @@ Polarity stringToPolarity(std::string polarity){
     if (polarity == "normal") return Polarity::Normal;
     if (polarity == "inverted") return Polarity::Inverted;
     if (polarity == "absolute") return Polarity::Absolute;
+    if (polarity == "neutral") return Polarity::Neutral;
+    Log::warn("Invalid value for \"polarity\": " + polarity + ", defaulting to \"neutral\", expected \"absolute\", \"inverted\", \"neutral\" or \"normal\"");
     return Polarity::Neutral;
 }
 
 void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::string>& linkerMap){
     for (const auto& entry : std::filesystem::directory_iterator(path)){
+        Log::setContext(entry.path().string());
         if (!entry.is_regular_file()) continue;
 
         std::ifstream file(entry.path());
 
-        if (!file.is_open()) continue;
+        if (!file.is_open()){
+            Log::warn("Failed to open");
+            continue;
+        }
 
         json j = json::parse(file);
 
         if (!j.contains("name")){
-            LOG("utils.cpp\tDefs::loadVariables " << entry.path().filename() << " missing 'name'. Skipping.");
-            continue;
+            Log::error("Missing required field \"name\"");
         }
 
         std::string name = j["name"];
@@ -146,28 +187,47 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
         if (j.contains("type")){
             if (j["type"] == "B")
                 type = VariableType::Boolean;
-            if (j["type"] == "I")
+            else if (j["type"] == "D")
+                type = VariableType::Double;
+            else if (j["type"] == "I")
                 type = VariableType::Int;
-            if (j["type"] == "E"){
+            else if (j["type"] == "E"){
                 type = VariableType::Enum;
-                if (!j.contains("states")) continue;
-                if (j["states"].empty()) continue;
+                if (!j.contains("states"))
+                    Log::error("Missing required field \"type.states\" (required for \"Enum\" type variables)");
+                if (j["states"].empty())
+                    Log::error("Unspecified field \"type.states\"  (required for \"Enum\" type variables)");
             }
-            if (j["type"] == "P")
+            else if (j["type"] == "P")
                 type = VariableType::Percentage;
+            else
+                Log::error("Invalid value for field \"type\": " + j["type"].dump() + ", expected \"B\", \"D\", \"E\", \"I\" or \"P\"");
+        }
+        else{
+            Log::warn("Missing field \"type\", defaulting to \"Double\"");
         }
 
         ScoreParams scoreParams = {100, 0, Polarity::Neutral};;
         if (j.contains("scoreParams")){
             auto& js = j["scoreParams"];
+            if (!js.contains("knee"))
+                Log::warn("Missing field \"knee\", defaulting to 100");
             scoreParams.knee = js.value("knee", 100);
+            if (!js.contains("offset"))
+                Log::warn("Missing field \"offset\", defaulting to 0");
             scoreParams.offset = js.value("offset", 0);
+            if (!js.contains("polarity"))
+                Log::warn("Missing field \"polarity\", defaulting to \"neutral\"");
             scoreParams.polarity = stringToPolarity(js.value("polarity", "neutral"));
         }
+        else
+            Log::warn("Missing field \"scoreParams\", defaulting to \"knee\"=100, \"offset\"=0, \"polarity\"=\"neutral\"");
 
         if (j.contains("homeButton")){
             linkerMap[name] = j["homeButton"];
         }
+        else
+            Log::error("Missing required field \"homeButton\"");
 
         Expression condition = construct(tokenize(j.value("unlockCondition", "1")));
         condition.normalize();
@@ -182,30 +242,39 @@ void Defs::loadVariables(std::string path, std::unordered_map<std::string, std::
         if (j.contains("granularity")){
             var.setGranularity(j["granularity"]);
         }
+        else
+            Log::warn("Missing field \"granularity\", defaulting to 1");
 
         if (var.getType() == VariableType::Enum){
             for(auto state : j["states"]){
+                if (var.doesStateExist(state))
+                    Log::warn("State \"" + state.dump() + "\" already exists");
                 var.addState(state);
             }
         }
 
         Defs::addVariable(std::move(var));
+
+        Log::info("Succesfully loaded");
     }
 }
 
 void Defs::loadProcesses(std::string path){
     for (const auto& entry : std::filesystem::directory_iterator(path)){
+        Log::setContext(entry.path().string());
         if (!entry.is_regular_file()) continue;
 
         std::ifstream file(entry.path());
 
-        if (!file.is_open()) continue;
+        if (!file.is_open()){
+            Log::warn("Failed to open");
+            continue;
+        }
 
         json j = json::parse(file);
 
         if (!j.contains("name")){
-            std::cerr << entry.path().filename() << " missing 'name'. Skipping." << std::endl;
-            continue;
+            Log::error("Missing required field \"name\"");
         }
 
         std::string name = j["name"];
@@ -218,6 +287,9 @@ void Defs::loadProcesses(std::string path){
             condition.normalize();
             process.setStartCondition(std::move(condition.expr));
         }
+        else{
+            Log::error("Missing required field \"startCondition\"");
+        }
 
         if (j.contains("endCondition")){
             auto& cond = j["endCondition"];
@@ -225,31 +297,50 @@ void Defs::loadProcesses(std::string path){
             condition.normalize();
             process.setEndCondition(std::move(condition.expr));
         }
+        else{
+            std::string cond = "!(" + j["startCondition"].dump() + ")";
+            Expression condition = construct(tokenize(cond));
+            condition.normalize();
+            process.setEndCondition(std::move(condition.expr));
+            Log::warn("Missing field \"endCondition\", defaulting to !(startCondition)");
+        }
 
         if (j.contains("interval")){
             auto& inter = j["interval"];
             Expression interval = construct(tokenize(inter));
             process.setInterval(std::move(interval.expr));
         }
+        else
+            Log::error("Missing required field \"interval\"");
 
         if (j.contains("terms")){
             auto& terms = j["terms"];
             for(const auto& t : terms){
-                if (!t.contains("name")) continue;
-                if (!t.contains("expressions")) continue;
+                if (!t.contains("name")) 
+                    Log::error("Missing required field \"terms.name\"");
+                if (!t.contains("expressions"))
+                    Log::error("Missing required field \"terms.expressions\"");
                 Term term(t["name"]);
+                if (!t.contains("condition"))
+                    Log::warn("Missing field \"terms.condition\", defaulting to \"1\"");
                 Expression condition = construct(tokenize(t.value("condition", "1")));
                 condition.normalize();
                 term.setCondition(std::move(condition.expr));
                 for(const auto& expr : t["expressions"]){
                     Expression expression = construct(tokenize(expr));
-                    term.addExpression(std::move(expression));
+                    term.addExpression(std::move(expression)); // problem
                 }
+                if (t["expressions"].size() == 0)
+                    Log::warn("Unspecified field \"terms.name\"");
                 process.addTerm(std::make_unique<Term>(std::move(term)));
             }
         }
+        else
+            Log::warn("Missing field \"terms\"");
 
         Defs::addProcess(std::move(process));
+
+        Log::info("Succesfully loaded");
     }
 }
 
@@ -264,6 +355,32 @@ void Defs::linkVariableHomeButtons(std::unordered_map<std::string, std::string>&
         }
         else LOG("utils.cpp\tlinkVariableHomeButtons() Button specified in " << varName << "s config doesnt exist (" << btnName << ").");
     }
+}
+
+void Defs::bind(){
+    for(auto& [varName, var] : vars){
+        var.bind();
+    }
+    for(auto& [btnName, btn] : btns){
+        btn.bind();
+    }
+    for(auto& [procName, proc] : procs){
+        proc.bind();
+    }
+
+    LOG("binded");
+
+    for(auto& [btnName, btn] : btns){
+        btn.updateTermsSets();
+    }
+
+    LOG("updated button terms sets");
+    
+    for(auto& [procName, proc] : procs){
+        proc.updateTermsSets();
+    }
+
+    LOG("sets updated");
 }
 
 Insightable* Defs::getTarget(std::string targetPath){
@@ -298,4 +415,27 @@ Insightable* Defs::getTarget(std::string targetPath){
 
 double getDistance(ButtonPosition start, ButtonPosition end){
     return sqrt(pow(start.row - end.row, 2) + pow(start.col - end.col, 2));
+}
+
+void Log::error(const std::string& message) {
+    std::cerr 
+    << "\033[31m" << std::left << std::setw(typeWidth)
+    << "[ERROR] "
+    << std::left << std::setw(pathWidth) <<
+    currentFile << message << "\033[0m" << std::endl;
+    std::exit(EXIT_FAILURE);
+}
+
+void Log::warn(const std::string& message) {
+    std::cout << "\033[33m" << std::left << std::setw(typeWidth)
+    << "[ERROR] "
+    << std::left << std::setw(pathWidth) <<
+    currentFile << message << "\033[0m" << std::endl;
+}
+
+void Log::info(const std::string& message) {
+    std::cout << "\033[32m" << std::left << std::setw(typeWidth)
+    << "[ERROR] "
+    << std::left << std::setw(pathWidth) <<
+    currentFile << message << "\033[0m" << std::endl;
 }

@@ -95,21 +95,25 @@ std::vector<DisplayLine> Button::insight(GameState& gameState, int level) {
 }
 
 void Button::addTerm(std::unique_ptr<Term> term){
+    LOG("adding new term");
+    if (term == nullptr) LOG("adding nullptr term??");
     term->setParent(*this);
-    term->updateSets();
-    term->printSets();
+    LOG("parent done");
+    
+    LOG("sets done");
     terms.push_back(std::move(term));
+    LOG("term added");
 }
 
-bool Button::isUnlocked(GameState& gameState) const{
+bool Button::isLocked(GameState& gameState) const{
     for(auto& term : terms){
-        if (term->isUnlocked(gameState))
-            return true;
+        if (!term->isLocked(gameState))
+            return false;
     }
-    return false;
+    return true;
 }
 
-bool Button::isActive(GameState& gameState){
+bool Button::isActive(GameState& gameState) const{
     for(auto& term : terms){
         if (term->isActive(gameState))
             return true;
@@ -117,27 +121,27 @@ bool Button::isActive(GameState& gameState){
     return false;
 }
 
-bool Button::isUnblocked(GameState& gameState){
+bool Button::isBlocked(GameState& gameState) const{
     for(auto& term : terms){
-        if (term->isUnblocked(gameState))
-            return true;
+        if (!term->isBlocked(gameState))
+            return false;
     }
-    return false;
+    return true;
 }
-
 
 VariableChanges Button::simulate(GameState& gameState){
     VariableChanges changes;
     for(auto& term : terms){
-        if (term->isUnblocked(gameState)){
+        auto state = term->getState(gameState);
+        if (state == InsightableState::Unblocked){
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION STARTED");
             VariableChanges c = term->simulate(gameState);
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " SIMULATION DONE");
             changes.add(c);
         }
-        else if (!term->isUnlocked(gameState))
+        else if (state == InsightableState::Locked)
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " LOCKED");
-        else if (!term->isActive(gameState))
+        else if (state == InsightableState::Inactive)
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " NOT ACTIVE");
         else
             LOG("button.cpp\tsimulate() of " << name << " TERM " << term->getName() << " BLOCKED");
@@ -148,7 +152,7 @@ VariableChanges Button::simulate(GameState& gameState){
 const std::vector<Expression> Button::getExpressions(GameState& gameState) const{
     std::vector<Expression> result;
     for(const auto& term : terms){
-        if (term->isUnblocked(gameState)){
+        if (term->getState(gameState) == InsightableState::Unblocked){
             for(const auto& expr : term->getExpressions()) {
                 result.push_back(expr.clone()); 
             }

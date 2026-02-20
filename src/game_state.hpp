@@ -68,17 +68,17 @@ struct ButtonEntry : Entry {
 
 struct ProcessEntry : Entry {
 private:
-    bool active = false;
+    bool running = false;
 
 public:
-    bool isActive() const{
-        return active;
+    bool isRunning() const{
+        return running;
     };
-    void activate(){
-        active = true;
+    void start(){
+        running = true;
     };
-    void deactivate(){
-        active = false;
+    void stop(){
+        running = false;
     };
 };
 
@@ -98,7 +98,10 @@ class GameState{
         std::unordered_map<std::string, ButtonEntry> buttons;
         std::unordered_map<std::string, ProcessEntry> processes;
 
+        // builtin variables
         uint64_t currentSeed;
+        std::unordered_map<std::string, double> builtin;
+
         double inGameTime = 0;
         double forcedRandom = -1;
 
@@ -136,6 +139,7 @@ class GameState{
         double getRealValue(std::string name) const;
         void setRealValue(std::string name, double value);
         void clearRealValues();
+        void addBuiltin();
         
         // Buttons
         bool isButtonUnlocked(std::string name) const;
@@ -166,6 +170,8 @@ class GameState{
 
         // Packets
         std::vector<Packet>& getPackets() {return packets;};
+        double getPacketsCount() {return (double)(packets.size());};
+        double getPacketsCount(std::string var);
         void sendPacket(Packet packet, bool update);
         void sendPackets(std::vector<Packet>& packets);
         void updatePacketsAndRealValues();

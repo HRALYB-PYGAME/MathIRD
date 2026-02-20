@@ -23,7 +23,10 @@ public:
 
     bool isStartConditionMet(GameState& gameState) const;
     bool isEndConditionMet(GameState& gameState) const;
-    bool isUnlocked(GameState& gameState) const override;
+    
+    bool isLocked(GameState& gameState) const override;
+    bool isActive(GameState& gameState) const override;
+    bool isBlocked(GameState& gameState) const override;
 
     void setStartCondition(std::unique_ptr<Node> startCondition);
     void setEndCondition(std::unique_ptr<Node> endCondition);
@@ -37,11 +40,18 @@ public:
         }
         return nullptr;
     };
+    void updateTermsSets() const{
+        for(auto& term : terms){
+            term->updateSets();
+        }
+    };
     const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
     const std::vector<Expression> getExpressions(GameState& gameState) const;
 
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
     std::set<std::string> getInputs(bool root, std::string function="") const override;
+
+    void bind();
 };
 
 #endif

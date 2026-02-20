@@ -107,10 +107,11 @@ void Token::print(){
             std::cout << "Token Type: VariableLock (" << std::get<std::string>(this->value) << ")\n";
             break;
         case TokenType::Function:
-            std::cout << "Function: (" << std::get<std::string>(this->value) << ")\n";
+            std::cout << "Token Type: Function: (" << std::get<std::string>(this->value) << ")\n";
             break;
         case TokenType::Argument:
-            std::cout << "Argument: (" << std::get<std::string>(this->value) << ")\n";
+            std::cout << "Token Type: Argument: (" << std::get<std::string>(this->value) << ")\n";
+            break;
     }
 }
 
@@ -221,7 +222,6 @@ std::vector<Token> tokenize(std::string text){
                 state = tokenizeStateMap.at(c);
             }
             else if (tokenMap.count(std::to_string(c))){
-                std::cout << "found" << std::endl;
                 tokens.push_back(tokenMap.at(std::to_string(c)));
             }
             break;
@@ -241,7 +241,7 @@ std::vector<Token> tokenize(std::string text){
                 acc += c;
             }
             else if (c == ']'){
-                tokens.push_back(Token(acc, TokenType::Argument));
+                if (!acc.empty()) tokens.push_back(Token(acc, TokenType::Argument));
                 tokens.push_back(Operand::RightPar);
                 acc.clear();
                 state = TokenizeState::Empty;
@@ -435,9 +435,7 @@ std::vector<Token> tokenize(std::string text){
         }
         
     }
-    for(auto token : tokens){
-        token.print();
-    }
+    LOG("tokenizer returning tokens");
     return tokens;
 }
 

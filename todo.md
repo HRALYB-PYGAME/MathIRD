@@ -3,8 +3,6 @@
 ## quick
 
 - Improve sendPackets
-- Implement predictChanges
-- Work on functionNode evaluation
 - Global variables
 
 ## priority 5
@@ -28,8 +26,6 @@
 
 - responsive button grid (kinda)
 - centered hover displays
-- operator parsing map
-- processes
 
 ## priority 1
 

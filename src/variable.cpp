@@ -53,6 +53,10 @@ double Variable::constrain(double value) const{
     return value;
 }
 
+void Variable::bind(){
+    unlockCondition->bind();
+}
+
 std::vector<DisplayLine> Variable::insight(GameState& gameState, int level){
     DisplayLine line;
     line.appendTextChunk("current value: ");
@@ -105,4 +109,17 @@ void Variable::printDependencies(){
     for(auto& output : asOutputInTerms){
         std::cout << output->getName() << std::endl;
     }
+}
+
+
+bool Variable::isLocked(GameState& gameState) const{
+    return !gameState.isVariableUnlocked(name);
+}
+
+bool Variable::isActive(GameState& gameState) const{
+    return true;
+}
+
+bool Variable::isBlocked(GameState& gameState) const{
+    return gameState.getVariableBlockCounter(name) > 0;
 }

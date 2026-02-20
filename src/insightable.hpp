@@ -87,13 +87,29 @@ struct ConditionalDisplayLine{
 
 void printLines(std::vector<DisplayLine>& lines);
 
+enum InsightableState{
+    Locked,
+    Inactive,
+    Blocked,
+    Unblocked
+};
+
 class Insightable{
 public:
     virtual std::vector<DisplayLine> insight(GameState& gameState, int level) = 0;
 
     virtual std::set<std::string> getInputs(bool root, std::string function = "") const { return {}; };
 
-    virtual bool isUnlocked(GameState& gameState) const { return false; };
+    virtual bool isLocked(GameState& gameState) const { return false; };
+    virtual bool isActive(GameState& gameState) const { return false; };
+    virtual bool isBlocked(GameState& gameState) const { return false; };
+
+    InsightableState getState(GameState& gameState) const{
+        if (isLocked(gameState)) return InsightableState::Locked;
+        if (!isActive(gameState)) return InsightableState::Inactive;
+        if (isBlocked(gameState)) return InsightableState::Blocked;
+        return InsightableState::Unblocked;
+    };
 
     virtual Term* getTerm(std::string name) const {return nullptr;};
 };

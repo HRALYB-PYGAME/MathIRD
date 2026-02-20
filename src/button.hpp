@@ -29,6 +29,13 @@ public:
         }
         return nullptr;
     };
+    void updateTermsSets() const{
+        LOG("updating button terms sets");
+        for(auto& term : terms){
+            term->updateSets();
+        }
+        LOG("updated button terms sets");
+    };
     const std::vector<std::unique_ptr<Term>>& getTerms() {return terms;};
     const std::vector<Expression> getExpressions(GameState& gameState) const;
 
@@ -42,11 +49,16 @@ public:
     void setPosition(int row, int col) {position = {row, col};};
 
     // State
-    bool isUnlocked(GameState& gameState) const override;
-    bool isActive(GameState& gameState);
-    bool isUnblocked(GameState& gameState);
+    bool isLocked(GameState& gameState) const override;
+    bool isActive(GameState& gameState) const override;
+    bool isBlocked(GameState& gameState) const override;
 
     VariableChanges simulate(GameState& gameState);
+    void bind(){
+        for(auto& term : terms){
+            term->bind();
+        }
+    };
 };
 
 #endif

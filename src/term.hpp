@@ -25,7 +25,6 @@ public:
 
     void setCondition(std::unique_ptr<Node> condition);
     void addExpression(Expression expression);
-    bool isActive(GameState& gameState) const;
     VariableChanges simulate(GameState& gameState);
     void updateDependencies();
     void updateInputs();
@@ -33,8 +32,9 @@ public:
     void updateBlockers();
     void updateSets();
     void printSets();
-    bool isUnlocked(GameState& gameState) const override;
-    bool isUnblocked(GameState& gameState) const;
+    bool isLocked(GameState& gameState) const override;
+    bool isActive(GameState& gameState) const override;
+    bool isBlocked(GameState& gameState) const override;
     std::vector<DisplayLine> insight(GameState& gameState, int level) override;
 
     std::set<std::string>& getDependencies() {return dependencies;};
@@ -47,6 +47,8 @@ public:
     Process& getParentProcess() {return *processParent;};
     void setParent(Button& ref) {buttonParent = &ref;};
     void setParent(Process& ref) {processParent = &ref;};
+
+    void bind();
 };
 
 #endif

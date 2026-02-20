@@ -13,11 +13,13 @@ std::set<std::string> OperandNode::getInputs(bool root, std::string function) co
     std::set<std::string> set;
     if (root){
         if (isAssignment(oper)){
+            LOG("assignment figuring out right inputs");
             auto rightIns = right->getInputs(false);
             set.insert(rightIns.begin(), rightIns.end());
         }
     }
     else {
+        LOG("figuring out left inputs");
         auto leftIns = left->getInputs(false);
         auto rightIns = right->getInputs(false);
         set.insert(leftIns.begin(), leftIns.end());
